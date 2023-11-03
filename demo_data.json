@@ -3,32 +3,38 @@
       {
         "name": "Sam BankmanFried",
         "status": "V",
-        "phone": "7729119111"
+        "phone": "7729119111",
+        "univ_id": null
       },
       {
         "name": "John Clay",
         "status": "E",
-        "phone": "266399121"
+        "phone": "266399121",
+        "univ_id": "jclay"
       },
       {
         "name": "Julia Hicks",
         "status": "E",
-        "phone": "366399121"
+        "phone": "366399121",
+        "univ_id": "jhicks"
       },
       {
         "name": "Ivan Garcia",
         "status": "E",
-        "phone": "466399121"
+        "phone": "466399121",
+        "univ_id": "igarcia"
       },
       {
         "name": "Sachin Tendulkar",
         "status": "S",
-        "phone": "122765234"
+        "phone": "122765234",
+        "univ_id": "stendulkar"
       },
       {
         "name": "Charles Xavier",
         "status": "V",
-        "phone": "9194789124"
+        "phone": "9194789124",
+        "univ_id": null
       }
     ],
     "ParkingLot": [
