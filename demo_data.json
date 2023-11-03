@@ -1,0 +1,187 @@
+{
+    "Driver": [
+      {
+        "name": "Sam BankmanFried",
+        "status": "V",
+        "phone": "7729119111"
+      },
+      {
+        "name": "John Clay",
+        "status": "E",
+        "phone": "266399121"
+      },
+      {
+        "name": "Julia Hicks",
+        "status": "E",
+        "phone": "366399121"
+      },
+      {
+        "name": "Ivan Garcia",
+        "status": "E",
+        "phone": "466399121"
+      },
+      {
+        "name": "Sachin Tendulkar",
+        "status": "S",
+        "phone": "122765234"
+      },
+      {
+        "name": "Charles Xavier",
+        "status": "V",
+        "phone": "9194789124"
+      }
+    ],
+    "ParkingLot": [
+      {
+        "lot_name": "Poulton Deck",
+        "address": "1021 Main Campus Dr Raleigh, NC, 27606"
+      },
+      {
+        "lot_name": "Partners Way Deck",
+        "address": "851 Partners Way Raleigh, NC, 27606"
+      },
+      {
+        "lot_name": "Dan Allen Parking Deck",
+        "address": "110 Dan Allen Dr Raleigh, NC, 27607"
+      }
+    ],
+    "Vehicle": [
+      {
+        "car_license_number": "SBF",
+        "model": "GT-R-Nismo",
+        "color": "Pearl White TriCoat",
+        "manufacturer": "Nissan",
+        "year": "2024"
+      },
+      {
+        "car_license_number": "Clay1",
+        "model": "Model S",
+        "color": "Ultra Red",
+        "manufacturer": "Tesla",
+        "year": "2023"
+      },
+      {
+        "car_license_number": "Hicks1",
+        "model": "M2 Coupe",
+        "color": "Zandvoort Blue",
+        "manufacturer": "BMW",
+        "year": "2024"
+      },
+      {
+        "car_license_number": "Garcia1",
+        "model": "Continental GT Speed",
+        "color": "Blue Fusion",
+        "manufacturer": "Bentley",
+        "year": "2024"
+      },
+      {
+        "car_license_number": "CRICKET",
+        "model": "Civic SI",
+        "color": "Sonic Gray Pearl",
+        "manufacturer": "Honda",
+        "year": "2024"
+      },
+      {
+        "car_license_number": "PROFX",
+        "model": "Taycan Sport Turismo",
+        "color": "Frozenblue Metallic",
+        "manufacturer": "Porsche",
+        "year": "2024"
+      }
+    ],
+    "Permit": [
+      {
+        "permit_id": "VSBF1C",
+        "permit_type": "Commuter",
+        "zone_id": "V",
+        "phone": "7729119111",
+        "car_license_number": "SBF",
+        "space_type": "Regular",
+        "start_date": "2023-01-01",
+        "expiration_date": "2024-01-01",
+        "expiration_time": "06:00:00"
+      },
+      {
+        "permit_id": "EJC1R",
+        "permit_type": "Residential",
+        "zone_id": "A",
+        "phone": "266399121",
+        "car_license_number": "Clay1",
+        "space_type": "Electric",
+        "start_date": "2010-01-01",
+        "expiration_date": "2030-01-01",
+        "expiration_time": "06:00:00"
+      },
+      {
+        "permit_id": "EJH2C",
+        "permit_type": "Commuter",
+        "zone_id": "A",
+        "phone": "366399121",
+        "car_license_number": "Hicks1",
+        "space_type": "Regular",
+        "start_date": "2023-01-01",
+        "expiration_date": "2024-01-01",
+        "expiration_time": "06:00:00"
+      },
+      {
+        "permit_id": "EIG3C",
+        "permit_type": "Commuter",
+        "zone_id": "A",
+        "phone": "466399121",
+        "car_license_number": "Garcia1",
+        "space_type": "Regular",
+        "start_date": "2023-01-01",
+        "expiration_date": "2024-01-01",
+        "expiration_time": "06:00:00"
+      },
+      {
+        "permit_id": "SST1R",
+        "permit_type": "Residential",
+        "zone_id": "AS",
+        "phone": "122765234",
+        "car_license_number": "CRICKET",
+        "space_type": "Compact Car",
+        "start_date": "2022-01-01",
+        "expiration_date": "2023-09-30",
+        "expiration_time": "06:00:00"
+      },
+      {
+        "permit_id": "VCX1SE",
+        "permit_type": "Special Event",
+        "zone_id": "V",
+        "phone": "9194789124",
+        "car_license_number": "PROFX",
+        "space_type": "Handicap",
+        "start_date": "2023-01-01",
+        "expiration_date": "2023-11-15",
+        "expiration_time": "06:00:00"
+      }
+    ],
+    "Citation": [
+      {
+        "citation_number": "NP1",
+        "citation_date": "2021-10-11",
+        "citation_time": "08:00:00",
+        "payment_status": "PAID",
+        "lot_name": "Dan Allen Parking Deck",
+        "category": "No Permit",
+        "fee": "$40",
+        "car_license_number": "VAN-9910",
+        "model": "Macan GTS",
+        "color": "Papaya Metallic"
+      },
+      {
+        "citation_number": "EP1",
+        "citation_date": "2023-10-01",
+        "citation_time": "08:00:00",
+        "payment_status": "DUE",
+        "lot_name": "Poulton Lot",
+        "category": "Expired Permit",
+        "fee": "$30",
+        "car_license_number": "CRICKET",
+        "model": "Civic SI",
+        "color": "Sonic Gray Pearl"
+      }
+    ]
+  }
+  
