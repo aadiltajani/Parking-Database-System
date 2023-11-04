@@ -51,53 +51,177 @@
         "address": "110 Dan Allen Dr Raleigh, NC, 27607"
       }
     ],
+    "Zone": [
+      {
+        "zone_id": "A",
+        "lot_name": "Poulton Deck"
+      },
+      {
+        "zone_id": "AS",
+        "lot_name": "Poulton Deck"
+      },
+      {
+        "zone_id": "V",
+        "lot_name": "Poulton Deck"
+      },
+      {
+        "zone_id": "A",
+        "lot_name": "Partners Way Deck"
+      },
+      {
+        "zone_id": "AS",
+        "lot_name": "Partners Way Deck"
+      },
+      {
+        "zone_id": "V",
+        "lot_name": "Partners Way Deck"
+      },
+      {
+        "zone_id": "A",
+        "lot_name": "Dan Allen Parking Deck"
+      },
+      {
+        "zone_id": "AS",
+        "lot_name": "Dan Allen Parking Deck"
+      },
+      {
+        "zone_id": "V",
+        "lot_name": "Dan Allen Parking Deck"
+      }
+    ],
+    "Space": [
+      {
+        "space_number": 1,
+        "lot_name": "Dan Allen Parking Deck",
+        "zone_id": "V",
+        "space_type": "Regular",
+        "availability_status": 1
+      },
+      {
+        "space_number": 2,
+        "lot_name": "Dan Allen Parking Deck",
+        "zone_id": "V",
+        "space_type": "Handicap",
+        "availability_status": 1
+      },
+      {
+        "space_number": 3,
+        "lot_name": "Dan Allen Parking Deck",
+        "zone_id": "V",
+        "space_type": "Electric",
+        "availability_status": 1
+      },
+      {
+        "space_number": 1,
+        "lot_name": "Partners Way Deck",
+        "zone_id": "AS",
+        "space_type": "Compact Car",
+        "availability_status": 1
+      },
+      {
+        "space_number": 2,
+        "lot_name": "Partners Way Deck",
+        "zone_id": "AS",
+        "space_type": "Regular",
+        "availability_status": 1
+      },
+      {
+        "space_number": 1,
+        "lot_name": "Poulton Deck",
+        "zone_id": "A",
+        "space_type": "Regular",
+        "availability_status": 1
+      },
+      {
+        "space_number": 2,
+        "lot_name": "Poulton Deck",
+        "zone_id": "A",
+        "space_type": "Regular",
+        "availability_status": 1
+      },
+      {
+        "space_number": 3,
+        "lot_name": "Poulton Deck",
+        "zone_id": "A",
+        "space_type": "Regular",
+        "availability_status": 1
+      },
+      {
+        "space_number": 4,
+        "lot_name": "Poulton Deck",
+        "zone_id": "A",
+        "space_type": "Electric",
+        "availability_status": 1
+      },
+      {
+        "space_number": 5,
+        "lot_name": "Poulton Deck",
+        "zone_id": "A",
+        "space_type": "Handicap",
+        "availability_status": 1
+      },
+      {
+        "space_number": 1,
+        "lot_name": "Poulton Deck",
+        "zone_id": "AS",
+        "space_type": "Regular",
+        "availability_status": 1
+      },
+      {
+        "space_number": 2,
+        "lot_name": "Poulton Deck",
+        "zone_id": "AS",
+        "space_type": "Regular",
+        "availability_status": 1
+      }
+    ],
     "Vehicle": [
       {
         "car_license_number": "SBF",
         "model": "GT-R-Nismo",
         "color": "Pearl White TriCoat",
         "manufacturer": "Nissan",
-        "year": "2024"
+        "year": 2024
       },
       {
         "car_license_number": "Clay1",
         "model": "Model S",
         "color": "Ultra Red",
         "manufacturer": "Tesla",
-        "year": "2023"
+        "year": 2023
       },
       {
         "car_license_number": "Hicks1",
         "model": "M2 Coupe",
         "color": "Zandvoort Blue",
         "manufacturer": "BMW",
-        "year": "2024"
+        "year": 2024
       },
       {
         "car_license_number": "Garcia1",
         "model": "Continental GT Speed",
         "color": "Blue Fusion",
         "manufacturer": "Bentley",
-        "year": "2024"
+        "year": 2024
       },
       {
         "car_license_number": "CRICKET",
         "model": "Civic SI",
         "color": "Sonic Gray Pearl",
         "manufacturer": "Honda",
-        "year": "2024"
+        "year": 2024
       },
       {
         "car_license_number": "PROFX",
         "model": "Taycan Sport Turismo",
         "color": "Frozenblue Metallic",
         "manufacturer": "Porsche",
-        "year": "2024"
+        "year": 2024
       }
     ],
     "Permit": [
       {
-        "permit_id": "VSBF1C",
+        "permit_id": 1,
         "permit_type": "Commuter",
         "zone_id": "V",
         "phone": "7729119111",
@@ -108,7 +232,7 @@
         "expiration_time": "06:00:00"
       },
       {
-        "permit_id": "EJC1R",
+        "permit_id": 2,
         "permit_type": "Residential",
         "zone_id": "A",
         "phone": "266399121",
@@ -119,7 +243,7 @@
         "expiration_time": "06:00:00"
       },
       {
-        "permit_id": "EJH2C",
+        "permit_id": 3,
         "permit_type": "Commuter",
         "zone_id": "A",
         "phone": "366399121",
@@ -130,7 +254,7 @@
         "expiration_time": "06:00:00"
       },
       {
-        "permit_id": "EIG3C",
+        "permit_id": 4,
         "permit_type": "Commuter",
         "zone_id": "A",
         "phone": "466399121",
@@ -141,7 +265,7 @@
         "expiration_time": "06:00:00"
       },
       {
-        "permit_id": "SST1R",
+        "permit_id": 5,
         "permit_type": "Residential",
         "zone_id": "AS",
         "phone": "122765234",
@@ -152,7 +276,7 @@
         "expiration_time": "06:00:00"
       },
       {
-        "permit_id": "VCX1SE",
+        "permit_id": 6,
         "permit_type": "Special Event",
         "zone_id": "V",
         "phone": "9194789124",
@@ -165,29 +289,100 @@
     ],
     "Citation": [
       {
-        "citation_number": "NP1",
+        "citation_number": 1,
         "citation_date": "2021-10-11",
         "citation_time": "08:00:00",
-        "payment_status": "PAID",
+        "payment_status": 1,
         "lot_name": "Dan Allen Parking Deck",
         "category": "No Permit",
-        "fee": "$40",
+        "fee": 40,
         "car_license_number": "VAN-9910",
         "model": "Macan GTS",
         "color": "Papaya Metallic"
       },
       {
-        "citation_number": "EP1",
+        "citation_number": 2,
         "citation_date": "2023-10-01",
         "citation_time": "08:00:00",
-        "payment_status": "DUE",
+        "payment_status": 0,
         "lot_name": "Poulton Lot",
         "category": "Expired Permit",
-        "fee": "$30",
+        "fee": 30,
         "car_license_number": "CRICKET",
         "model": "Civic SI",
         "color": "Sonic Gray Pearl"
       }
+    ],
+    "IsAssigned": [
+      {
+        "permit_id": 1,
+        "phone": "7729119111",
+        "car_license_number": "SBF"
+      },
+      {
+        "permit_id": 2,
+        "phone": "266399121",
+        "car_license_number": "Clay1"
+      },
+      {
+        "permit_id": 3,
+        "phone": "366399121",
+        "car_license_number": "Hicks1"
+      },
+      {
+        "permit_id": 4,
+        "phone": "466399121",
+        "car_license_number": "Garcia1"
+      },
+      {
+        "permit_id": 5,
+        "phone": "122765234",
+        "car_license_number": "CRICKET"
+      },
+      {
+        "permit_id": 6,
+        "phone": "9194789124",
+        "car_license_number": "PROFX"
+      }
+    ],
+    "Shows": [
+      {
+        "citation_number": 1,
+        "lot_name":"Dan Allen Parking Deck"
+      },
+      {
+        "citation_number": 2,
+        "lot_name":"Poulton Lot"
+      }
+    ],
+    "HasLot": [
+      {
+        "permit_id": 1,
+        "lot_name": "Dan Allen Parking Deck"
+      },
+      {
+        "permit_id": 2,
+        "lot_name": "Poulton Deck"
+      },
+      {
+        "permit_id": 3,
+        "lot_name": "Poulton Deck"
+      },
+      {
+        "permit_id": 4,
+        "lot_name": "Poulton Deck"
+      },
+      {
+        "permit_id": 5,
+        "lot_name": "Partners Way Deck"
+      },
+      {
+        "permit_id": 6,
+        "lot_name": "Dan Allen Parking Deck"
+      }
+    ],
+    "HasZone": [
+      
     ]
   }
   
