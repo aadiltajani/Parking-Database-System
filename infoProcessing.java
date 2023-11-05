@@ -1,6 +1,7 @@
 import java.sql.*;
+import java.util.Scanner;
 
-public Class infoProcessing {
+public class infoProcessing {
     private Connection connection = null;
     private Statement statement = null;
     private ResultSet result = null;

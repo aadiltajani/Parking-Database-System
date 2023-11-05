@@ -1,20 +1,23 @@
 import java.sql.*;
+import java.util.Scanner;
 
 public class Main {
 
-// Update your user info alone here
+    // Update your user info alone here
     private static final String jdbcURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/$USER$"; // Using SERVICE_NAME
 
-// Update your user and password info here!
+    // Update your user and password info here!
     private static final String user = "$USER$";
     private static final String password = "$PASSWORD$";
 
-    public static void main(String[] args) {
-        
-        while (true) {
-            
-            private static Scanner sc = new Scanner(System.in);
+    private static Scanner sc = new Scanner(System.in);
 
+    public static void main(String[] args) {
+
+        //load demo data every time we start Main.java
+        DemoDataLoad demodataload = new DemoDataLoad();
+
+        do {
             System.out.println("Choose the operation from the main menu by inputting the respective number:");
             System.out.println("1. Information Processing");
             System.out.println("2. Maintaining permits and vehicle information for each driver");
@@ -24,18 +27,19 @@ public class Main {
 
             int option = sc.nextInt();
 
+            String query = new String();
             switch (option) {
                 case 1:
-                    informationProcessingMenu();
+                    query = informationProcessingMenu();
                     break;
                 case 2:
-                    maintainingPermitsMenu();
+                    query = maintainingPermitsMenu();
                     break;
                 case 3:
-                    generatingCitationsMenu();
+                    query = generatingCitationsMenu();
                     break;
                 case 4:
-                    reportsMenu();
+                    query = reportsMenu();
                     break;
                 case 100:
                     System.out.println("Exiting...");
@@ -44,16 +48,87 @@ public class Main {
                 default:
                     System.out.println("Invalid option. Please try again.");
                     break;
+            } while (query.isEmpty());
+
+
+        try {
+
+            // Loading the driver. This creates an instance of the driver
+            // and calls the registerDriver method to make MySql(MariaDB) Thin available to
+            // clients.
+            Class.forName("org.mariadb.jdbc.Driver");
+
+            Connection connection = null;
+            Statement statement = null;
+            ResultSet result = null;
+
+            try {
+                // Get a connection instance from the first driver in the
+                // DriverManager list that recognizes the URL jdbcURL
+                connection = DriverManager.getConnection(jdbcURL, user, password);
+
+                // Create a statement instance that will be sending
+                // your SQL statements to the DBMS
+                statement = connection.createStatement();
+
+                // Create the CATS table
+                statement.executeUpdate(query);
+
+                // Get records from the CATS table
+                result = statement.executeQuery("SELECT CNAME, WEIGHT FROM CATS");
+
+                // Now result contains the rows of cat names and weights from
+                // the CATS table. To access the data, use the method
+                // NEXT to access all rows in result, one row at a time
+                while (result.next()) {
+                    String name = result.getString("CNAME");
+                    float weight = result.getFloat("WEIGHT");
+                    System.out.println(name + "  " + weight);
+                }
+            } finally {
+                close(result);
+                close(statement);
+                close(connection);
+            }
+        } catch (Throwable oops) {
+            oops.printStackTrace();
+        }
+    }
+
+    static void close(Connection connection) {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (Throwable whatever) {
             }
         }
     }
 
-    private static void informationProcessingMenu() {
+    static void close(Statement statement) {
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (Throwable whatever) {
+            }
+        }
+    }
+
+    static void close(ResultSet result) {
+        if (result != null) {
+            try {
+                result.close();
+            } catch (Throwable whatever) {
+            }
+        }
+    }
+
+    private static String informationProcessingMenu() {
         int option;
+        String query = new String();
         do {
             System.out.println("\nInformation Processing Menu:");
             System.out.println("Choose the operation from the menu by inputting the respective number:");
-            System.out.println("1.Enter driver info"); 
+            System.out.println("1.Enter driver info");
             System.out.println("2.Update driver info");
             System.out.println("3.Delete driver info");
             System.out.println("4.Enter parking lot info");
@@ -78,11 +153,14 @@ public class Main {
 
             switch (option) {
                 case 1:
-                    query = infoProcessing.enterDriverInfo()
+                    infoProcessing enterDriverInfo = new infoProcessing();
+                    query = enterDriverInfo.enterDriverInfo();
                     // Implement code for entering driver information
                     break;
                 case 2:
                     // Update driver info
+                    infoProcessing updateDriverInfo = new infoProcessing();
+                    query = updateDriverInfo.updateDriverInfo();
                     // Implement code for updating driver information
                     break;
                 case 3:
@@ -158,16 +236,20 @@ public class Main {
                     // Implement code for updating citation payment
                     break;
                 case 100:
-                    return; // Return to main menu
+                    System.out.println("Exiting...");
+                    sc.close();
+                    break; // Return to main menu
                 default:
                     System.out.println("Invalid option. Please try again.");
                     break;
-                }
+            }
         } while (option != 100);
+        return query;
     }
 
-    private static void maintainingPermitsMenu() {
+    private static String maintainingPermitsMenu() {
         int option;
+        String query = new String();
         do {
             System.out.println("Choose the operation from the menu by inputting the respective number:");
             System.out.println("\nMaintaining Permits Menu:");
@@ -200,22 +282,27 @@ public class Main {
                     // Logic to remove vehicle
                     break;
                 case 100:
-                    return; // Return to the main menu
+                    System.out.println("Exiting...");
+                    sc.close();
+                    break; // Return to main menu
                 default:
                     System.out.println("Invalid option. Please try again.");
                     break;
-                }
+            }
         } while (option != 100);
+        return query;
     }
 
-    private static void generatingCitationsMenu() {
+    private static String generatingCitationsMenu() {
         int option;
+        String query = new String();
         do {
             System.out.println("Choose the operation from the menu by inputting the respective number:");
             System.out.println("\nGenerating and Maintaining Citations Menu:");
-            System.out.println("1.Detect parking violations by checking if a car has a valid permit in the lot,zone and space.");
+            System.out.println(
+                    "1.Detect parking violations by checking if a car has a valid permit in the lot,zone and space.");
             System.out.println("2.Generate a citation");
-            //need to change 29 based on tbd functions
+            // need to change 29 based on tbd functions
             System.out.println("3.Maintain a citation");
             System.out.println("4.Pay citation");
             System.out.println("5.Appeal citation");
@@ -227,22 +314,28 @@ public class Main {
                 // submenu options
                 // break;
                 case 100:
-                    return;
+                    System.out.println("Exiting...");
+                    sc.close();
+                    break; // Return to main menu
                 default:
                     System.out.println("Invalid option. Please try again.");
                     break;
             }
         } while (option != 100);
+        return query;
     }
 
-    private static void reportsMenu() {
+    private static String reportsMenu() {
         int option;
+        String query = new String();
         do {
             System.out.println("Choose the operation from the menu by inputting the respective number:");
             System.out.println("\nReports Menu:");
             System.out.println("1. Generate a report for citations");
-            System.out.println("2. For each lot, generate a report for the total number of citations given in all zones in the lot for a given month");
-            System.out.println("3. For each lot, generate a report for the total number of citations given in all zones in the lot for a given year");
+            System.out.println(
+                    "2. For each lot, generate a report for the total number of citations given in all zones in the lot for a given month");
+            System.out.println(
+                    "3. For each lot, generate a report for the total number of citations given in all zones in the lot for a given year");
             System.out.println("4. Return the list of zones for each lot as tuple pairs (lot, zone)");
             System.out.println("5. Return the number of cars that are currently in violation");
             System.out.println("6. Return the number of employees having permits for a given parking zone");
@@ -257,11 +350,13 @@ public class Main {
                     // Implement code to generate the citation report
                     break;
                 case 2:
-                    // For each lot, generate a report for the total number of citations given in all zones in the lot for a given month
+                    // For each lot, generate a report for the total number of citations given in
+                    // all zones in the lot for a given month
                     // Implement code for generating the monthly citation report for each lot
                     break;
                 case 3:
-                    // For each lot, generate a report for the total number of citations given in all zones in the lot for a given year
+                    // For each lot, generate a report for the total number of citations given in
+                    // all zones in the lot for a given year
                     // Implement code for generating the yearly citation report for each lot
                     break;
                 case 4:
@@ -285,89 +380,14 @@ public class Main {
                     // Implement code to find an available space of a specific type in a parking lot
                     break;
                 case 100:
-                    return; // Return to main menu
+                    System.out.println("Exiting...");
+                    sc.close();
+                    break; // Return to main menu
                 default:
                     System.out.println("Invalid option. Please try again.");
                     break;
-                }
-        } while (option != 100);
-    }
-
-    try {
-// Loading the driver. This creates an instance of the driver
-// and calls the registerDriver method to make MySql(MariaDB) Thin available to clients.
-        Class.forName("org.mariadb.jdbc.Driver");
-
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet result = null;
-
-        try {
-            // Get a connection instance from the first driver in the
-            // DriverManager list that recognizes the URL jdbcURL
-            connection = DriverManager.getConnection(jdbcURL, user, password);
-
-            // Create a statement instance that will be sending
-            // your SQL statements to the DBMS
-            statement = connection.createStatement();
-
-            // Create the CATS table
-            statement.executeUpdate("CREATE TABLE CATS (CNAME VARCHAR(20), " +
-            "TYPE VARCHAR(30), AGE INTEGER, WEIGHT FLOAT, SEX CHAR(1))");
-
-            // Populate the CATS table
-            statement.executeUpdate("INSERT INTO CATS VALUES ('Oscar', 'Egyptian Mau'," +
-            " 3, 23.4, 'F')");
-            statement.executeUpdate("INSERT INTO CATS VALUES ('Max', 'Turkish Van Cats'," +
-            " 2, 21.8, 'M')");
-            statement.executeUpdate("INSERT INTO CATS VALUES ('Tiger', 'Russian Blue'," +
-            " 1, 13.3, 'M')");
-            statement.executeUpdate("INSERT INTO CATS VALUES ('Sam', 'Persian Cats'," +
-            " 5, 24.3, 'M')");
-            statement.executeUpdate("INSERT INTO CATS VALUES ('Simba', 'Americal Bobtail'," +
-            " 3, 19.8, 'F')");
-            statement.executeUpdate("INSERT INTO CATS VALUES ('Lucy', 'Turkish Angora Cats'," +
-            "2, 22.4, 'F')");
-
-            // Get records from the CATS table
-        result = statement.executeQuery("SELECT CNAME, WEIGHT FROM CATS");
-
-        // Now result contains the rows of cat names and weights from
-        // the CATS table. To access the data, use the method
-        // NEXT to access all rows in result, one row at a time
-        while (result.next()) {
-            String name = result.getString("CNAME");
-            float weight = result.getFloat("WEIGHT");
-            System.out.println(name + "  " + weight);
-        }
-            } finally {
-                close(result);
-                close(statement);
-                close(connection);
             }
-} catch(Throwable oops) {
-            oops.printStackTrace();
-        }
+        } while (option != 100);
+        return query;
+    }
 }
-static void close(Connection connection) {
-        if(connection != null) {
-            try {
-            connection.close();
-            } catch(Throwable whatever) {}
-        }
-    }
-    static void close(Statement statement) {
-        if(statement != null) {
-            try {
-            statement.close();
-            } catch(Throwable whatever) {}
-        }
-    }
-    static void close(ResultSet result) {
-        if(result != null) {
-            try {
-            result.close();
-            } catch(Throwable whatever) {}
-        }
-    }
-    
