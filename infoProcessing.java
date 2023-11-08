@@ -2,13 +2,13 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class infoProcessing {
-    private Connection connection = null;
-    private Statement statement = null;
-    private ResultSet result = null;
+    // private Connection connection = null;
+    // private Statement statement = null;
+    // private ResultSet result = null;
 
-    public void infoProcessing(Connection connection){
-        this.statement = connection.createStatement();
-    }
+    // public void infoProcessing(Connection connection){
+    //     this.statement = connection.createStatement();
+    // }
 
     public String enterDriverInfo(){
         Scanner sc = new Scanner(System.in);
@@ -16,10 +16,11 @@ public class infoProcessing {
         String phoneNumber = sc.nextLine();
         System.out.print("\nEnter name: ");
         String name = sc.nextLine();
-        System.out.print("\nEnter status: ")
+        System.out.print("\nEnter status: ");
         String status = sc.nextLine();
-        System.out.print("\nEnter university id: ")
+        System.out.print("\nEnter university id: ");
         String id = sc.nextLine();
+        sc.close();
         return String.format("INSERT INTO Driver VALUES(%s, %s, %s, %s);", phoneNumber, name, status, id);
     }
 
@@ -28,9 +29,10 @@ public class infoProcessing {
         System.out.print("Enter phone number: ");
         String phoneNumber = sc.nextLine();
         System.out.print("\nUpdate status? (y/n): ");
-        if(sc.next() == 'y'){
+        if(sc.next() == "y"){
             System.out.print("\nEnter status : ");
         }
-
+        sc.close();
+        return String.format
     }
 }

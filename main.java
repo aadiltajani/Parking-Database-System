@@ -1,14 +1,37 @@
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.*;
+import java.util.Properties;
 import java.util.Scanner;
 
 public class Main {
 
     // Update your user info alone here
-    private static final String jdbcURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/$USER$"; // Using SERVICE_NAME
+    Properties properties = new Properties();
+    FileInputStream input = null;
+    String user = null;
+    String password = null;
 
-    // Update your user and password info here!
-    private static final String user = "$USER$";
-    private static final String password = "$PASSWORD$";
+    System.out.println("Success");
+
+    try {
+        input = new FileInputStream("../db_keys");
+        properties.load(input);
+
+        user = properties.getProperty("username");
+        password = properties.getProperty("password");
+
+        System.out.println("User: " + user);
+        System.out.println("Password: " + password);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+    String jdbcURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/" + user;
+    Class.forName("org.mariadb.jdbc.Driver");
+
+    Connection conn = DriverManager.getConnection(jdbcURL, user, password);
+    Statement stmt = conn.createStatement();
 
     private static Scanner sc = new Scanner(System.in);
 
@@ -17,6 +40,8 @@ public class Main {
         //load demo data every time we start Main.java
         DemoDataLoad demodataload = new DemoDataLoad();
 
+        int option = sc.nextInt();
+
         do {
             System.out.println("Choose the operation from the main menu by inputting the respective number:");
             System.out.println("1. Information Processing");
@@ -24,8 +49,6 @@ public class Main {
             System.out.println("3. Generating and maintaining citations");
             System.out.println("4. Reports");
             System.out.println("100. Exit");
-
-            int option = sc.nextInt();
 
             String query = new String();
             switch (option) {
@@ -93,6 +116,7 @@ public class Main {
         } catch (Throwable oops) {
             oops.printStackTrace();
         }
+    } while (option != 100);
     }
 
     static void close(Connection connection) {
