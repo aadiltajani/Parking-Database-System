@@ -1,14 +1,10 @@
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.*;
+import java.util.Properties;
 import java.util.Scanner;
 
 public class Main {
-
-    // Update your user info alone here
-    private static final String jdbcURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/$USER$"; // Using SERVICE_NAME
-
-    // Update your user and password info here!
-    private static final String user = "$USER$";
-    private static final String password = "$PASSWORD$";
 
     private static Scanner sc = new Scanner(System.in);
 
@@ -16,6 +12,49 @@ public class Main {
 
         //load demo data every time we start Main.java
         DemoDataLoad demodataload = new DemoDataLoad();
+
+        try {
+
+            // Loading the driver. This creates an instance of the driver
+            // and calls the registerDriver method to make MySql(MariaDB) Thin available to
+            // clients.
+            Properties properties = new Properties();
+            FileInputStream input = null;
+            String user = null;
+            String password = null;
+
+            System.out.println("Success");
+
+            try {
+                input = new FileInputStream("../db_keys");
+                properties.load(input);
+
+                user = properties.getProperty("username");
+                password = properties.getProperty("password");
+
+                System.out.println("User: " + user);
+                System.out.println("Password: " + password);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String jdbcURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/" + user;
+            Class.forName("org.mariadb.jdbc.Driver");
+
+            try {
+                // Get a connection instance from the first driver in the
+                // DriverManager list that recognizes the URL jdbcURL
+                Connection connection = DriverManager.getConnection(jdbcURL, user, password);
+
+                // Create a statement instance that will be sending
+                // your SQL statements to the DBMS
+                Statement statement = connection.createStatement();
+                
+            } catch (Throwable oops) {
+                oops.printStackTrace();
+            }
+
+        int option = sc.nextInt();
 
         do {
             System.out.println("Choose the operation from the main menu by inputting the respective number:");
@@ -25,21 +64,18 @@ public class Main {
             System.out.println("4. Reports");
             System.out.println("100. Exit");
 
-            int option = sc.nextInt();
-
-            String query = new String();
             switch (option) {
                 case 1:
-                    query = informationProcessingMenu();
+                    informationProcessingMenu();
                     break;
                 case 2:
-                    query = maintainingPermitsMenu();
+                    maintainingPermitsMenu();
                     break;
                 case 3:
-                    query = generatingCitationsMenu();
+                    generatingCitationsMenu();
                     break;
                 case 4:
-                    query = reportsMenu();
+                    reportsMenu();
                     break;
                 case 100:
                     System.out.println("Exiting...");
@@ -48,53 +84,14 @@ public class Main {
                 default:
                     System.out.println("Invalid option. Please try again.");
                     break;
-            } while (query.isEmpty());
-
-
-        try {
-
-            // Loading the driver. This creates an instance of the driver
-            // and calls the registerDriver method to make MySql(MariaDB) Thin available to
-            // clients.
-            Class.forName("org.mariadb.jdbc.Driver");
-
-            Connection connection = null;
-            Statement statement = null;
-            ResultSet result = null;
-
-            try {
-                // Get a connection instance from the first driver in the
-                // DriverManager list that recognizes the URL jdbcURL
-                connection = DriverManager.getConnection(jdbcURL, user, password);
-
-                // Create a statement instance that will be sending
-                // your SQL statements to the DBMS
-                statement = connection.createStatement();
-
-                // Create the CATS table
-                statement.executeUpdate(query);
-
-                // Get records from the CATS table
-                result = statement.executeQuery("SELECT CNAME, WEIGHT FROM CATS");
-
-                // Now result contains the rows of cat names and weights from
-                // the CATS table. To access the data, use the method
-                // NEXT to access all rows in result, one row at a time
-                while (result.next()) {
-                    String name = result.getString("CNAME");
-                    float weight = result.getFloat("WEIGHT");
-                    System.out.println(name + "  " + weight);
-                }
-            } finally {
-                close(result);
-                close(statement);
-                close(connection);
-            }
-        } catch (Throwable oops) {
-            oops.printStackTrace();
+            } while (option != 100);
+    
+        close(connection);
+        close(statement);
+    
+        } Finally 
         }
     }
-
     static void close(Connection connection) {
         if (connection != null) {
             try {
@@ -113,18 +110,8 @@ public class Main {
         }
     }
 
-    static void close(ResultSet result) {
-        if (result != null) {
-            try {
-                result.close();
-            } catch (Throwable whatever) {
-            }
-        }
-    }
-
-    private static String informationProcessingMenu() {
+    private static void informationProcessingMenu() {
         int option;
-        String query = new String();
         do {
             System.out.println("\nInformation Processing Menu:");
             System.out.println("Choose the operation from the menu by inputting the respective number:");
@@ -154,13 +141,13 @@ public class Main {
             switch (option) {
                 case 1:
                     infoProcessing enterDriverInfo = new infoProcessing();
-                    query = enterDriverInfo.enterDriverInfo();
+                    enterDriverInfo.enterDriverInfo();
                     // Implement code for entering driver information
                     break;
                 case 2:
                     // Update driver info
                     infoProcessing updateDriverInfo = new infoProcessing();
-                    query = updateDriverInfo.updateDriverInfo();
+                    updateDriverInfo.updateDriverInfo();
                     // Implement code for updating driver information
                     break;
                 case 3:
@@ -244,7 +231,6 @@ public class Main {
                     break;
             }
         } while (option != 100);
-        return query;
     }
 
     private static String maintainingPermitsMenu() {
@@ -293,9 +279,8 @@ public class Main {
         return query;
     }
 
-    private static String generatingCitationsMenu() {
+    private static void generatingCitationsMenu() {
         int option;
-        String query = new String();
         do {
             System.out.println("Choose the operation from the menu by inputting the respective number:");
             System.out.println("\nGenerating and Maintaining Citations Menu:");
@@ -322,12 +307,10 @@ public class Main {
                     break;
             }
         } while (option != 100);
-        return query;
     }
 
-    private static String reportsMenu() {
+    private static void reportsMenu() {
         int option;
-        String query = new String();
         do {
             System.out.println("Choose the operation from the menu by inputting the respective number:");
             System.out.println("\nReports Menu:");
@@ -388,6 +371,5 @@ public class Main {
                     break;
             }
         } while (option != 100);
-        return query;
     }
 }
