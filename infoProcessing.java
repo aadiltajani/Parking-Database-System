@@ -10,7 +10,7 @@ public class infoProcessing {
     //     this.statement = connection.createStatement();
     // }
 
-    public String enterDriverInfo(){
+    public void enterDriverInfo(Statement statement){
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter phone number: ");
         String phoneNumber = sc.nextLine();
@@ -21,10 +21,17 @@ public class infoProcessing {
         System.out.print("\nEnter university id: ");
         String id = sc.nextLine();
         sc.close();
-        return String.format("INSERT INTO Driver VALUES(%s, %s, %s, %s);", phoneNumber, name, status, id);
+        String query = String.format("INSERT INTO Driver VALUES(%s, %s, %s, %s);", phoneNumber, name, status, id);
+        try{
+            result = statement.executeUpdate(query);
+            System.out.println(result)
+        } catch (Throwable oops) {
+			oops.printStackTrace();
+		}
+       
     }
 
-    public String updateDriverInfo(){
+    public void updateDriverInfo(Statement statement){
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter phone number: ");
         String phoneNumber = sc.nextLine();
@@ -33,6 +40,6 @@ public class infoProcessing {
             System.out.print("\nEnter status : ");
         }
         sc.close();
-        return String.format
+
     }
 }
