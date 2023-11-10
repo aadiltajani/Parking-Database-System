@@ -109,4 +109,119 @@ public class infoProcessing {
             oops.printStackTrace();
         }
     }
+
+    public void enterZoneInfo(Statement statement){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter zone id: ");
+        String zone_id = sc.nextLine();
+        System.out.print("\nEnter lot name: ");
+        String lot_name = sc.nextLine();
+        sc.close();
+        String query = String.format("INSERT INTO Zone (zone_id, lot_name) VALUES(%s, %s);", zone_id, lot_name);
+        try{
+            statement.executeUpdate(query);
+            System.out.println("Zone Added");
+        } catch (Throwable oops) {
+			oops.printStackTrace();
+		}
+    }
+
+    public void updateZoneInfo(Statement statement){
+        // TODO impement
+    }
+
+    public void deleteZoneInfo(Statement statement){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter zone id: ");
+        String zone_id = sc.nextLine();
+        System.out.print("\nEnter lot name: ");
+        String lot_name = sc.nextLine();
+        sc.close();
+        try{
+            statement.executeUpdate(String.format("DELETE FROM Zone WHERE zone_id = %s AND lot_name = %s;",zone_id, lot_name));
+            System.out.println("Zone Deleted");
+        } catch (Throwable oops) {
+            oops.printStackTrace();
+        }
+    }
+
+
+    /*
+     * TODO possible changes to space table
+     */
+    public void enterSpaceInfo(Statement statement){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter space number: ");
+        int space_number = sc.nextInt();
+        System.out.print("\nEnter zone id: ");
+        String zone_id = sc.nextLine();
+        System.out.print("\nEnter lot name: ");
+        String lot_name = sc.nextLine();
+        System.out.print("\nEnter space type: ");
+        String space_type = sc.nextLine();
+        sc.close();
+        try{
+            statement.executeUpdate(String.format("INSERT INTO Space (space_number, lot_name, zone_id, space_type, avilability_status) VALUES(%d, %s, %s, %s, 1);", space_number, lot_name, zone_id, space_type));
+            System.out.println("Space Added");
+        } catch (Throwable oops) {
+            oops.printStackTrace();
+        }
+    }
+
+    public void updateSpaceInfo(Statement statement){
+        // TODO implement
+    }
+
+    public void deleteSpaceInfo(Statement statement){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter space number: ");
+        int space_number = sc.nextInt();
+        System.out.print("\nEnter zone id: ");
+        String zone_id = sc.nextLine();
+        System.out.print("\nEnter lot name: ");
+        String lot_name = sc.nextLine();
+        sc.close();
+        try{
+            statement.executeUpdate(String.format("DELETE FROM Space WHERE space_number = %d AND zone_id = %s AND lot_name = %s;",space_number, zone_id, lot_name));
+            System.out.println("Zone Deleted");
+        } catch (Throwable oops) {
+            oops.printStackTrace();
+        }
+    }
+
+    /*
+     * TODO possible other way to enter date
+     */
+    public void enterPermitInfo(Statement statement){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter permit id: ");
+        int permit_id = sc.nextInt();
+        System.out.print("\nEnter space type: ");
+        String space_type = sc.nextLine();
+        System.out.print("\nEnter permit type: ");
+        String permit_type = sc.nextLine();
+        System.out.print("\nEnter Start Date in format YYYY-MM-DD: ");
+        String start_date = sc.nextLine();
+        System.out.print("\nEnter Expiration Date in format YYYY-MM-DD: ");
+        String expiration_date = sc.nextLine();
+        System.out.print("\nEnter Expiration Time in format HH:MM:SS: ");
+        String expiration_time = sc.nextLine();
+
+        sc.close();
+         try{
+            statement.executeUpdate(String.format("INSERT INTO Permit (permit_id, space_type, permit_type, start_date, expiration_date, expiration_time) VALUES (%d, %s, %s, %s', %s, %s);",permit_id, space_type, permit_type, start_date, expiration_date, expiration_time));
+            System.out.println("Permit Added");
+        } catch (Throwable oops) {
+            oops.printStackTrace();
+        }
+    }
+
+    public void updatePermitInfo(){
+        // TODO
+    }
+
+    public void deletePermitInfo(Statement statement){
+        // TODO
+    }
+
 }
