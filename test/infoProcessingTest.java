@@ -1,11 +1,15 @@
 package test;
-import static org.junit.jupiter.api;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
-import java.util.Scanner;
 
 import src.infoProcessing;
 
@@ -18,28 +22,42 @@ public class infoProcessingTest {
 
 
     @BeforeAll
-    public void initiateConnection(){
-        getUser();
-        connectToDatabase("jdbc:mariadb://classdb2.csc.ncsu.edu:3306/" + user, user, password);
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("Shutting down...");
+    public static void initiateConnection(){
+        try {
+            getUser();
+            connectToDatabase("jdbc:mariadb://classdb2.csc.ncsu.edu:3306/" + user, user, password);
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                System.out.println("Shutting down...");
+                close();
+            }));
+            try{
+                statement.executeUpdate("DELETE FROM Driver WHERE phone = \'9108887955\'");
+            } catch(Exception e){
+                // ignore
+            }
+            
+        }catch (Exception e) {
+            System.out.println("Error Occurred" + e);
             close();
-        }));
+        }
     }
 
     @AfterAll
-    public void closeConnection(){
+    public static void closeConnection(){
         close();
     }
     
     @Test
     public void testEnterDriverInfo(){
-        IP.enterDriverInfoHelper(statement, "9108887955", "Washington,George", "Student", "gwashU");
-        ResultSet result = statement.executeQuery("SELECT * FROM Driver WHERE phone ='9108887955';");
-        assertEquals("gwashU", result.getString("univ_id"));
-        assertEquals("Washington,George", result.getString("name"));
-
-
+        IP.enterDriverInfoHelper(statement, "9108887955", "Washington,George", "S", "gwashU");
+        try{
+            ResultSet result = statement.executeQuery("SELECT * FROM Driver WHERE phone =\'9108887955\';");
+            result.next();
+            assertEquals("gwashU", result.getString("univ_id"));
+            assertEquals("Washington,George", result.getString("name"));
+        } catch(Exception e) {
+            fail();
+        }
     }
 
 
@@ -48,7 +66,7 @@ public class infoProcessingTest {
 		Properties properties = new Properties();
         FileInputStream input = null;
         try {
-            input = new FileInputStream("../db_keys");
+            input = new FileInputStream("./db_keys");
             properties.load(input);
             user = properties.getProperty("username");
             password = properties.getProperty("password");

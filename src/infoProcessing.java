@@ -10,7 +10,7 @@ public class infoProcessing {
         String phoneNumber = sc.nextLine();
         System.out.print("\nEnter name: ");
         String name = sc.nextLine();
-        System.out.print("\nEnter status: ");
+        System.out.print("\nEnter status E, V, or S: ");
         String status = sc.nextLine();
         System.out.print("\nEnter university id: ");
         String id = sc.nextLine();
@@ -26,7 +26,7 @@ public class infoProcessing {
     }
 
     public void enterDriverInfoHelper(Statement statement, String phoneNumber, String name, String status, String id){
-        String query = String.format("INSERT INTO Driver (phone, name, status, univ_id) VALUES(%s, %s, %s, %s);", phoneNumber, name, status, id);
+        String query = String.format("INSERT INTO Driver (phone, name, status, univ_id) VALUES (\'%s\', \'%s\', \'%s\', \'%s\');", phoneNumber, name, status, id);
         try{
             statement.executeUpdate(query);
             System.out.println("Driver Added");
