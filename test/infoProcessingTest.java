@@ -1,7 +1,5 @@
 package test;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import org.junit.jupiter.api;
+import static org.junit.jupiter.api;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,13 +10,14 @@ import java.util.Scanner;
 import src.infoProcessing;
 
 public class infoProcessingTest {
-    public static Connection connection = null;
-    public static Statement statement = null;
-    public static String user = null;
-    public static String password = null;
-    private static Scanner sc = new Scanner(System.in);
+    private static Connection connection = null;
+    private static Statement statement = null;
+    private static String user = null;
+    private static String password = null;
+    private infoProcessing IP = new infoProcessing();
 
-    @BeforeEach
+
+    @BeforeAll
     public void initiateConnection(){
         getUser();
         connectToDatabase("jdbc:mariadb://classdb2.csc.ncsu.edu:3306/" + user, user, password);
@@ -27,14 +26,20 @@ public class infoProcessingTest {
             close();
         }));
     }
+
+    @AfterAll
+    public void closeConnection(){
+        close();
+    }
     
     @Test
     public void testEnterDriverInfo(){
-        Statement statement = null;
+        IP.enterDriverInfoHelper(statement, "9108887955", "Washington,George", "Student", "gwashU");
+        ResultSet result = statement.executeQuery("SELECT * FROM Driver WHERE phone ='9108887955';");
+        assertEquals("gwashU", result.getString("univ_id"));
+        assertEquals("Washington,George", result.getString("name"));
 
-        infoProcessing in = new infoProcessing();
-        in.enterDriverInfo(statement);
-        assertEquals(1,1);
+
     }
 
 

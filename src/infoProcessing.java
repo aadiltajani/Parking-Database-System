@@ -3,13 +3,6 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class infoProcessing {
-    // private Connection connection = null;
-    // private Statement statement = null;
-    // private ResultSet result = null;
-
-    // public void infoProcessing(Connection connection){
-    //     this.statement = connection.createStatement();
-    // }
 
     public void enterDriverInfo(Statement statement){
         Scanner sc = new Scanner(System.in);
@@ -30,6 +23,16 @@ public class infoProcessing {
 			oops.printStackTrace();
 		}
        
+    }
+
+    public void enterDriverInfoHelper(Statement statement, String phoneNumber, String name, String status, String id){
+        String query = String.format("INSERT INTO Driver (phone, name, status, univ_id) VALUES(%s, %s, %s, %s);", phoneNumber, name, status, id);
+        try{
+            statement.executeUpdate(query);
+            System.out.println("Driver Added");
+        } catch (Throwable oops) {
+			oops.printStackTrace();
+		}
     }
 
     public void updateDriverInfo(Statement statement){
@@ -110,6 +113,11 @@ public class infoProcessing {
         }
     }
 
+    /*
+     * Does the following:
+     * Enter zone info
+     * Assign zones to each parking lot
+     */
     public void enterZoneInfo(Statement statement){
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter zone id: ");
@@ -221,7 +229,63 @@ public class infoProcessing {
     }
 
     public void deletePermitInfo(Statement statement){
-        // TODO
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter permit id: ");
+        int permit_id = sc.nextInt();
+        sc.close();
+         try{
+            statement.executeUpdate(String.format("DELETE from Permit WHERE permit_id = %d;",permit_id));
+            System.out.println("Permit Deleted");
+        } catch (Throwable oops) {
+            oops.printStackTrace();
+        }
+    }
+
+    public void assignTypeToSpace(Statement statement){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter space number: ");
+        int space_number = sc.nextInt();
+        System.out.print("\nEnter zone id: ");
+        String zone_id = sc.nextLine();
+        System.out.print("\nEnter lot name: ");
+        String lot_name = sc.nextLine();
+        System.out.print("\nEnter space type: ");
+        String space_type = sc.nextLine();
+        sc.close();
+        try{
+            statement.executeUpdate(String.format("UPDATE Space SET space_type = %s WHERE space_number = %d AND lot_name = %s AND zone_id = %s;", space_type, space_number, lot_name, zone_id));
+            System.out.println("Space Type Assigned");
+        } catch (Throwable oops) {
+            oops.printStackTrace();
+        }
+    }
+
+    public void requestCitationAppeal(Statement statement){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter phone: ");
+        String phone = sc.nextLine();
+        System.out.print("\nEnter citation number: ");
+        int citation_number = sc.nextInt();
+        sc.close();
+        try{
+            statement.executeUpdate(String.format("INSERT INTO Appeals VALUES (%s,%d, 'Pending');", phone, citation_number));
+            System.out.println("Citation Appealed");
+        } catch (Throwable oops) {
+            oops.printStackTrace();
+        }
+    }
+
+    public void updateCitationPayment(Statement statement){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("\nEnter citation number: ");
+        int citation_number = sc.nextInt();
+        sc.close();
+         try{
+            statement.executeUpdate(String.format("UPDATE Citation set payment_status = 1 WHERE citation_number = %d;", citation_number));
+            System.out.println("Citation Payment Successful");
+        } catch (Throwable oops) {
+            oops.printStackTrace();
+        }
     }
 
 }
