@@ -1,6 +1,7 @@
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
+import java.util.InputMismatchException;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -56,8 +57,8 @@ public class Main {
                         break;
                 }
             } while (option != 100);
-            
-            close();            
+
+            close();
         } catch (Exception e) {
             System.out.println("Error Occurred" + e);
             close();
@@ -65,7 +66,7 @@ public class Main {
     }
 
     static void getUser() {
-		Properties properties = new Properties();
+        Properties properties = new Properties();
         FileInputStream input = null;
         try {
             input = new FileInputStream("../db_keys");
@@ -76,292 +77,318 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-	}
+    }
 
-    static void connectToDatabase(String jdbcURL, String user, String password) throws ClassNotFoundException, SQLException {
-		Class.forName("org.mariadb.jdbc.Driver");
-		connection = DriverManager.getConnection(jdbcURL, user, password);
-		statement = connection.createStatement();
+    static void connectToDatabase(String jdbcURL, String user, String password)
+            throws ClassNotFoundException, SQLException {
+        Class.forName("org.mariadb.jdbc.Driver");
+        connection = DriverManager.getConnection(jdbcURL, user, password);
+        statement = connection.createStatement();
         System.out.println("Connected to Database");
-	}
+    }
 
     static void close() {
         if (connection != null) {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		if (statement != null) {
-			try {
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
         System.out.println("Database Connection Terminated");
     }
 
     private static void informationProcessingMenu() {
-        int option;
+        int option = 0;
         do {
-            System.out.println("\nInformation Processing Menu:");
-            System.out.println("Choose the operation from the menu by inputting the respective number:");
-            System.out.println("1.Enter driver info");
-            System.out.println("2.Update driver info");
-            System.out.println("3.Delete driver info");
-            System.out.println("4.Enter parking lot info");
-            System.out.println("5.Update parking lot info");
-            System.out.println("6.Delete parking lot info");
-            System.out.println("7.Enter parking lot info");
-            System.out.println("8.Enter zone info");
-            System.out.println("9.Update lot info");
-            System.out.println("10.Delete lot info");
-            System.out.println("11.Enter space info");
-            System.out.println("12.Update space info");
-            System.out.println("13.Delete space info");
-            System.out.println("14.Enter permit info");
-            System.out.println("15.Update permit info");
-            System.out.println("16.Delete permit info");
-            System.out.println("17.Assign zones to each parking lot");
-            System.out.println("18.Assign a type to a given space.");
-            System.out.println("19.Request citation appeal");
-            System.out.println("20.Update citation payment");
-            System.out.println("100. Return to main menu");
-            option = sc.nextInt();
+            try {
+                System.out.println("\nInformation Processing Menu:");
+                System.out.println("Choose the operation from the menu by inputting the respective number:");
+                System.out.println("1.Enter driver info");
+                System.out.println("2.Update driver info");
+                System.out.println("3.Delete driver info");
+                System.out.println("4.Enter parking lot info");
+                System.out.println("5.Update parking lot info");
+                System.out.println("6.Delete parking lot info");
+                System.out.println("7.Enter parking lot info");
+                System.out.println("8.Enter zone info");
+                System.out.println("9.Update lot info");
+                System.out.println("10.Delete lot info");
+                System.out.println("11.Enter space info");
+                System.out.println("12.Update space info");
+                System.out.println("13.Delete space info");
+                System.out.println("14.Enter permit info");
+                System.out.println("15.Update permit info");
+                System.out.println("16.Delete permit info");
+                System.out.println("17.Assign zones to each parking lot");
+                System.out.println("18.Assign a type to a given space.");
+                System.out.println("19.Request citation appeal");
+                System.out.println("20.Update citation payment");
+                System.out.println("100. Return to main menu");
+                option = sc.nextInt();
+                sc.nextLine();
 
-            switch (option) {
-                case 1:
-                    // infoProcessing enterDriverInfo = new infoProcessing();
-                    // enterDriverInfo.enterDriverInfo();
-                    // Implement code for entering driver information
-                    break;
-                case 2:
-                    // Update driver info
-                    // infoProcessing updateDriverInfo = new infoProcessing();
-                    // updateDriverInfo.updateDriverInfo();
-                    // Implement code for updating driver information
-                    break;
-                case 3:
-                    // Delete driver info
-                    // Implement code for deleting driver information
-                    break;
-                case 4:
-                    // Enter parking lot info
-                    // Implement code for entering parking lot information
-                    break;
-                case 5:
-                    // Update parking lot info
-                    // Implement code for updating parking lot information
-                    break;
-                case 6:
-                    // Delete parking lot info
-                    // Implement code for deleting parking lot information
-                    break;
-                case 7:
-                    // Enter parking lot info
-                    // Implement code for entering parking lot information
-                    break;
-                case 8:
-                    // Enter zone info
-                    // Implement code for entering zone information
-                    break;
-                case 9:
-                    // Update lot info
-                    // Implement code for updating zone information
-                    break;
-                case 10:
-                    // Delete lot info
-                    // Implement code for deleting zone information
-                    break;
-                case 11:
-                    // Enter space info
-                    // Implement code for entering space information
-                    break;
-                case 12:
-                    // Update space info
-                    // Implement code for updating space information
-                    break;
-                case 13:
-                    // Delete space info
-                    // Implement code for deleting space information
-                    break;
-                case 14:
-                    // Enter permit info
-                    // Implement code for entering permit information
-                    break;
-                case 15:
-                    // Update permit info
-                    // Implement code for updating permit information
-                    break;
-                case 16:
-                    // Delete permit info
-                    // Implement code for deleting permit information
-                    break;
-                case 17:
-                    // Assign zones to each parking lot
-                    // Implement code for assigning zones to parking lots
-                    break;
-                case 18:
-                    // Assign a type to a given space
-                    // Implement code for assigning space type
-                    break;
-                case 19:
-                    // Request citation appeal
-                    // Implement code for appealing a citation
-                    break;
-                case 20:
-                    // Update citation payment
-                    // Implement code for updating citation payment
-                    break;
-                case 100:
-                    System.out.println("Exiting...");
-                    sc.close();
-                    break; // Return to main menu
-                default:
-                    System.out.println("Invalid option. Please try again.");
-                    break;
+                switch (option) {
+                    case 1:
+                        // infoProcessing enterDriverInfo = new infoProcessing();
+                        // enterDriverInfo.enterDriverInfo();
+                        // Implement code for entering driver information
+                        break;
+                    case 2:
+                        // Update driver info
+                        // infoProcessing updateDriverInfo = new infoProcessing();
+                        // updateDriverInfo.updateDriverInfo();
+                        // Implement code for updating driver information
+                        break;
+                    case 3:
+                        // Delete driver info
+                        // Implement code for deleting driver information
+                        break;
+                    case 4:
+                        // Enter parking lot info
+                        // Implement code for entering parking lot information
+                        break;
+                    case 5:
+                        // Update parking lot info
+                        // Implement code for updating parking lot information
+                        break;
+                    case 6:
+                        // Delete parking lot info
+                        // Implement code for deleting parking lot information
+                        break;
+                    case 7:
+                        // Enter parking lot info
+                        // Implement code for entering parking lot information
+                        break;
+                    case 8:
+                        // Enter zone info
+                        // Implement code for entering zone information
+                        break;
+                    case 9:
+                        // Update lot info
+                        // Implement code for updating zone information
+                        break;
+                    case 10:
+                        // Delete lot info
+                        // Implement code for deleting zone information
+                        break;
+                    case 11:
+                        // Enter space info
+                        // Implement code for entering space information
+                        break;
+                    case 12:
+                        // Update space info
+                        // Implement code for updating space information
+                        break;
+                    case 13:
+                        // Delete space info
+                        // Implement code for deleting space information
+                        break;
+                    case 14:
+                        // Enter permit info
+                        // Implement code for entering permit information
+                        break;
+                    case 15:
+                        // Update permit info
+                        // Implement code for updating permit information
+                        break;
+                    case 16:
+                        // Delete permit info
+                        // Implement code for deleting permit information
+                        break;
+                    case 17:
+                        // Assign zones to each parking lot
+                        // Implement code for assigning zones to parking lots
+                        break;
+                    case 18:
+                        // Assign a type to a given space
+                        // Implement code for assigning space type
+                        break;
+                    case 19:
+                        // Request citation appeal
+                        // Implement code for appealing a citation
+                        break;
+                    case 20:
+                        // Update citation payment
+                        // Implement code for updating citation payment
+                        break;
+                    case 100:
+                        System.out.println("Exiting...");
+                        sc.close();
+                        break; // Return to main menu
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                        break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                sc.nextLine(); // Consume the invalid input and discard it
             }
         } while (option != 100);
     }
 
-    private static String maintainingPermitsMenu() {
-        int option;
-        String query = new String();
+    private static void maintainingPermitsMenu() {
+        int option = 0;
         do {
-            System.out.println("Choose the operation from the menu by inputting the respective number:");
-            System.out.println("\nMaintaining Permits Menu:");
-            System.out.println("1. Assign permits to drivers");
-            System.out.println("2. Enter permit information");
-            System.out.println("3. Update permit information");
-            System.out.println("4. Add vehicle");
-            System.out.println("5. Update vehicle ownership information");
-            System.out.println("6. Remove vehicle");
-            System.out.println("100. Return to main menu");
-            option = sc.nextInt();
+            try {
+                System.out.println("Choose the operation from the menu by inputting the respective number:");
+                System.out.println("\nMaintaining Permits Menu:");
+                System.out.println("1. Assign permits to drivers");
+                System.out.println("2. Enter permit information");
+                System.out.println("3. Update permit information");
+                System.out.println("4. Add vehicle");
+                System.out.println("5. Update vehicle ownership information");
+                System.out.println("6. Remove vehicle");
+                System.out.println("100. Return to main menu");
+                option = sc.nextInt();
 
-            switch (option) {
-                case 1:
-                    // Logic to assign permits to drivers
-                    break;
-                case 2:
-                    // Logic to enter permit information
-                    break;
-                case 3:
-                    // Logic to update permit information
-                    break;
-                case 4:
-                    // Logic to add vehicle
-                    break;
-                case 5:
-                    // Logic to update vehicle ownership information
-                    break;
-                case 6:
-                    // Logic to remove vehicle
-                    break;
-                case 100:
-                    System.out.println("Exiting...");
-                    sc.close();
-                    break; // Return to main menu
-                default:
-                    System.out.println("Invalid option. Please try again.");
-                    break;
+                switch (option) {
+                    case 1:
+                        // Logic to assign permits to drivers
+                        break;
+                    case 2:
+                        // Logic to enter permit information
+                        break;
+                    case 3:
+                        // Logic to update permit information
+                        break;
+                    case 4:
+                        // Logic to add vehicle
+                        break;
+                    case 5:
+                        // Logic to update vehicle ownership information
+                        break;
+                    case 6:
+                        // Logic to remove vehicle
+                        break;
+                    case 100:
+                        System.out.println("Exiting...");
+                        sc.close();
+                        break; // Return to main menu
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                        break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                sc.nextLine(); // Consume the invalid input and discard it
             }
         } while (option != 100);
-        return query;
     }
 
     private static void generatingCitationsMenu() {
-        int option;
+        int option = 0;
         do {
-            System.out.println("Choose the operation from the menu by inputting the respective number:");
-            System.out.println("\nGenerating and Maintaining Citations Menu:");
-            System.out.println(
-                    "1.Detect parking violations by checking if a car has a valid permit in the lot,zone and space.");
-            System.out.println("2.Generate a citation");
-            // need to change 29 based on tbd functions
-            System.out.println("3.Maintain a citation");
-            System.out.println("4.Pay citation");
-            System.out.println("5.Appeal citation");
-            System.out.println("6. Return to main menu");
-            option = sc.nextInt();
+            try {
+                System.out.println("Choose the operation from the menu by inputting the respective number:");
+                System.out.println("\nGenerating and Maintaining Citations Menu:");
+                System.out.println(
+                        "1.Detect parking violations by checking if a car has a valid permit in the lot,zone and space.");
+                System.out.println("2.Generate a citation");
+                // need to change 29 based on tbd functions
+                System.out.println("3.Maintain a citation");
+                System.out.println("4.Pay citation");
+                System.out.println("5.Appeal citation");
+                System.out.println("6. Return to main menu");
+                option = sc.nextInt();
 
-            switch (option) {
-                // case 27 to 31:
-                // submenu options
-                // break;
-                case 100:
-                    System.out.println("Exiting...");
-                    sc.close();
-                    break; // Return to main menu
-                default:
-                    System.out.println("Invalid option. Please try again.");
-                    break;
+                switch (option) {
+                    case 1:
+
+                    case 2:
+
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 100:
+                        System.out.println("Exiting...");
+                        sc.close();
+                        break; // Return to main menu
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                        break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                sc.nextLine(); // Consume the invalid input and discard it
             }
         } while (option != 100);
     }
 
     private static void reportsMenu() {
-        int option;
+        int option = 0;
         do {
-            System.out.println("Choose the operation from the menu by inputting the respective number:");
-            System.out.println("\nReports Menu:");
-            System.out.println("1. Generate a report for citations");
-            System.out.println(
-                    "2. For each lot, generate a report for the total number of citations given in all zones in the lot for a given month");
-            System.out.println(
-                    "3. For each lot, generate a report for the total number of citations given in all zones in the lot for a given year");
-            System.out.println("4. Return the list of zones for each lot as tuple pairs (lot, zone)");
-            System.out.println("5. Return the number of cars that are currently in violation");
-            System.out.println("6. Return the number of employees having permits for a given parking zone");
-            System.out.println("7. Return permit information given an ID or phone number");
-            System.out.println("8. Return an available space number given a space type in a given parking lot");
-            System.out.println("100. Return to main menu");
-            option = sc.nextInt();
+            try {
+                System.out.println("Choose the operation from the menu by inputting the respective number:");
+                System.out.println("\nReports Menu:");
+                System.out.println("1. Generate a report for citations");
+                System.out.println(
+                        "2. For each lot, generate a report for the total number of citations given in all zones in the lot for a given month");
+                System.out.println(
+                        "3. For each lot, generate a report for the total number of citations given in all zones in the lot for a given year");
+                System.out.println("4. Return the list of zones for each lot as tuple pairs (lot, zone)");
+                System.out.println("5. Return the number of cars that are currently in violation");
+                System.out.println("6. Return the number of employees having permits for a given parking zone");
+                System.out.println("7. Return permit information given an ID or phone number");
+                System.out.println("8. Return an available space number given a space type in a given parking lot");
+                System.out.println("100. Return to main menu");
+                option = sc.nextInt();
 
-            switch (option) {
-                case 1:
-                    // Generate a report for citations
-                    // Implement code to generate the citation report
-                    break;
-                case 2:
-                    // For each lot, generate a report for the total number of citations given in
-                    // all zones in the lot for a given month
-                    // Implement code for generating the monthly citation report for each lot
-                    break;
-                case 3:
-                    // For each lot, generate a report for the total number of citations given in
-                    // all zones in the lot for a given year
-                    // Implement code for generating the yearly citation report for each lot
-                    break;
-                case 4:
-                    // Return the list of zones for each lot as tuple pairs (lot, zone)
-                    // Implement code to return the list of zones for each parking lot
-                    break;
-                case 5:
-                    // Return the number of cars that are currently in violation
-                    // Implement code to count the number of cars in violation
-                    break;
-                case 6:
-                    // Return the number of employees having permits for a given parking zone
-                    // Implement code to count the employees with permits in a specific zone
-                    break;
-                case 7:
-                    // Return permit information given an ID or phone number
-                    // Implement code to retrieve permit information by ID or phone number
-                    break;
-                case 8:
-                    // Return an available space number given a space type in a given parking lot
-                    // Implement code to find an available space of a specific type in a parking lot
-                    break;
-                case 100:
-                    System.out.println("Exiting...");
-                    sc.close();
-                    break; // Return to main menu
-                default:
-                    System.out.println("Invalid option. Please try again.");
-                    break;
+                switch (option) {
+                    case 1:
+                        // Generate a report for citations
+                        // Implement code to generate the citation report
+                        break;
+                    case 2:
+                        // For each lot, generate a report for the total number of citations given in
+                        // all zones in the lot for a given month
+                        // Implement code for generating the monthly citation report for each lot
+                        break;
+                    case 3:
+                        // For each lot, generate a report for the total number of citations given in
+                        // all zones in the lot for a given year
+                        // Implement code for generating the yearly citation report for each lot
+                        break;
+                    case 4:
+                        // Return the list of zones for each lot as tuple pairs (lot, zone)
+                        // Implement code to return the list of zones for each parking lot
+                        break;
+                    case 5:
+                        // Return the number of cars that are currently in violation
+                        // Implement code to count the number of cars in violation
+                        break;
+                    case 6:
+                        // Return the number of employees having permits for a given parking zone
+                        // Implement code to count the employees with permits in a specific zone
+                        break;
+                    case 7:
+                        // Return permit information given an ID or phone number
+                        // Implement code to retrieve permit information by ID or phone number
+                        break;
+                    case 8:
+                        // Return an available space number given a space type in a given parking lot
+                        // Implement code to find an available space of a specific type in a parking lot
+                        break;
+                    case 100:
+                        System.out.println("Exiting...");
+                        sc.close();
+                        break; // Return to main menu
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                        break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                sc.nextLine(); // Consume the invalid input and discard it
             }
         } while (option != 100);
     }
