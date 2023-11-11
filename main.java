@@ -318,6 +318,11 @@ public class Main {
                         }
                         break;
                     case 3:
+                        try {
+                            Citations.maintainCitation(connection);       
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }         
                         continue;
                     case 4:
                         try {

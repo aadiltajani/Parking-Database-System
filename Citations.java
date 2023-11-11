@@ -221,24 +221,209 @@ public class Citations {
     }
 
     // Function to maintain a citation
-    public static void maintainCitation(Connection connection, int citationNumber, String newCategory, String newCitationTime) throws SQLException {
-        String updateCategoryQuery = "UPDATE Citation SET category = ? WHERE citation_number = ?";
-        String updateCitationTimeQuery = "UPDATE Citation SET citation_time = ? WHERE citation_number = ?";
+    public static void maintainCitation(Connection connection) throws Exception {
+        Scanner scanner = new Scanner(System.in);
 
-        try (PreparedStatement updateCategoryStatement = connection.prepareStatement(updateCategoryQuery);
-             PreparedStatement updateCitationTimeStatement = connection.prepareStatement(updateCitationTimeQuery)) {
+        try {
+            // Take user input for Citation Number
+            System.out.print("Enter Citation Number: ");
+            int citation_number = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
 
-            // Update category
-            updateCategoryStatement.setString(1, newCategory);
-            updateCategoryStatement.setInt(2, citationNumber);
-            updateCategoryStatement.executeUpdate();
+            // Check if the citation number exists
+            String selectQuery = "SELECT * FROM Citation WHERE citation_number = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+                preparedStatement.setInt(1, citation_number);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (!resultSet.next()) {
+                        System.out.println("Citation with Citation Number " + citation_number + " does not exist.");
+                        return;
+                    }
+                }
+            }
+            
+            // Display current details of the citation
+            DisplayGetCitation(connection, citation_number);
+            selectQuery = "SELECT C.*, S.lot_name, G.car_license_number " +
+                "FROM Citation C " +
+                "INNER JOIN Shows S ON C.citation_number = S.citation_number " +
+                "INNER JOIN GivenTo G ON C.citation_number = G.citation_number " +
+                "WHERE C.citation_number = ?" ;
+                
+            try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+                preparedStatement.setInt(1, citation_number);
 
-            // Update citation time
-            updateCitationTimeStatement.setString(1, newCitationTime);
-            updateCitationTimeStatement.setInt(2, citationNumber);
-            updateCitationTimeStatement.executeUpdate();
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()){
+                        Date citation_date = resultSet.getDate("C.citation_date");
+                        Time citation_time = resultSet.getTime("C.citation_time");
+                        String category = resultSet.getString("C.category");
+                        float fee = resultSet.getFloat("C.fee");
+                        boolean payment_status = resultSet.getBoolean("C.payment_status");
+                        String lot_name = resultSet.getString("S.lot_name");
+                        String car_license_number = resultSet.getString("G.car_license_number");
+                        System.out.print("\nDo you want to make changes to this citation? (yes/no): ");
+                        String userChoice = scanner.nextLine().trim().toLowerCase();
 
-            System.out.println("Citation updated successfully.");
+                        if (userChoice.equals("yes")) {
+                            // Take user input for new details
+
+                            System.out.print("Do you want to change the Citation Date? (yes/no): ");
+                            if (scanner.next().trim().equalsIgnoreCase("yes")) {
+                                System.out.print("Citation Date (YYYY-MM-DD): ");
+                                String citation_date_str = scanner.next();
+                                java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(citation_date_str);
+                                citation_date = new Date(utilDate.getTime());
+                            }
+
+                            System.out.print("Do you want to change the Citation Time? (yes/no): ");
+                            if (scanner.next().trim().equalsIgnoreCase("yes")) {
+                                System.out.print("Citation Time (HH:mm:ss): ");
+                                String citation_time_str = scanner.next();
+                                citation_time = Time.valueOf(citation_time_str);
+                            }
+
+                            scanner.nextLine();
+
+                            System.out.print("Do you want to change the Category? (yes/no): ");
+                            if (scanner.next().trim().equalsIgnoreCase("yes")) {
+                                scanner.nextLine();
+                                System.out.print("Category(Invalid Permit, Expired Permit, No Permit): ");
+                                category = scanner.nextLine().trim();
+                                List<String> permitCategories = List.of("Expired Permit", "Invalid Permit", "No Permit");
+                                if (!permitCategories.contains(category)) {
+                                    scanner.close();
+                                    System.out.println("Invalid Category");
+                                    return;
+                                }
+                            }
+
+                            System.out.print("Do you want to change the Car License Number? (yes/no): ");
+                            if (scanner.next().trim().equalsIgnoreCase("yes")) {
+                                System.out.print("Car License Number: ");
+                                car_license_number = scanner.next().trim();
+                            }
+
+                            System.out.print("Do you want to change the Fee? (yes/no): ");
+                            if (scanner.next().trim().equalsIgnoreCase("yes")) {
+                                System.out.print("Fee: ");
+                                fee = scanner.nextFloat();
+                            }
+
+                            scanner.nextLine();
+
+                            System.out.print("Do you want to change the Lot Name? (yes/no): ");
+                            if (scanner.next().trim().equalsIgnoreCase("yes")) {
+                                scanner.nextLine();
+                                System.out.print("Lot Name: ");
+                                lot_name = scanner.nextLine().trim();
+                            }
+
+                            System.out.print("Do you want to change the Payment Status? (yes/no): ");
+                            if (scanner.next().trim().equalsIgnoreCase("yes")) {
+                                System.out.print("Payment Status (0 for unpaid, 1 for paid): ");
+                                payment_status = scanner.nextInt() == 0 ? false : true;
+                            }
+
+
+                            // Update the Citation table
+                            try {
+                                connection.setAutoCommit(false);
+                                String updateCitationQuery = "UPDATE Citation SET citation_date = ?, citation_time = ?, category = ?, fee = ?, payment_status = ? WHERE citation_number = ?";
+                                String updateLotQuery = "UPDATE Shows SET lot_name = ? WHERE citation_number = ?";
+                                String updateLicenseQuery = "UPDATE GivenTo SET car_license_number = ? WHERE citation_number = ?";
+                                try (PreparedStatement preparedStatementCitation = connection.prepareStatement(updateCitationQuery)) {
+                                    preparedStatementCitation.setDate(1, citation_date);
+                                    preparedStatementCitation.setTime(2, citation_time);
+                                    preparedStatementCitation.setString(3, category);
+                                    preparedStatementCitation.setFloat(4, fee);
+                                    preparedStatementCitation.setBoolean(5, payment_status);
+                                    preparedStatementCitation.setInt(6, citation_number);
+
+                                    preparedStatementCitation.executeUpdate();
+                                } catch (Exception e) {
+                                    connection.rollback();
+                                    System.out.println("Error Occurred while updating citation data " + e.getMessage());
+                                    return;
+                                }  
+                                
+                                try (PreparedStatement preparedStatementLot = connection.prepareStatement(updateLotQuery)) {
+                                    preparedStatementLot.setString(1, lot_name);
+                                    preparedStatementLot.setInt(2, citation_number);
+
+                                    preparedStatementLot.executeUpdate();
+                                } catch (Exception e) {
+                                    connection.rollback();
+                                    System.out.println("Error Occurred while updating citation data " + e.getMessage());
+                                    return;
+                                }  
+                                
+                                try (PreparedStatement preparedStatementLicense = connection.prepareStatement(updateLicenseQuery)) {
+                                    preparedStatementLicense.setString(1, car_license_number);
+                                    preparedStatementLicense.setInt(2, citation_number);
+
+                                    preparedStatementLicense.executeUpdate();
+                                } catch (Exception e) {
+                                    connection.rollback();
+                                    System.out.println("Error Occurred while updating citation data " + e.getMessage());
+                                    return;
+                                } 
+                                connection.commit();
+                                System.out.println("Citation Updated Successfully");
+                                DisplayGetCitation(connection, citation_number);
+                            } catch (Exception e) {
+                                System.out.println("Error Occurred while managing transaction: " + e.getMessage());
+                            } finally {
+                                try {
+                                    connection.setAutoCommit(true);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            }       
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error occurred while maintaining citation: " + e.getMessage());
+        } finally {
+            scanner.close();
+        }
+    }
+
+    public static void  DisplayGetCitation(Connection connection, int citation_number) throws Exception {
+        String selectQuery = "SELECT C.*, S.lot_name, G.car_license_number " +
+                "FROM Citation C " +
+                "INNER JOIN Shows S ON C.citation_number = S.citation_number " +
+                "INNER JOIN GivenTo G ON C.citation_number = G.citation_number " +
+                "WHERE C.citation_number = ?" ;
+                
+        try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+            preparedStatement.setInt(1, citation_number);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    Date citation_date = resultSet.getDate("C.citation_date");
+                    Time citation_time = resultSet.getTime("C.citation_time");
+                    String category = resultSet.getString("C.category");
+                    float fee = resultSet.getFloat("C.fee");
+                    boolean payment_status = resultSet.getBoolean("C.payment_status");
+                    String lot_name = resultSet.getString("S.lot_name");
+                    String car_license_number = resultSet.getString("G.car_license_number");
+                    System.out.println("\n\nDetails of Citation " + citation_number + ":\n");
+                    System.out.println("Citation Date: " + citation_date);
+                    System.out.println("Citation Time: " + citation_time);
+                    System.out.println("Category: " + category);
+                    System.out.println("Fee: " + fee);
+                    System.out.println("Payment Status: " + payment_status);
+                    System.out.println("Lot Name: " + lot_name);
+                    System.out.println("Car License Number: " + car_license_number);
+                } else {
+                    System.out.println("No records found for citation number: " + citation_number);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
