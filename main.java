@@ -20,7 +20,8 @@ public class Main {
                 System.out.println("Shutting down...");
                 close();
             }));
-            int option = -1;
+
+            int option;
 
             do {
                 System.out.println("=============================================================================");
@@ -42,7 +43,7 @@ public class Main {
                         maintainingPermitsMenu();
                         continue;
                     case 3:
-                        generatingCitationsMenu();
+                        citationsMenu();
                         continue;
                     case 4:
                         reportsMenu();
@@ -59,7 +60,7 @@ public class Main {
             
             close();            
         } catch (Exception e) {
-            System.out.println("Error Occurred" + e);
+            System.out.println("Error Occurred");
             close();
         }
     }
@@ -272,34 +273,65 @@ public class Main {
         return query;
     }
 
-    private static void generatingCitationsMenu() {
-        int option;
+    private static void citationsMenu() {
+        int option = 0;
         do {
-            System.out.println("Choose the operation from the menu by inputting the respective number:");
+            System.out.println("=============================================================================");
             System.out.println("\nGenerating and Maintaining Citations Menu:");
+            System.out.println("=============================================================================");
             System.out.println(
                     "1.Detect parking violations by checking if a car has a valid permit in the lot,zone and space.");
             System.out.println("2.Generate a citation");
-            // need to change 29 based on tbd functions
             System.out.println("3.Maintain a citation");
             System.out.println("4.Pay citation");
             System.out.println("5.Appeal citation");
-            System.out.println("6. Return to main menu");
+            System.out.println("6.Return to main menu");
+            System.out.println("=============================================================================");
+            System.out.print("Enter Your Choice: ");
             option = sc.nextInt();
 
             switch (option) {
-                // case 27 to 31:
-                // submenu options
-                // break;
+                 case 1:
+                    try {
+                        Citations.detectParkingViolations(connection);       
+                    } catch (Exception e) {
+                        System.out.println("Sorry. Try Again.");
+                    }
+                    break;
+                case 2:
+                    try {
+                        Citations.generateCitation(connection);       
+                    } catch (Exception e) {
+                        System.out.println("Sorry. Try Again.");
+                    }
+                    break;
+                case 3:
+                    continue;
+                case 4:
+                    try {
+                        Citations.payCitation(connection);       
+                    } catch (Exception e) {
+                        System.out.println("Sorry. Try Again.");
+                    }
+                    break;
+                case 5:
+                    try {
+                        Citations.appealCitation(connection);       
+                    } catch (Exception e) {
+                        System.out.println("Sorry. Try Again.");
+                    }
+                    break;
+                case 6:
+                    break;
                 case 100:
                     System.out.println("Exiting...");
-                    sc.close();
-                    break; // Return to main menu
+                    System.exit(0);
                 default:
                     System.out.println("Invalid option. Please try again.");
-                    break;
+                    continue;
             }
         } while (option != 100);
+
     }
 
     private static void reportsMenu() {
