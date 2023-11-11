@@ -51,15 +51,6 @@ public class infoProcessing {
             }
             sb.append(String.format("name = \'%s\'", status));
         }
-        System.out.print("\nUpdate name? (y/n): ");
-        if(sc.next() == "y"){
-            System.out.print("\nEnter name : ");
-            String status = sc.next();
-            if(sb.length() != 0){
-                sb.append(" , ");
-            }
-            sb.append(String.format("name = \'%s\'", status));
-        }
         sc.close();
         updateDriverInfoHelper(statement, phoneNumber, sb.toString());
     }
@@ -92,23 +83,33 @@ public class infoProcessing {
                 System.out.print("\nEnter id: ");
                 id = sc.nextLine();
                 deleteDriverInfoHelper(statement, id, phoneNumber); 
-                System.out.println("Driver Deleted");
                
             }
+            
         } while (option != 1 && option != 2);
         sc.close();
     }
 
-    public void deleteDriverInfoHelper(Statement statement, String id, String phone){
+    public int deleteDriverInfoHelper(Statement statement, String id, String phone){
         try{
+            int rowsAffected = 0;
             if(phone == null){
-                statement.executeUpdate(String.format("DELETE FROM Driver WHERE univ_id = \'%s\'';", id));
+                rowsAffected = statement.executeUpdate(String.format("DELETE FROM Driver WHERE univ_id = \'%s\' AND (status = \'S\' OR status = \'E\');", id));
             } else {
-                statement.executeUpdate(String.format("DELETE FROM Driver WHERE phone = \'%s\'';", phone));
+                rowsAffected = statement.executeUpdate(String.format("DELETE FROM Driver WHERE phone = \'%s\';", phone));
             }
+            if (rowsAffected > 0){
+                System.out.println("Driver Deleted");
+            } else if (rowsAffected == 0){
+                System.out.println("Driver did not exist prior to delete");
+
+            }
+            return rowsAffected;
+           
         } catch (Throwable oops) {
             oops.printStackTrace();
         }
+        return 0;
 
     }
 
@@ -124,7 +125,7 @@ public class infoProcessing {
     }
 
     public void enterParkingLotInfoHelper(Statement statement, String lot_name, String address){
-        String query = String.format("INSERT INTO ParkingLot (lot_name, address) VALUES(%s, %s);", lot_name, address);
+        String query = String.format("INSERT INTO ParkingLot (lot_name, address) VALUES(\'%s\', \'%s\');", lot_name, address);
         try{
             statement.executeUpdate(query);
             System.out.println("Parking Lot Added");
@@ -135,41 +136,21 @@ public class infoProcessing {
 
     public void updateParkingLotInfo(Statement statement){
         Scanner sc = new Scanner(System.in);
-        int option = -1;
         String lot_name = null;
         String address = null;
-        do{
-            System.out.print("Update lot by (1) address or (2) name");
-            option = sc.nextInt();
-            if (option == 1){
-                System.out.print("\nEnter address: ");
-                address = sc.nextLine();
-                System.out.print("\nUpdate lot name: ");
-                lot_name = sc.nextLine();
-                updateParkingLotInfoHelper(statement, lot_name, address, option);
-                System.out.println("Lot updated");
-
-            }
-            if (option == 2){
-                System.out.print("\nEnter lot name: ");
-                lot_name = sc.nextLine();
-                System.out.print("\nUpdate address: ");
-                address = sc.nextLine();
-                updateParkingLotInfoHelper(statement, lot_name, address, option);
-                System.out.println("Lot updated");
-               
-            }
-        } while (option != 1 && option != 2);
+        System.out.print("\nEnter lot name: ");
+        lot_name = sc.nextLine();
+        System.out.print("\nUpdate address: ");
+        address = sc.nextLine();
         sc.close();
+        updateParkingLotInfoHelper(statement, lot_name, address);
+       
     }
 
-    public void updateParkingLotInfoHelper(Statement statement, String lot_name, String address, int option){
+    public void updateParkingLotInfoHelper(Statement statement, String lot_name, String address){
         try{
-            if(option == 1){
-                statement.executeUpdate(String.format("UPDATE ParkingLot SET lot_name = \'%s\' WHERE address = \'%s\'';", lot_name, address));
-            }else{
-                statement.executeUpdate(String.format("UPDATE ParkingLot SET address = \'%s\' WHERE lot_name = \'%s\'';", address, lot_name));
-            }
+            statement.executeUpdate(String.format("UPDATE ParkingLot SET address = \'%s\' WHERE lot_name = \'%s\';",address, lot_name));
+           
         } catch (Throwable oops) {
 			oops.printStackTrace();
 		}
@@ -184,13 +165,21 @@ public class infoProcessing {
         deleteParkingLotInfoHelper(statement, lot_name);
     }
 
-    public void deleteParkingLotInfoHelper(Statement statement, String lot_name){
+    public int deleteParkingLotInfoHelper(Statement statement, String lot_name){
+        int rowsAffected = -1;
         try{
-            statement.executeUpdate(String.format("DELETE FROM ParkingLot WHERE lot_name = \'%s\';", lot_name));
-            System.out.println("Parking Lot Deleted");
+            rowsAffected = statement.executeUpdate(String.format("DELETE FROM ParkingLot WHERE lot_name = \'%s\';", lot_name));
+            if (rowsAffected > 0){
+                System.out.println("Parking Lot Deleted");
+
+            } else {
+                System.out.println("Parking Lot did not exist prior to delete operation");
+            }
+            return rowsAffected;
         } catch (Throwable oops) {
             oops.printStackTrace();
         }
+        return 0;
     }
 
     /*
@@ -224,22 +213,43 @@ public class infoProcessing {
         String zone_id = sc.nextLine();
         System.out.print("\nEnter lot name: ");
         String lot_name = sc.nextLine();
-        System.out.print("\nEnter updated zone id: ");
-        String new_zone_id = sc.nextLine();
-        System.out.print("\nEnter updated lot name: ");
-        String new_lot_name = sc.nextLine();
+        System.out.print("\nUpdate zone id (1) or update lot name (2)");
+        int option = sc.nextInt();
+        if (option == 1){
+            System.out.print("\nEnter updated zone id: ");
+            String new_zone_id = sc.nextLine(); 
+            updateZoneInfoHelper(statement, zone_id, lot_name, new_zone_id, null);
+        } else if (option == 2){
+            System.out.print("\nEnter updated lot name: ");
+            String new_lot_name = sc.nextLine();
+            updateZoneInfoHelper(statement, zone_id, lot_name, null, new_lot_name);
+
+        }
         sc.close();
-        updateZoneInfoHelper(statement, zone_id, lot_name, new_zone_id, new_lot_name);
+       
     }
 
     public void updateZoneInfoHelper(Statement statement, String zone_id, String lot_name, String new_zone_id, String new_lot_name){
-        String query = String.format("Update Zone SET zone_id = \'%s\', lot_name = \'%s\' WHERE zone_id = \'%s\' AND lot_name = \'%s\';",new_zone_id, new_lot_name, zone_id, lot_name);
-        try{
-            statement.executeUpdate(query);
-            System.out.println("Zone Added");
-        } catch (Throwable oops) {
-			oops.printStackTrace();
-		}
+        String query = null;
+        if (new_zone_id == null){
+            query = String.format("Update Zone SET lot_name = \'%s\' WHERE zone_id = \'%s\' AND lot_name = \'%s\';",new_lot_name, zone_id, lot_name);
+
+        } else if(new_lot_name == null){
+            query = String.format("Update Zone SET zone_id = \'%s\' WHERE zone_id = \'%s\' AND lot_name = \'%s\';",new_zone_id, zone_id, lot_name);
+
+        }
+        if (query != null){
+            try{
+                statement.executeUpdate(query);
+                System.out.println("Zone Updated");
+            } catch (Throwable oops) {
+                oops.printStackTrace();
+            }
+        } else {
+            System.out.println("Invalid Option Selected");
+
+        }
+       
     }
 
     public void deleteZoneInfo(Statement statement){
@@ -252,13 +262,22 @@ public class infoProcessing {
         deleteZoneInfoHelper(statement, zone_id, lot_name);
     }
 
-    public void deleteZoneInfoHelper(Statement statement, String zone_id, String lot_name){
+    public int deleteZoneInfoHelper(Statement statement, String zone_id, String lot_name){
+        int rowsAffected = -1;
         try{
-            statement.executeUpdate(String.format("DELETE FROM Zone WHERE zone_id = \'%s\' AND lot_name = \'%s\'';",zone_id, lot_name));
-            System.out.println("Zone Deleted");
+            rowsAffected = statement.executeUpdate(String.format("DELETE FROM Zone WHERE zone_id = \'%s\' AND lot_name = \'%s\';",zone_id, lot_name));
+            if(rowsAffected > 0){
+                System.out.println("Zone Deleted");
+
+            } else {
+                System.out.println("Zone did not exist prior to deletion");
+
+            }
+            return rowsAffected;
         } catch (Throwable oops) {
             oops.printStackTrace();
         }
+        return 0;
     }
 
     /*
@@ -289,7 +308,31 @@ public class infoProcessing {
     }
 
     public void updateSpaceInfo(Statement statement){
-        // TODO implement
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter space number: ");
+        int space_number = sc.nextInt();
+        System.out.print("\nEnter zone id: ");
+        String zone_id = sc.nextLine();
+        System.out.print("\nEnter lot name: ");
+        String lot_name = sc.nextLine();
+        System.out.print("\nUpdate space type: ");
+        String space_type = sc.nextLine();
+        System.out.print("\nUpdate availability status (0 or 1): ");
+        int availability_status = sc.nextInt();
+        sc.close();
+        updateSpaceInfoHelper(statement, zone_id, lot_name, space_number, space_type, availability_status);
+    }
+
+    public void updateSpaceInfoHelper(Statement statement, String zone_id, String lot_name, int space_number, String space_type, int availability_status){
+        String query = "UPDATE Space SET availability_status = %d, space_type = \'%s\' " +
+        "WHERE zone_id = \'s\' AND lot_name = \'s\' AND space_number = %d;";
+        try{
+            statement.executeUpdate(String.format(query, availability_status, space_type, zone_id, lot_name, space_number));
+            System.out.println("Space Added");
+        } catch (Throwable oops) {
+            oops.printStackTrace();
+        }
+        
     }
 
     public void deleteSpaceInfo(Statement statement){
@@ -304,13 +347,21 @@ public class infoProcessing {
         deleteSpaceInfoHelper(statement, space_number, zone_id, lot_name);
     }
 
-    public void deleteSpaceInfoHelper(Statement statement, int space_number, String zone_id, String lot_name){
+    public int deleteSpaceInfoHelper(Statement statement, int space_number, String zone_id, String lot_name){
+        int rowsAffected = 0;
         try{
-            statement.executeUpdate(String.format("DELETE FROM Space WHERE space_number = %d AND zone_id = %s AND lot_name = %s;",space_number, zone_id, lot_name));
-            System.out.println("Zone Deleted");
+            rowsAffected = statement.executeUpdate(String.format("DELETE FROM Space WHERE space_number = %d AND zone_id = \'%s\' AND lot_name = \'%s\';",space_number, zone_id, lot_name));
+            if(rowsAffected > 0){
+                System.out.println("Space Deleted");
+            } else {
+                System.out.println("Space did not exist prior to deletion");
+
+            }
+            return rowsAffected;
         } catch (Throwable oops) {
             oops.printStackTrace();
         }
+        return 0;
     }
 
     /*
@@ -332,8 +383,16 @@ public class infoProcessing {
         String expiration_time = sc.nextLine();
 
         sc.close();
-         try{
-            statement.executeUpdate(String.format("INSERT INTO Permit (permit_id, space_type, permit_type, start_date, expiration_date, expiration_time) VALUES (%d, %s, %s, %s', %s, %s);",permit_id, space_type, permit_type, start_date, expiration_date, expiration_time));
+        enterPermitInfoHelper(statement, permit_id, space_type, permit_type, start_date, expiration_date, expiration_time);
+  
+    }
+
+    public void enterPermitInfoHelper(Statement statement, int permit_id, String space_type, String permit_type, String start_date, String expiration_date, String expiration_time){
+      try{
+            String query = "INSERT INTO Permit (permit_id, space_type, permit_type, start_date, expiration_date, expiration_time)" +
+            "VALUES (%d,\'%s\', \'%s\', \'%s\', \'%s\', \'%s\');";
+            
+            statement.executeUpdate(String.format(query,permit_id, space_type, permit_type, start_date, expiration_date, expiration_time));
             System.out.println("Permit Added");
         } catch (Throwable oops) {
             oops.printStackTrace();
@@ -341,7 +400,60 @@ public class infoProcessing {
     }
 
     public void updatePermitInfo(){
-        // TODO
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter permit id: ");
+        int permit_id = sc.nextInt();
+        StringBuilder sb = new StringBuilder();
+        System.out.print("\nUpdate space type (-1 to not update): ");
+        String space_type = sc.nextLine();
+        if (!space_type.equals("-1")){
+            sb.append("space_type = \'" + space_type + "\'");
+        } 
+        System.out.print("\nUpdate permit type (-1 to not update): ");
+        String permit_type = sc.nextLine();
+        if (!permit_type.equals("-1")){
+            if(sb.length() > 0){
+                sb.append(", ");
+            }
+            sb.append("permit_type = \'" + permit_type + "\'");
+        } 
+        System.out.print("\nUpdate Start Date in format YYYY-MM-DD (-1 to not update): ");
+        String start_date = sc.nextLine();
+        if (!start_date.equals("-1")){
+            if(sb.length() > 0){
+                sb.append(", ");
+            }
+            sb.append("start_date = \'" + start_date + "\'");
+        }
+        System.out.print("\nUpdate Expiration Date in format YYYY-MM-DD (-1 to not update): ");
+        String expiration_date = sc.nextLine();
+        if (!expiration_date.equals("-1")){
+            if(sb.length() > 0){
+                sb.append(", ");
+            }
+            sb.append("expiration_date = \'" + expiration_date + "\'");
+        }
+        System.out.print("\nUpdate Expiration Time in format HH:MM:SS (-1 to not update): ");
+        String expiration_time = sc.nextLine();
+         if (!expiration_time.equals("-1")){
+            if(sb.length() > 0){
+                sb.append(", ");
+            }
+            sb.append("expiration_time = \'" + expiration_time + "\'");
+        }
+        sc.close();
+        updatePermitInfoHelper(null, permit_id, expiration_time);
+
+    }
+
+    public void updatePermitInfoHelper(Statement statement, int permit_id, String updates){
+        String query = "UPDATE Permit SET "+ updates + " WHERE permit_id = %d;";
+        try{
+            statement.executeUpdate(String.format(query,permit_id));
+            System.out.println("Permit Updated");
+        } catch (Throwable oops) {
+            oops.printStackTrace();
+        }
     }
 
     public void deletePermitInfo(Statement statement){
@@ -349,12 +461,24 @@ public class infoProcessing {
         System.out.print("Enter permit id: ");
         int permit_id = sc.nextInt();
         sc.close();
-         try{
-            statement.executeUpdate(String.format("DELETE from Permit WHERE permit_id = %d;",permit_id));
-            System.out.println("Permit Deleted");
+        deletePermitInfoHelper(statement, permit_id);
+    }
+
+    public int deletePermitInfoHelper(Statement statement, int permit_id){
+        int rowsDeleted = -1;
+        try{
+            rowsDeleted = statement.executeUpdate(String.format("DELETE from Permit WHERE permit_id = %d;",permit_id));
+            if (rowsDeleted > 0){
+                System.out.println("Permit Deleted");
+
+            } else {
+                System.out.println("Permit did not exist prior to deletion");
+
+            }
         } catch (Throwable oops) {
             oops.printStackTrace();
         }
+        return 0;
     }
 
     public void assignTypeToSpace(Statement statement){
@@ -368,8 +492,13 @@ public class infoProcessing {
         System.out.print("\nEnter space type: ");
         String space_type = sc.nextLine();
         sc.close();
+        assignTypeToSpaceHelper(statement, space_type, space_number, lot_name, zone_id);
+        
+    }
+
+    public void assignTypeToSpaceHelper(Statement statement, String space_type, int space_number, String lot_name, String zone_id){
         try{
-            statement.executeUpdate(String.format("UPDATE Space SET space_type = %s WHERE space_number = %d AND lot_name = %s AND zone_id = %s;", space_type, space_number, lot_name, zone_id));
+            statement.executeUpdate(String.format("UPDATE Space SET space_type = \'%s\' WHERE space_number = %d AND lot_name = \'%s\' AND zone_id = \'%s\';", space_type, space_number, lot_name, zone_id));
             System.out.println("Space Type Assigned");
         } catch (Throwable oops) {
             oops.printStackTrace();
