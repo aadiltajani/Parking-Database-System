@@ -62,7 +62,6 @@ public class DemoDataLoad {
             }
 
             createTables(stmt);
-            // Insert data from the JSON
             insertData(stmt);
 
             stmt.close();
@@ -210,8 +209,8 @@ public class DemoDataLoad {
             "citation_number INT," +
             "car_license_number VARCHAR(10)," +
             "PRIMARY KEY (citation_number, car_license_number)," +
-            "FOREIGN KEY (citation_number) REFERENCES Citation(citation_number) ON UPDATE CASCADE," +
-            "FOREIGN KEY (car_license_number) REFERENCES Vehicle(car_license_number) ON UPDATE CASCADE" +
+            "FOREIGN KEY (citation_number) REFERENCES Citation(citation_number) ON UPDATE CASCADE" +
+            // "FOREIGN KEY (car_license_number) REFERENCES Vehicle(car_license_number) ON UPDATE CASCADE" +
             ")";
         stmt.execute(createGivenToTableSQL);
 

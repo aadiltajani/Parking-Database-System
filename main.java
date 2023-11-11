@@ -6,121 +6,102 @@ import java.util.Properties;
 import java.util.Scanner;
 
 public class Main {
-
+    public static Connection connection = null;
+    public static Statement statement = null;
+    public static String user = null;
+    public static String password = null;
     private static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
 
-        //load demo data every time we start Main.java
-        DemoDataLoad demodataload = new DemoDataLoad();
-
-        Connection connection = null;
-        Statement statement = null;
         try {
+            getUser();
+            connectToDatabase("jdbc:mariadb://classdb2.csc.ncsu.edu:3306/" + user, user, password);
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                System.out.println("Shutting down...");
+                close();
+            }));
+            int option = -1;
 
-            // Loading the driver. This creates an instance of the driver
-            // and calls the registerDriver method to make MySql(MariaDB) Thin available to
-            // clients.
-            Properties properties = new Properties();
-            FileInputStream input = null;
-            String user = null;
-            String password = null;
-
-            System.out.println("Success");
-
-            try {
-                input = new FileInputStream("../db_keys");
-                properties.load(input);
-
-                user = properties.getProperty("username");
-                password = properties.getProperty("password");
-
-                System.out.println("User: " + user);
-                System.out.println("Password: " + password);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (input != null) {
-                    input.close(); }
-                }
-            String jdbcURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/" + user;
-            Class.forName("org.mariadb.jdbc.Driver");
-
-            // Get a connection instance from the first driver in the
-            // DriverManager list that recognizes the URL jdbcURL
-            connection = DriverManager.getConnection(jdbcURL, user, password);
-
-            // Create a statement instance that will be sending
-            // your SQL statements to the DBMS
-            statement = connection.createStatement();
-
-            int option = 0;
             do {
-                try {
-                    System.out.println("Choose the operation from the main menu by inputting the respective number:");
-                    System.out.println("1. Information Processing");
-                    System.out.println("2. Maintaining permits and vehicle information for each driver");
-                    System.out.println("3. Generating and maintaining citations");
-                    System.out.println("4. Reports");
-                    System.out.println("100. Exit");
-
-                    option = sc.nextInt(); // Try to get the next integer
-                    sc.nextLine(); // Consume the newline character
-
-                    switch (option) {
-                        case 1:
-                            informationProcessingMenu();
-                            break;
-                        case 2:
-                            maintainingPermitsMenu();
-                            break;
-                        case 3:
-                            generatingCitationsMenu();
-                            break;
-                        case 4:
-                            reportsMenu();
-                            break;
-                        case 100:
-                            System.out.println("Exiting...");
-                            return; // It's not necessary to close the scanner here if it's closed in the finally block
-                        default:
-                            System.out.println("Invalid option. Please try again.");
-                            break;
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Invalid input. Please enter a number.");
-                    sc.nextLine(); // Consume the invalid input and discard it
+                System.out.println("=============================================================================");
+                System.out.println("Choose the operation from the main menu by inputting the respective number:");
+                System.out.println("=============================================================================");
+                System.out.println("1. Information Processing");
+                System.out.println("2. Maintaining permits and vehicle information for each driver");
+                System.out.println("3. Generating and maintaining citations");
+                System.out.println("4. Reports");
+                System.out.println("100. Exit");
+                System.out.println("=============================================================================");
+                System.out.print("Enter Your Choice: ");
+                option = sc.nextInt();
+                switch (option) {
+                    case 1:
+                        informationProcessingMenu();
+                        continue;
+                    case 2:
+                        maintainingPermitsMenu();
+                        continue;
+                    case 3:
+                        generatingCitationsMenu();
+                        continue;
+                    case 4:
+                        reportsMenu();
+                        continue;
+                    case 100:
+                        System.out.println("Exiting...");
+                        sc.close();
+                        break;
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                        break;
                 }
             } while (option != 100);
-        } catch (ClassNotFoundException | SQLException | IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (sc != null) {
-                sc.close();
-            }
-            close(connection);
-            close(statement);
-        }
-        System.out.println("End of public void main");
-    }
-    static void close(Connection connection) {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            
+            close();            
+        } catch (Exception e) {
+            System.out.println("Error Occurred" + e);
+            close();
         }
     }
 
-    static void close(Statement statement) {
-        if (statement != null) {
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+    static void getUser() {
+		Properties properties = new Properties();
+        FileInputStream input = null;
+        try {
+            input = new FileInputStream("../db_keys");
+            properties.load(input);
+            user = properties.getProperty("username");
+            password = properties.getProperty("password");
+            System.out.println("User Found");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+	}
+
+    static void connectToDatabase(String jdbcURL, String user, String password) throws ClassNotFoundException, SQLException {
+		Class.forName("org.mariadb.jdbc.Driver");
+		connection = DriverManager.getConnection(jdbcURL, user, password);
+		statement = connection.createStatement();
+        System.out.println("Connected to Database");
+	}
+
+    static void close() {
+        if (connection != null) {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		if (statement != null) {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+        System.out.println("Database Connection Terminated");
     }
 
     private static void informationProcessingMenu() {
@@ -155,14 +136,14 @@ public class Main {
 
                 switch (option) {
                 case 1:
-                    infoProcessing enterDriverInfo = new infoProcessing();
-                    enterDriverInfo.enterDriverInfo();
+                    // infoProcessing enterDriverInfo = new infoProcessing();
+                    // enterDriverInfo.enterDriverInfo();
                     // Implement code for entering driver information
                     break;
                 case 2:
                     // Update driver info
-                    infoProcessing updateDriverInfo = new infoProcessing();
-                    updateDriverInfo.updateDriverInfo();
+                    // infoProcessing updateDriverInfo = new infoProcessing();
+                    // updateDriverInfo.updateDriverInfo();
                     // Implement code for updating driver information
                     break;
                 case 3:
