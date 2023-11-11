@@ -57,8 +57,8 @@ public class Main {
                         break;
                 }
             } while (option != 100);
-            
-            close();            
+
+            close();
         } catch (Exception e) {
             System.out.println("Error Occurred" + e);
             close();
@@ -66,7 +66,7 @@ public class Main {
     }
 
     static void getUser() {
-		Properties properties = new Properties();
+        Properties properties = new Properties();
         FileInputStream input = null;
         try {
             input = new FileInputStream("../db_keys");
@@ -77,30 +77,31 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-	}
+    }
 
-    static void connectToDatabase(String jdbcURL, String user, String password) throws ClassNotFoundException, SQLException {
-		Class.forName("org.mariadb.jdbc.Driver");
-		connection = DriverManager.getConnection(jdbcURL, user, password);
-		statement = connection.createStatement();
+    static void connectToDatabase(String jdbcURL, String user, String password)
+            throws ClassNotFoundException, SQLException {
+        Class.forName("org.mariadb.jdbc.Driver");
+        connection = DriverManager.getConnection(jdbcURL, user, password);
+        statement = connection.createStatement();
         System.out.println("Connected to Database");
-	}
+    }
 
     static void close() {
         if (connection != null) {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		if (statement != null) {
-			try {
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
         System.out.println("Database Connection Terminated");
     }
 
@@ -135,100 +136,100 @@ public class Main {
                 sc.nextLine();
 
                 switch (option) {
-                case 1:
-                    // infoProcessing enterDriverInfo = new infoProcessing();
-                    // enterDriverInfo.enterDriverInfo();
-                    // Implement code for entering driver information
-                    break;
-                case 2:
-                    // Update driver info
-                    // infoProcessing updateDriverInfo = new infoProcessing();
-                    // updateDriverInfo.updateDriverInfo();
-                    // Implement code for updating driver information
-                    break;
-                case 3:
-                    // Delete driver info
-                    // Implement code for deleting driver information
-                    break;
-                case 4:
-                    // Enter parking lot info
-                    // Implement code for entering parking lot information
-                    break;
-                case 5:
-                    // Update parking lot info
-                    // Implement code for updating parking lot information
-                    break;
-                case 6:
-                    // Delete parking lot info
-                    // Implement code for deleting parking lot information
-                    break;
-                case 7:
-                    // Enter parking lot info
-                    // Implement code for entering parking lot information
-                    break;
-                case 8:
-                    // Enter zone info
-                    // Implement code for entering zone information
-                    break;
-                case 9:
-                    // Update lot info
-                    // Implement code for updating zone information
-                    break;
-                case 10:
-                    // Delete lot info
-                    // Implement code for deleting zone information
-                    break;
-                case 11:
-                    // Enter space info
-                    // Implement code for entering space information
-                    break;
-                case 12:
-                    // Update space info
-                    // Implement code for updating space information
-                    break;
-                case 13:
-                    // Delete space info
-                    // Implement code for deleting space information
-                    break;
-                case 14:
-                    // Enter permit info
-                    // Implement code for entering permit information
-                    break;
-                case 15:
-                    // Update permit info
-                    // Implement code for updating permit information
-                    break;
-                case 16:
-                    // Delete permit info
-                    // Implement code for deleting permit information
-                    break;
-                case 17:
-                    // Assign zones to each parking lot
-                    // Implement code for assigning zones to parking lots
-                    break;
-                case 18:
-                    // Assign a type to a given space
-                    // Implement code for assigning space type
-                    break;
-                case 19:
-                    // Request citation appeal
-                    // Implement code for appealing a citation
-                    break;
-                case 20:
-                    // Update citation payment
-                    // Implement code for updating citation payment
-                    break;
-                case 100:
-                    System.out.println("Exiting...");
-                    sc.close();
-                    break; // Return to main menu
-                default:
-                    System.out.println("Invalid option. Please try again.");
-                    break;
-                } 
+                    case 1:
+                        // infoProcessing enterDriverInfo = new infoProcessing();
+                        // enterDriverInfo.enterDriverInfo();
+                        // Implement code for entering driver information
+                        break;
+                    case 2:
+                        // Update driver info
+                        // infoProcessing updateDriverInfo = new infoProcessing();
+                        // updateDriverInfo.updateDriverInfo();
+                        // Implement code for updating driver information
+                        break;
+                    case 3:
+                        // Delete driver info
+                        // Implement code for deleting driver information
+                        break;
+                    case 4:
+                        // Enter parking lot info
+                        // Implement code for entering parking lot information
+                        break;
+                    case 5:
+                        // Update parking lot info
+                        // Implement code for updating parking lot information
+                        break;
+                    case 6:
+                        // Delete parking lot info
+                        // Implement code for deleting parking lot information
+                        break;
+                    case 7:
+                        // Enter parking lot info
+                        // Implement code for entering parking lot information
+                        break;
+                    case 8:
+                        // Enter zone info
+                        // Implement code for entering zone information
+                        break;
+                    case 9:
+                        // Update lot info
+                        // Implement code for updating zone information
+                        break;
+                    case 10:
+                        // Delete lot info
+                        // Implement code for deleting zone information
+                        break;
+                    case 11:
+                        // Enter space info
+                        // Implement code for entering space information
+                        break;
+                    case 12:
+                        // Update space info
+                        // Implement code for updating space information
+                        break;
+                    case 13:
+                        // Delete space info
+                        // Implement code for deleting space information
+                        break;
+                    case 14:
+                        // Enter permit info
+                        // Implement code for entering permit information
+                        break;
+                    case 15:
+                        // Update permit info
+                        // Implement code for updating permit information
+                        break;
+                    case 16:
+                        // Delete permit info
+                        // Implement code for deleting permit information
+                        break;
+                    case 17:
+                        // Assign zones to each parking lot
+                        // Implement code for assigning zones to parking lots
+                        break;
+                    case 18:
+                        // Assign a type to a given space
+                        // Implement code for assigning space type
+                        break;
+                    case 19:
+                        // Request citation appeal
+                        // Implement code for appealing a citation
+                        break;
+                    case 20:
+                        // Update citation payment
+                        // Implement code for updating citation payment
+                        break;
+                    case 100:
+                        System.out.println("Exiting...");
+                        sc.close();
+                        break; // Return to main menu
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                        break;
+                }
             } catch (InputMismatchException e) {
-                    System.out.println("Invalid input. Please enter a number.");
-                    sc.nextLine(); // Consume the invalid input and discard it
+                System.out.println("Invalid input. Please enter a number.");
+                sc.nextLine(); // Consume the invalid input and discard it
             }
         } while (option != 100);
     }
@@ -249,41 +250,41 @@ public class Main {
                 option = sc.nextInt();
 
                 switch (option) {
-                case 1:
-                    // Logic to assign permits to drivers
-                    break;
-                case 2:
-                    // Logic to enter permit information
-                    break;
-                case 3:
-                    // Logic to update permit information
-                    break;
-                case 4:
-                    // Logic to add vehicle
-                    break;
-                case 5:
-                    // Logic to update vehicle ownership information
-                    break;
-                case 6:
-                    // Logic to remove vehicle
-                    break;
-                case 100:
-                    System.out.println("Exiting...");
-                    sc.close();
-                    break; // Return to main menu
-                default:
-                    System.out.println("Invalid option. Please try again.");
-                    break;
+                    case 1:
+                        // Logic to assign permits to drivers
+                        break;
+                    case 2:
+                        // Logic to enter permit information
+                        break;
+                    case 3:
+                        // Logic to update permit information
+                        break;
+                    case 4:
+                        // Logic to add vehicle
+                        break;
+                    case 5:
+                        // Logic to update vehicle ownership information
+                        break;
+                    case 6:
+                        // Logic to remove vehicle
+                        break;
+                    case 100:
+                        System.out.println("Exiting...");
+                        sc.close();
+                        break; // Return to main menu
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                        break;
                 }
-                } catch (InputMismatchException e) {
-                    System.out.println("Invalid input. Please enter a number.");
-                    sc.nextLine(); // Consume the invalid input and discard it
-                } 
-        } while (option != 100); 
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                sc.nextLine(); // Consume the invalid input and discard it
+            }
+        } while (option != 100);
     }
 
     private static void generatingCitationsMenu() {
-        int option = 0 ;
+        int option = 0;
         do {
             try {
                 System.out.println("Choose the operation from the menu by inputting the respective number:");
@@ -303,7 +304,7 @@ public class Main {
 
                     case 2:
 
-                    case 3: 
+                    case 3:
                     case 4:
                     case 5:
                     case 6:
@@ -316,11 +317,10 @@ public class Main {
                         System.out.println("Invalid option. Please try again.");
                         break;
                 }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                sc.nextLine(); // Consume the invalid input and discard it
             }
-            catch(InputMismatchException e) {
-                    System.out.println("Invalid input. Please enter a number.");
-                    sc.nextLine(); // Consume the invalid input and discard it
-            } 
         } while (option != 100);
     }
 
@@ -389,7 +389,7 @@ public class Main {
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number.");
                 sc.nextLine(); // Consume the invalid input and discard it
-            }  
+            }
         } while (option != 100);
     }
 }
