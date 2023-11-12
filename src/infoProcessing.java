@@ -467,7 +467,7 @@ public class infoProcessing {
     public int deletePermitInfoHelper(Statement statement, int permit_id){
         int rowsDeleted = -1;
         try{
-            rowsDeleted = statement.executeUpdate(String.format("DELETE from Permit WHERE permit_id = %d;",permit_id));
+            rowsDeleted = statement.executeUpdate(String.format("DELETE FROM Permit WHERE permit_id = %d;", permit_id));
             if (rowsDeleted > 0){
                 System.out.println("Permit Deleted");
 
@@ -475,6 +475,7 @@ public class infoProcessing {
                 System.out.println("Permit did not exist prior to deletion");
 
             }
+            return rowsDeleted;
         } catch (Throwable oops) {
             oops.printStackTrace();
         }

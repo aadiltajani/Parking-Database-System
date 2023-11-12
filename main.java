@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.InputMismatchException;
 import java.util.Properties;
 import java.util.Scanner;
+import src.infoProcessing;
 
 public class Main {
     public static Connection connection = null;
@@ -119,7 +120,7 @@ public class Main {
                 System.out.println("4.Enter parking lot info");
                 System.out.println("5.Update parking lot info");
                 System.out.println("6.Delete parking lot info");
-                System.out.println("7.Enter parking lot info");
+                System.out.println("7.Enter parking lot info"); // TODO this is a repeat
                 System.out.println("8.Enter zone info");
                 System.out.println("9.Update lot info");
                 System.out.println("10.Delete lot info");
@@ -136,90 +137,108 @@ public class Main {
                 System.out.println("100. Return to main menu");
                 option = sc.nextInt();
                 sc.nextLine();
-
+                infoProcessing ip = new infoProcessing();
                 switch (option) {
+                    
                     case 1:
-                        // infoProcessing enterDriverInfo = new infoProcessing();
-                        // enterDriverInfo.enterDriverInfo();
+                        ip.enterDriverInfo(statement);
                         // Implement code for entering driver information
                         break;
                     case 2:
                         // Update driver info
-                        // infoProcessing updateDriverInfo = new infoProcessing();
-                        // updateDriverInfo.updateDriverInfo();
+                        ip.updateDriverInfo(statement);
                         // Implement code for updating driver information
                         break;
                     case 3:
                         // Delete driver info
                         // Implement code for deleting driver information
+                        ip.deleteDriverInfo(statement);
                         break;
                     case 4:
                         // Enter parking lot info
+                        ip.enterParkingLotInfo(statement);
                         // Implement code for entering parking lot information
                         break;
                     case 5:
                         // Update parking lot info
                         // Implement code for updating parking lot information
+                        ip.updateParkingLotInfo(statement);
                         break;
                     case 6:
                         // Delete parking lot info
                         // Implement code for deleting parking lot information
+                        ip.deleteParkingLotInfo(statement);
                         break;
                     case 7:
                         // Enter parking lot info
                         // Implement code for entering parking lot information
+                       
                         break;
                     case 8:
                         // Enter zone info
                         // Implement code for entering zone information
+                        ip.enterZoneInfo(statement);
                         break;
                     case 9:
-                        // Update lot info
+                        // Update zone info
                         // Implement code for updating zone information
+                        ip.updateZoneInfo(statement);
                         break;
                     case 10:
-                        // Delete lot info
+                        // Delete zone info
                         // Implement code for deleting zone information
+                        ip.deleteZoneInfo(statement);
                         break;
                     case 11:
                         // Enter space info
                         // Implement code for entering space information
+                        ip.enterSpaceInfo(statement);
                         break;
                     case 12:
                         // Update space info
                         // Implement code for updating space information
+                        ip.updateSpaceInfo(statement);
                         break;
                     case 13:
                         // Delete space info
                         // Implement code for deleting space information
+                        ip.deleteZoneInfo(statement);
+                        
                         break;
                     case 14:
                         // Enter permit info
                         // Implement code for entering permit information
+                        ip.enterPermitInfo(statement);
                         break;
                     case 15:
                         // Update permit info
                         // Implement code for updating permit information
+                        ip.updatePermitInfo();
                         break;
                     case 16:
                         // Delete permit info
                         // Implement code for deleting permit information
+                        ip.deletePermitInfo(statement);
                         break;
                     case 17:
                         // Assign zones to each parking lot
                         // Implement code for assigning zones to parking lots
+                        // TODO how is this different from insert?
                         break;
                     case 18:
                         // Assign a type to a given space
                         // Implement code for assigning space type
+                        ip.assignTypeToSpace(statement);
                         break;
                     case 19:
                         // Request citation appeal
                         // Implement code for appealing a citation
+                        ip.requestCitationAppeal(statement);
                         break;
                     case 20:
                         // Update citation payment
                         // Implement code for updating citation payment
+                        ip.updateCitationPayment(statement);
                         break;
                     case 100:
                         System.out.println("Exiting...");
