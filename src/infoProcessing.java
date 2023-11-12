@@ -300,7 +300,7 @@ public class infoProcessing {
 
     public void enterSpaceInfoHelper(Statement statement, int space_number, String zone_id, String lot_name, String space_type){
         try{
-            statement.executeUpdate(String.format("INSERT INTO Space (space_number, lot_name, zone_id, space_type, avilability_status) VALUES(%d, \'%s\', \'%s\', \'%s\', 1);", space_number, lot_name, zone_id, space_type));
+            statement.executeUpdate(String.format("INSERT INTO Space (space_number, lot_name, zone_id, space_type, availability_status) VALUES(%d, \'%s\', \'%s\', \'%s\', 1);", space_number, lot_name, zone_id, space_type));
             System.out.println("Space Added");
         } catch (Throwable oops) {
             oops.printStackTrace();
@@ -324,11 +324,11 @@ public class infoProcessing {
     }
 
     public void updateSpaceInfoHelper(Statement statement, String zone_id, String lot_name, int space_number, String space_type, int availability_status){
-        String query = "UPDATE Space SET availability_status = %d, space_type = \'%s\' " +
-        "WHERE zone_id = \'s\' AND lot_name = \'s\' AND space_number = %d;";
+        String query = String.format("UPDATE Space SET availability_status = %d, space_type = \'%s\' " +
+        "WHERE zone_id = \'%s\' AND lot_name = \'%s\' AND space_number = %d;",  availability_status, space_type, zone_id, lot_name, space_number);
         try{
-            statement.executeUpdate(String.format(query, availability_status, space_type, zone_id, lot_name, space_number));
-            System.out.println("Space Added");
+            statement.executeUpdate(query);
+            System.out.println("Space Updated");
         } catch (Throwable oops) {
             oops.printStackTrace();
         }

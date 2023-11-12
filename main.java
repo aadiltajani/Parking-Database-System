@@ -120,20 +120,19 @@ public class Main {
                 System.out.println("4.Enter parking lot info");
                 System.out.println("5.Update parking lot info");
                 System.out.println("6.Delete parking lot info");
-                System.out.println("7.Enter parking lot info"); // TODO this is a repeat
-                System.out.println("8.Enter zone info");
-                System.out.println("9.Update lot info");
-                System.out.println("10.Delete lot info");
-                System.out.println("11.Enter space info");
-                System.out.println("12.Update space info");
-                System.out.println("13.Delete space info");
-                System.out.println("14.Enter permit info");
-                System.out.println("15.Update permit info");
-                System.out.println("16.Delete permit info");
-                System.out.println("17.Assign zones to each parking lot");
-                System.out.println("18.Assign a type to a given space.");
-                System.out.println("19.Request citation appeal");
-                System.out.println("20.Update citation payment");
+                System.out.println("7.Enter zone info");
+                System.out.println("8.Update lot info");
+                System.out.println("9.Delete lot info");
+                System.out.println("10.Enter space info");
+                System.out.println("11.Update space info");
+                System.out.println("12.Delete space info");
+                System.out.println("13.Enter permit info");
+                System.out.println("14.Update permit info");
+                System.out.println("15.Delete permit info");
+                System.out.println("16.Assign zones to each parking lot");
+                System.out.println("17.Assign a type to a given space.");
+                System.out.println("18.Request citation appeal");
+                System.out.println("19.Update citation payment");
                 System.out.println("100. Return to main menu");
                 option = sc.nextInt();
                 sc.nextLine();
@@ -170,72 +169,68 @@ public class Main {
                         ip.deleteParkingLotInfo(statement);
                         break;
                     case 7:
-                        // Enter parking lot info
-                        // Implement code for entering parking lot information
-                       
-                        break;
-                    case 8:
                         // Enter zone info
                         // Implement code for entering zone information
                         ip.enterZoneInfo(statement);
                         break;
-                    case 9:
+                    case 8:
                         // Update zone info
                         // Implement code for updating zone information
                         ip.updateZoneInfo(statement);
                         break;
-                    case 10:
+                    case 9:
                         // Delete zone info
                         // Implement code for deleting zone information
                         ip.deleteZoneInfo(statement);
                         break;
-                    case 11:
+                    case 10:
                         // Enter space info
                         // Implement code for entering space information
                         ip.enterSpaceInfo(statement);
                         break;
-                    case 12:
+                    case 11:
                         // Update space info
                         // Implement code for updating space information
                         ip.updateSpaceInfo(statement);
                         break;
-                    case 13:
+                    case 12:
                         // Delete space info
                         // Implement code for deleting space information
-                        ip.deleteZoneInfo(statement);
+                        ip.deleteSpaceInfo(statement);
                         
                         break;
-                    case 14:
+                    case 13:
                         // Enter permit info
                         // Implement code for entering permit information
                         ip.enterPermitInfo(statement);
                         break;
-                    case 15:
+                    case 14:
                         // Update permit info
                         // Implement code for updating permit information
                         ip.updatePermitInfo();
                         break;
-                    case 16:
+                    case 15:
                         // Delete permit info
                         // Implement code for deleting permit information
                         ip.deletePermitInfo(statement);
                         break;
-                    case 17:
+                    case 16:
                         // Assign zones to each parking lot
                         // Implement code for assigning zones to parking lots
                         // TODO how is this different from insert?
+                        ip.enterZoneInfo(statement);
                         break;
-                    case 18:
+                    case 17:
                         // Assign a type to a given space
                         // Implement code for assigning space type
                         ip.assignTypeToSpace(statement);
                         break;
-                    case 19:
+                    case 18:
                         // Request citation appeal
                         // Implement code for appealing a citation
                         ip.requestCitationAppeal(statement);
                         break;
-                    case 20:
+                    case 19:
                         // Update citation payment
                         // Implement code for updating citation payment
                         ip.updateCitationPayment(statement);

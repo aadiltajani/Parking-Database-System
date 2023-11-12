@@ -208,11 +208,12 @@ public class infoProcessingTest {
 
     @Test
     public void testUpdateSpaceInfo(){
-        IP.updateSpaceInfoHelper(statement, "AS", "Partners Way Deck", 111, "Regular", 0);
+        IP.enterSpaceInfoHelper(statement, 112, "AS", "Poulton Deck",  "Handicap");
+        IP.updateSpaceInfoHelper(statement, "AS", "Poulton Deck", 112, "Regular", 0);
         try{
-            ResultSet result = statement.executeQuery("SELECT * FROM Space WHERE lot_name =\'Partners Way Deck\' AND zone_id = \'AS\';");
+            ResultSet result = statement.executeQuery("SELECT * FROM Space WHERE lot_name = \'Poulton Deck\' AND zone_id = \'AS\' AND space_number = 112;");
             result.next();
-            assertEquals("Partners Way Deck", result.getString("lot_name"));
+            assertEquals("Poulton Deck", result.getString("lot_name"));
             assertEquals("Regular", result.getString("space_type"));
         } catch(Exception e) {
             fail();
@@ -222,16 +223,12 @@ public class infoProcessingTest {
     
     @Test
     public void testDeleteSpaceInfo(){
-        try{
-            statement.executeUpdate("INSERT INTO Space (lot_name, zone_id, space_number) VALUES ('Dan Allen Parking Deck','AS', 111);");
-        } catch(Exception e){
-            // ignore
-        }
+        IP.enterSpaceInfoHelper(statement, 111, "AS", "Partners Way Deck",  "Regular");
 
-        int rowsAffected = IP.deleteSpaceInfoHelper(statement,111, "AS", "Dan Allen Parking Deck");
+        int rowsAffected = IP.deleteSpaceInfoHelper(statement,111, "AS", "Partners Way Deck");
         
         try{
-            ResultSet result = statement.executeQuery("SELECT * FROM Space WHERE space_number = 111 AND zone_id = \'AS\' AND lot_name = \'Dan Allen Parking Deck\';");
+            ResultSet result = statement.executeQuery("SELECT * FROM Space WHERE space_number = 111 AND zone_id = \'AS\' AND lot_name = \'Partners Way Deck\';");
             assertFalse(result.next());
         } catch(Exception e) {
             fail();
