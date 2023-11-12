@@ -1,3 +1,4 @@
+package src;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -152,7 +153,7 @@ public class Citations {
             
 
             scanner.close();
-            // Execute insert queries in transaction
+            // Execute insert queries in transaction in all the tables at the same time
             try{
                 connection.setAutoCommit(false);
                 try (PreparedStatement preparedStatement = connection.prepareStatement(insertCitationQuery)) {
@@ -244,11 +245,12 @@ public class Citations {
             
             // Display current details of the citation
             DisplayGetCitation(connection, citation_number);
-            selectQuery = "SELECT C.*, S.lot_name, G.car_license_number " +
-                "FROM Citation C " +
-                "INNER JOIN Shows S ON C.citation_number = S.citation_number " +
-                "INNER JOIN GivenTo G ON C.citation_number = G.citation_number " +
-                "WHERE C.citation_number = ?" ;
+            selectQuery = "SELECT C.*, S.lot_name, G.car_license_number, A.appeal_status " +
+            "FROM Citation C " +
+            "INNER JOIN Shows S ON C.citation_number = S.citation_number " +
+            "INNER JOIN GivenTo G ON C.citation_number = G.citation_number " +
+            "LEFT JOIN Appeals A ON C.citation_number = A.citation_number " +
+            "WHERE C.citation_number = ?";
                 
             try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
                 preparedStatement.setInt(1, citation_number);
@@ -264,6 +266,7 @@ public class Citations {
                         String car_license_number = resultSet.getString("G.car_license_number");
                         System.out.print("\nDo you want to make changes to this citation? (yes/no): ");
                         String userChoice = scanner.nextLine().trim().toLowerCase();
+                        String appeal_status = resultSet.getString("A.appeal_status");
 
                         if (userChoice.equals("yes")) {
                             // Take user input for new details
@@ -324,7 +327,21 @@ public class Citations {
                                 System.out.print("Payment Status (0 for unpaid, 1 for paid): ");
                                 payment_status = scanner.nextInt() == 0 ? false : true;
                             }
-
+                            
+                            if(appeal_status != null) {
+                                System.out.print("Do you want to change the Appeal Status? (yes/no): ");
+                                if (scanner.next().trim().equalsIgnoreCase("yes")) {
+                                    System.out.print("Appeal Status (0:Pending, 1:Approved, 2:Rejected): ");
+                                    int appeal_option = scanner.nextInt();
+                                    if (appeal_option == 0) appeal_status = "Pending";
+                                    else if (appeal_option == 1) appeal_status = "Approved";
+                                    else if (appeal_option == 2) appeal_status = "Rejected";
+                                    else {
+                                        System.out.println("Invalid option!\n");
+                                        return;
+                                    }
+                                }
+                            }
 
                             // Update the Citation table
                             try {
@@ -332,6 +349,7 @@ public class Citations {
                                 String updateCitationQuery = "UPDATE Citation SET citation_date = ?, citation_time = ?, category = ?, fee = ?, payment_status = ? WHERE citation_number = ?";
                                 String updateLotQuery = "UPDATE Shows SET lot_name = ? WHERE citation_number = ?";
                                 String updateLicenseQuery = "UPDATE GivenTo SET car_license_number = ? WHERE citation_number = ?";
+                                String updateAppealsQuery = "UPDATE Appeals SET appeal_status = ? WHERE citation_number = ?";
                                 try (PreparedStatement preparedStatementCitation = connection.prepareStatement(updateCitationQuery)) {
                                     preparedStatementCitation.setDate(1, citation_date);
                                     preparedStatementCitation.setTime(2, citation_time);
@@ -368,6 +386,19 @@ public class Citations {
                                     System.out.println("Error Occurred while updating citation data " + e.getMessage());
                                     return;
                                 } 
+
+                                if (appeal_status != null) {
+                                    try (PreparedStatement preparedStatementAppeal = connection.prepareStatement(updateAppealsQuery)) {
+                                    preparedStatementAppeal.setString(1, appeal_status);
+                                    preparedStatementAppeal.setInt(2, citation_number);
+
+                                    preparedStatementAppeal.executeUpdate();
+                                    } catch (Exception e) {
+                                        connection.rollback();
+                                        System.out.println("Error Occurred while updating citation data " + e.getMessage());
+                                        return;
+                                    }
+                                }
                                 connection.commit();
                                 System.out.println("Citation Updated Successfully");
                                 DisplayGetCitation(connection, citation_number);
@@ -392,11 +423,12 @@ public class Citations {
     }
 
     public static void  DisplayGetCitation(Connection connection, int citation_number) throws Exception {
-        String selectQuery = "SELECT C.*, S.lot_name, G.car_license_number " +
-                "FROM Citation C " +
-                "INNER JOIN Shows S ON C.citation_number = S.citation_number " +
-                "INNER JOIN GivenTo G ON C.citation_number = G.citation_number " +
-                "WHERE C.citation_number = ?" ;
+        String selectQuery = "SELECT C.*, S.lot_name, G.car_license_number, A.appeal_status " +
+            "FROM Citation C " +
+            "INNER JOIN Shows S ON C.citation_number = S.citation_number " +
+            "INNER JOIN GivenTo G ON C.citation_number = G.citation_number " +
+            "LEFT JOIN Appeals A ON C.citation_number = A.citation_number " +
+            "WHERE C.citation_number = ?";
                 
         try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
             preparedStatement.setInt(1, citation_number);
@@ -410,6 +442,7 @@ public class Citations {
                     boolean payment_status = resultSet.getBoolean("C.payment_status");
                     String lot_name = resultSet.getString("S.lot_name");
                     String car_license_number = resultSet.getString("G.car_license_number");
+                    String appeal_status = resultSet.getString("A.appeal_status");
                     System.out.println("\n\nDetails of Citation " + citation_number + ":\n");
                     System.out.println("Citation Date: " + citation_date);
                     System.out.println("Citation Time: " + citation_time);
@@ -418,6 +451,9 @@ public class Citations {
                     System.out.println("Payment Status: " + payment_status);
                     System.out.println("Lot Name: " + lot_name);
                     System.out.println("Car License Number: " + car_license_number);
+                    if (appeal_status != null) {
+                        System.out.println("Appeal Status: " + appeal_status);
+                    }
                 } else {
                     System.out.println("No records found for citation number: " + citation_number);
                 }
@@ -480,6 +516,10 @@ public class Citations {
 
             System.out.print("Enter Driver's Phone: ");
             String phone = scanner.nextLine().trim();
+            if (!phone.matches("\\d+")){
+                System.out.println("Invalid phone number");
+                return;
+            }
 
             // Check if citation number belongs to phone
             String selectQuery = "SELECT * " +
