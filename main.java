@@ -5,6 +5,7 @@ import java.util.InputMismatchException;
 import java.util.Properties;
 import java.util.Scanner;
 import src.infoProcessing;
+import src.reports;
 
 public class Main {
     public static Connection connection = null;
@@ -138,7 +139,7 @@ public class Main {
                 sc.nextLine();
                 infoProcessing ip = new infoProcessing();
                 switch (option) {
-                    
+
                     case 1:
                         ip.enterDriverInfo(statement);
                         // Implement code for entering driver information
@@ -197,7 +198,7 @@ public class Main {
                         // Delete space info
                         // Implement code for deleting space information
                         ip.deleteSpaceInfo(statement);
-                        
+
                         break;
                     case 13:
                         // Enter permit info
@@ -302,7 +303,7 @@ public class Main {
     private static void citationsMenu() {
         int option = 0;
         do {
-            try{
+            try {
                 System.out.println("=============================================================================");
                 System.out.println("Generating and Maintaining Citations Menu:");
                 System.out.println("=============================================================================");
@@ -320,35 +321,35 @@ public class Main {
                 switch (option) {
                     case 1:
                         try {
-                            Citations.detectParkingViolations(connection);       
+                            Citations.detectParkingViolations(connection);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 2:
                         try {
-                            Citations.generateCitation(connection);       
+                            Citations.generateCitation(connection);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 3:
                         try {
-                            Citations.maintainCitation(connection);       
+                            Citations.maintainCitation(connection);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
-                        }         
+                        }
                         continue;
                     case 4:
                         try {
-                            Citations.payCitation(connection);       
+                            Citations.payCitation(connection);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 5:
                         try {
-                            Citations.appealCitation(connection);       
+                            Citations.appealCitation(connection);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
@@ -392,38 +393,66 @@ public class Main {
 
                 switch (option) {
                     case 1:
-                        // Generate a report for citations
-                        // Implement code to generate the citation report
+                        try {
+                            reports.generateReportCitations(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 2:
-                        // For each lot, generate a report for the total number of citations given in
-                        // all zones in the lot for a given month
-                        // Implement code for generating the monthly citation report for each lot
-                        break;
+                        try {
+                            reports.totalCitationsCountByTimeRange(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                     case 3:
-                        // For each lot, generate a report for the total number of citations given in
-                        // all zones in the lot for a given year
-                        // Implement code for generating the yearly citation report for each lot
+                        try {
+                            reports.totalCitationsCountByMonth(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 4:
-                        // Return the list of zones for each lot as tuple pairs (lot, zone)
-                        // Implement code to return the list of zones for each parking lot
+                        try {
+                            reports.totalCitationsCountByYear(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 5:
-                        // Return the number of cars that are currently in violation
-                        // Implement code to count the number of cars in violation
+                        try {
+                            reports.listOfZones(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 6:
-                        // Return the number of employees having permits for a given parking zone
-                        // Implement code to count the employees with permits in a specific zone
+                        try {
+                            reports.carsInViolation(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 7:
-                        // Return permit information given an ID or phone number
-                        // Implement code to retrieve permit information by ID or phone number
+                        try {
+                            reports.employeesHavePermits(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 8:
-                        // Return an available space number given a space type in a given parking lot
-                        // Implement code to find an available space of a specific type in a parking lot
+                        try {
+                            reports.returnPermitInfo(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
+                        break;
+                    case 9:
+                        try {
+                            reports.generateSpaceAvailable(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 100:
                         System.out.println("Exiting...");
