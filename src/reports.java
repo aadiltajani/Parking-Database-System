@@ -315,7 +315,7 @@ public class reports {
 
     }
 
-    public static void generateSpaceAvailable(Connection connection, sc sc) throws SQLException {
+    public static void generateSpaceAvailable(Connection connection, Scanner sc) throws SQLException {
         // Return an available space number given a space type in a given parking lot
 
         try (Statement stmt = connection.createStatement()) {
