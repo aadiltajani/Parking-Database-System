@@ -20,13 +20,15 @@ public class reports {
 
             if (!rs.next()) {
                 System.out.println("No records found");
+            } else {
+                System.out.println("Number of Citations, Number of Vehicles, Total Fees");
+                do {
+                    int numberCitations = rs.getInt("number_citations");
+                    int numberVehicles = rs.getInt("number_vehicles");
+                    float totalFees = rs.getFloat("total_fees");
+                    System.out.println(numberCitations + ", " + numberVehicles + ", " + totalFees);
+                } while (rs.next());
             }
-            do {
-                int numberCitations = rs.getInt("number_citations");
-                int numberVehicles = rs.getInt("SUP_ID");
-                float totalFees = rs.getFloat("total_fees");
-                System.out.println(numberCitations + ", " + numberVehicles + ", " + totalFees);
-            } while (rs.next());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -81,15 +83,19 @@ public class reports {
 
             if (!rs.next()) {
                 System.out.println("No records found");
+            } else {
+                System.out.println("Lot Name, Number of Citations, Number of Vehicles, Total Fees");
+
+                do {
+                    String lotName = rs.getString("lot_name");
+                    int numberCitations = rs.getInt("number_citations");
+                    int numberVehicles = rs.getInt("number_vehicles");
+                    float totalFees = rs.getFloat("total_fees");
+                    System.out.println(lotName + ", " + numberCitations + ", "
+                            + numberVehicles + ", " + totalFees);
+                } while (rs.next());
             }
-            do {
-                String lotName = rs.getString("lot_name");
-                int numberCitations = rs.getInt("number_citations");
-                int numberVehicles = rs.getInt("number_vehicles");
-                float totalFees = rs.getFloat("total_fees");
-                System.out.println(lotName + ", " + numberCitations + ", "
-                        + numberVehicles + ", " + totalFees);
-            } while (rs.next());
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -127,6 +133,7 @@ public class reports {
             if (!rs.next()) {
                 System.out.println("No records found");
             } else {
+                System.out.println("Lot Name, Number of Citations, Number of Vehicles, Total Fees");
                 do {
                     String lotName = rs.getString("lot_name");
                     int numberCitations = rs.getInt("number_citations");
@@ -175,15 +182,18 @@ public class reports {
 
             if (!rs.next()) {
                 System.out.println("No records found");
+            } else {
+                System.out.println("Lot Name, Number of Citations, Number of Vehicles, Total Fees");
+                do {
+                    String lotName = rs.getString("lot_name");
+                    int numberCitations = rs.getInt("number_citations");
+                    int numberVehicles = rs.getInt("number_vehicles");
+                    float totalFees = rs.getFloat("total_fees");
+                    System.out.println(lotName + ", " + numberCitations + ", "
+                            + numberVehicles + ", " + totalFees);
+                } while (rs.next());
             }
-            do {
-                String lotName = rs.getString("lot_name");
-                int numberCitations = rs.getInt("number_citations");
-                int numberVehicles = rs.getInt("number_vehicles");
-                float totalFees = rs.getFloat("total_fees");
-                System.out.println(lotName + ", " + numberCitations + ", "
-                        + numberVehicles + ", " + totalFees);
-            } while (rs.next());
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -198,12 +208,15 @@ public class reports {
 
             if (!rs.next()) {
                 System.out.println("No records found");
+            } else {
+                System.out.println("Zone Id, Lot Name");
+                do {
+                    String zoneId = rs.getString("zone_id");
+                    String lotName = rs.getString("lot_name");
+                    System.out.println(zoneId + ", " + lotName);
+                } while (rs.next());
             }
-            do {
-                String zoneId = rs.getString("zone_id");
-                String lotName = rs.getString("lot_name");
-                System.out.println(zoneId + ", " + lotName);
-            } while (rs.next());
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -222,11 +235,13 @@ public class reports {
 
             if (!rs.next()) {
                 System.out.println("No records found");
+            } else {
+                System.out.println("Number of Cars in Violation");
+                do {
+                    int numberCarsViolation = rs.getInt("number_cars_violation");
+                    System.out.println(numberCarsViolation);
+                } while (rs.next());
             }
-            do {
-                int numberCarsViolation = rs.getInt("number_cars_violation");
-                System.out.println(numberCarsViolation);
-            } while (rs.next());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -241,7 +256,7 @@ public class reports {
             while (true) {
                 System.out.print("Enter Zone Id: ");
                 zone_id = sc.nextLine().trim();
-                
+
                 if (zone_id.length() == 2) {
                     System.out.println("Zone Id: " + zone_id);
                     break; // Exit the loop when a valid input with 2 characters is entered
@@ -260,6 +275,7 @@ public class reports {
             if (!rs.next()) {
                 System.out.println("No records found");
             } else {
+                System.out.println("Number of Employees");
                 do {
                     int numberEmployees = rs.getInt("number_employees");
                     System.out.println(numberEmployees);
@@ -343,6 +359,7 @@ public class reports {
             if (!rs.next()) {
                 System.out.println("No records found");
             } else {
+                System.out.println("Permit Id, Space Type, Start Date, Expiration Date, Expiration Time, Permit Time");
                 do {
                     int permitId = rs.getInt("permit_id");
                     String spaceType = rs.getString("space_type");
@@ -444,11 +461,13 @@ public class reports {
 
             if (!rs.next()) {
                 System.out.println("No records found");
+            } else {
+                System.out.println("Space number");
+                do {
+                    int spaceNumber = rs.getInt("space_number");
+                    System.out.println(spaceNumber);
+                } while (rs.next());
             }
-            do {
-                int spaceNumber = rs.getInt("space_number");
-                System.out.println(spaceNumber);
-            } while (rs.next());
 
         } catch (SQLException e) {
             e.printStackTrace();
