@@ -263,9 +263,9 @@ public class reports {
 
     public static void employeesHavePermits(Connection connection, Scanner sc) throws SQLException {
         // Return the number of employees having permits for a given parking zone
-        try (Statement stmt = connection.createStatement()) {
-
+        try {
             String zone_id = "";
+            connection.setAutoCommit(false); //start transaction 
 
             while (true) {
                 System.out.print("Enter Zone Id: ");
@@ -281,25 +281,39 @@ public class reports {
 
             String query = "SELECT COUNT(DISTINCT phone) as Number_Employees"
                     + " FROM IsAssigned NATURAL JOIN Permit NATURAL JOIN Driver NATURAL JOIN HasZone"
-                    + " WHERE zone_id= '" + zone_id + "' and status='E';";
+                    + " WHERE zone_id = ? and status='E';";
 
-            ResultSet rs = stmt.executeQuery(query);
-            System.out.println("=======================RESULTS=======================");
-
-            if (!rs.next()) {
-                System.out.println("No records found");
-            } else {
-                System.out.println("Number of Employees");
-                do {
-                    int numberEmployees = rs.getInt("number_employees");
-                    System.out.println(numberEmployees);
-                } while (rs.next());
+            try (PreparedStatement employeeHavePermitsStatement = connection.prepareStatement(query)) {
+                employeeHavePermitsStatement.setString(1, zone_id);
+                try (ResultSet rs = employeeHavePermitsStatement.executeQuery()) {
+                    System.out.println("=======================RESULTS=======================");
+                    if (!rs.next()) {
+                        System.out.println("No records found");
+                    } else {
+                        System.out.println("Number of Employees");
+                        do {
+                            int numberEmployees = rs.getInt("number_employees");
+                            System.out.println(numberEmployees);
+                        } while (rs.next());
+                    }
+                    System.out.println("=======================END OF RESULTS=======================");
+                }
             }
-
-            System.out.println("=======================END OF RESULTS=======================");
+            connection.commit(); //end transaction
             System.out.println();
         } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                connection.rollback(); // Rollback the transaction in case of an error
+            } catch (SQLException rollbackException) {
+                rollbackException.printStackTrace();
+            }
+            System.out.println("Error occurred while deleting citation: " + e.getMessage());
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
