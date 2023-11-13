@@ -17,6 +17,9 @@ public class infoProcessing {
         String status = sc.nextLine().trim();
         System.out.print("\nEnter university id: ");
         String id = sc.nextLine().trim();
+        if("".equals(id)){
+            id = null;
+        }
         enterDriverInfoHelper(statement, phoneNumber, name,status, id);       
     }
 
@@ -51,6 +54,13 @@ public class infoProcessing {
         return false;
     }
 
+    private boolean checkID(String status, String id){
+        if ((status.equals("E") || status.equals("S")) && id == null ){
+            return false;
+        }
+        return true;
+
+    }
     public void enterDriverInfoHelper(Statement statement, String phoneNumber, String name, String status, String id){
         if(!isPhone(phoneNumber)){
             System.out.println("Phone number must be all digits");
@@ -62,7 +72,17 @@ public class infoProcessing {
             return;
             //throw new IllegalArgumentException("Status must have values 'E', 'S' or 'V'");
         }
-        String query = String.format("INSERT INTO Driver (phone, name, status, univ_id) VALUES (\'%s\', \'%s\', \'%s\', \'%s\');", phoneNumber, name, status, id);
+        String query = null;
+        if (!checkID(status, id)){
+            System.out.println("Students and Employees must have an id");
+            return;
+        }
+        if(id == null){
+            query = String.format("INSERT INTO Driver (phone, name, status) VALUES (\'%s\', \'%s\', \'%s\');", phoneNumber, name, status);
+        } else {
+            query = String.format("INSERT INTO Driver (phone, name, status, univ_id) VALUES (\'%s\', \'%s\', \'%s\', \'%s\');", phoneNumber, name, status, id);
+        }
+        
         try{
             statement.executeUpdate(query);
             System.out.println("Driver Added");
@@ -75,13 +95,15 @@ public class infoProcessing {
      * Identify with phone or univ_id 
      */
     public void updateDriverInfo(Statement statement, Scanner sc){
+        String id = null;
+        String status = null;
         System.out.print("Enter phone number: ");
         String phoneNumber = sc.nextLine().trim();
         StringBuilder sb = new StringBuilder();
         System.out.print("\nUpdate status? (y/n): ");
-        if(sc.next().trim() == "y"){
+        if(sc.nextLine().equals("y")){
             System.out.print("\nEnter status : ");
-            String status = sc.next().trim();
+            status = sc.nextLine().trim();
             if(!validStatus(status)){
                 System.out.println("Status must have values 'E', 'S' or 'V'");
                 return;
@@ -91,15 +113,34 @@ public class infoProcessing {
             sb.append(String.format("status = \'%s\'", status));
         }
         System.out.print("\nUpdate name? (y/n): ");
-        if(sc.next().trim() == "y"){
+        if(sc.nextLine().equals("y")){
             System.out.print("\nEnter name : ");
-            String status = sc.next().trim();
+            String name = sc.nextLine().trim();
             if(sb.length() != 0){
                 sb.append(" , ");
             }
-            sb.append(String.format("name = \'%s\'", status));
+            sb.append(String.format("name = \'%s\'", name));
         }
-        updateDriverInfoHelper(statement, phoneNumber, sb.toString());
+
+        System.out.print("\nUpdate university id? (y/n): ");
+        if(sc.nextLine().equals("y")){
+            System.out.print("\nEnter university id : ");
+            id = sc.nextLine().trim();
+            if(sb.length() != 0){
+                sb.append(" , ");
+            }
+            sb.append(String.format("univ_id = \'%s\'", id));
+        }
+        if(!checkID(status, id)){
+            System.out.println("When updating the status to Student or Employee, an updated id must be assigned");
+            return;
+        }
+        if(sb.length() != 0){
+            updateDriverInfoHelper(statement, phoneNumber, sb.toString());
+        } else {
+            System.out.println("There were no changes indicated");
+        }
+        
     }
 
     public void updateDriverInfoHelper(Statement statement, String phone, String update){
@@ -118,13 +159,14 @@ public class infoProcessing {
     }
 
     public void deleteDriverInfo(Statement statement, Scanner sc){
-        int option = -1;
+        int opt = -1;
         String phoneNumber = null;
         String id = null;
         do{
-            System.out.print("Delete Driver by (1) phone or (2) university id");
-            option = sc.nextInt();
-            if (option == 1){
+            System.out.print("Delete Driver by (1) phone or (2) university id: ");
+            opt = sc.nextInt();
+            sc.nextLine();
+            if (opt == 1){
                 System.out.print("\nEnter phone number: ");
                 phoneNumber = sc.nextLine().trim();
                 if(!isPhone(phoneNumber)){
@@ -133,13 +175,12 @@ public class infoProcessing {
                     //throw new IllegalArgumentException("Phone number must be all digits");
                 }
                 deleteDriverInfoHelper(statement, id, phoneNumber); 
-                System.out.println("Driver Deleted");
 
             }
-            if (option == 2){
+            if (opt == 2){
                 System.out.print("\nEnter id: ");
                 id = sc.nextLine().trim();
-                if(id == null){
+                if(id == null || "".equals(id)){
                     System.out.println("ID must contain a value for deletion");
                     return;
                     //throw new IllegalArgumentException("ID must contain a value for deletion");
@@ -148,8 +189,8 @@ public class infoProcessing {
                
             }
             
-        } while (option != 1 && option != 2);
-        sc.close();
+        } while (opt != 1 && opt != 2);
+        
     }
 
     public int deleteDriverInfoHelper(Statement statement, String id, String phone){
@@ -188,7 +229,7 @@ public class infoProcessing {
         }
         System.out.print("\nEnter address: ");
         String address = sc.nextLine().trim();
-        enterParkingLotInfoHelper(statement, address, lot_name);
+        enterParkingLotInfoHelper(statement, lot_name, address);
        
     }
 
@@ -225,8 +266,12 @@ public class infoProcessing {
 
     public void updateParkingLotInfoHelper(Statement statement, String lot_name, String address){
         try{
-            statement.executeUpdate(String.format("UPDATE ParkingLot SET address = \'%s\' WHERE lot_name = \'%s\';",address, lot_name));
-           
+            int rowsAdded = statement.executeUpdate(String.format("UPDATE ParkingLot SET address = \'%s\' WHERE lot_name = \'%s\';",address, lot_name));
+            if(rowsAdded > 0){
+                System.out.println("Parking lot updated successfully");
+            } else {
+                System.out.println("Could not update parking lot");
+            }
         } catch (Throwable oops) {
 			oops.printStackTrace();
 		}
@@ -285,7 +330,7 @@ public class infoProcessing {
 
     public void enterZoneInfoHelper(Statement statement, String zone_id, String lot_name){
         if(!validZoneId(zone_id)){
-            System.out.println("Zone id must be at most 2 characters");
+            System.out.println("Zone id must be at least 1 character and at most 2 characters");
             return;
             //throw new IllegalArgumentException("Zone id must be at most 2 characters");
         }
@@ -302,24 +347,25 @@ public class infoProcessing {
         System.out.print("Enter zone id: ");
         String zone_id = sc.nextLine().trim();
         if(!validZoneId(zone_id)){
-            System.out.println("Zone id must be at most 2 characters");
+            System.out.println("Zone id must be at least 1 character and at most 2 characters");
             return;
             // sc.close();
             // throw new IllegalArgumentException("Zone id must be at most 2 characters");
         }
         System.out.print("\nEnter lot name: ");
         String lot_name = sc.nextLine().trim();
-        System.out.print("\nUpdate zone id (1) or update lot name (2)");
-        int option = sc.nextInt();
-        if (option == 1){
+        System.out.print("\nUpdate zone id (1) or update lot name (2): ");
+        int opt = sc.nextInt();
+        sc.nextLine();
+        if (opt == 1){
             System.out.print("\nEnter updated zone id: ");
             String new_zone_id = sc.nextLine().trim(); 
             if(!validZoneId(new_zone_id)){
-                System.out.println("Zone id must be at most 2 characters");
+                System.out.println("Zone id must be at least 1 character and at most 2 characters");
                 return;
             }
             updateZoneInfoHelper(statement, zone_id, lot_name, new_zone_id, null);
-        } else if (option == 2){
+        } else if (opt == 2){
             System.out.print("\nEnter updated lot name: ");
             String new_lot_name = sc.nextLine().trim();
             updateZoneInfoHelper(statement, zone_id, lot_name, null, new_lot_name);
@@ -344,7 +390,7 @@ public class infoProcessing {
                 oops.printStackTrace();
             }
         } else {
-            System.out.println("Invalid Option Selected");
+            System.out.println("Invalid opt Selected");
         }
        
     }
@@ -737,7 +783,7 @@ public class infoProcessing {
     public void updateCitationPayment(Statement statement, Scanner sc){
         System.out.print("\nEnter citation number: ");
         int citation_number = sc.nextInt();
-        sc.close();
+        //sc.close();
         updateCitationPaymentHelper(statement, citation_number);
     }
 

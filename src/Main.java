@@ -119,7 +119,6 @@ public class Main {
     private static void informationProcessingMenu(Scanner sc) {
         int option = 0;
         do {
-            // Scanner sc = new Scanner(System.in);
             try {
                 System.out.println("\nInformation Processing Menu:");
                 System.out.println("Choose the operation from the menu by inputting the respective number:");
@@ -130,8 +129,8 @@ public class Main {
                 System.out.println("5.Update parking lot info");
                 System.out.println("6.Delete parking lot info");
                 System.out.println("7.Enter zone info");
-                System.out.println("8.Update lot info");
-                System.out.println("9.Delete lot info");
+                System.out.println("8.Update zone info");
+                System.out.println("9.Delete zone info");
                 System.out.println("10.Enter space info");
                 System.out.println("11.Update space info");
                 System.out.println("12.Delete space info");
@@ -144,6 +143,7 @@ public class Main {
                 System.out.println("19.Update citation payment");
                 System.out.println("100. Return to main menu");
                 option = sc.nextInt();
+                sc.nextLine();
                 infoProcessing ip = new infoProcessing();
                 switch (option) {
 

@@ -109,7 +109,7 @@ public class DemoDataLoad {
             "zone_id VARCHAR(2),\n" +
             "lot_name VARCHAR(100),\n" +
             "PRIMARY KEY(zone_id, lot_name),\n" +
-            "FOREIGN KEY(lot_name) REFERENCES ParkingLot(lot_name) ON UPDATE CASCADE\n" +
+            "FOREIGN KEY(lot_name) REFERENCES ParkingLot(lot_name) ON UPDATE CASCADE ON DELETE CASCADE\n" +
             ");";
         stmt.execute(createZoneTableSQL);
 
@@ -120,7 +120,7 @@ public class DemoDataLoad {
             "space_type VARCHAR(11) NOT NULL,\n" +
             "availability_status BOOLEAN NOT NULL,\n" +
             "PRIMARY KEY(space_number, lot_name, zone_id),\n" +
-            "FOREIGN KEY(zone_id, lot_name) REFERENCES Zone(zone_id, lot_name)\n" +
+            "FOREIGN KEY(zone_id, lot_name) REFERENCES Zone(zone_id, lot_name) ON UPDATE CASCADE ON DELETE CASCADE\n" +
             ");";
         stmt.execute(createSpaceTableSQL);
 
@@ -161,8 +161,8 @@ public class DemoDataLoad {
             "permit_id INT,\n" +
             "car_license_number VARCHAR(10),\n" +
             "PRIMARY KEY(phone, permit_id, car_license_number),\n" +
-            "FOREIGN KEY(phone) REFERENCES Driver(phone) ON UPDATE CASCADE,\n" +
-            "FOREIGN KEY(permit_id) REFERENCES Permit(permit_id) ON UPDATE CASCADE,\n" +
+            "FOREIGN KEY(phone) REFERENCES Driver(phone) ON UPDATE CASCADE ON DELETE CASCADE,\n" +
+            "FOREIGN KEY(permit_id) REFERENCES Permit(permit_id) ON UPDATE CASCADE ON DELETE CASCADE,\n" +
             "FOREIGN KEY(car_license_number) REFERENCES Vehicle(car_license_number) ON UPDATE CASCADE\n" +
             ");";
         stmt.execute(createIsAssignedTableSQL);
@@ -181,8 +181,8 @@ public class DemoDataLoad {
             "citation_number INT," +
             "appeal_status VARCHAR(9) NOT NULL," +
             "PRIMARY KEY (phone, citation_number)," +
-            "FOREIGN KEY (citation_number) REFERENCES Citation(citation_number) ON UPDATE CASCADE," +
-            "FOREIGN KEY (phone) REFERENCES Driver(phone) ON UPDATE CASCADE" +
+            "FOREIGN KEY (citation_number) REFERENCES Citation(citation_number) ON UPDATE CASCADE ON DELETE CASCADE," +
+            "FOREIGN KEY (phone) REFERENCES Driver(phone) ON UPDATE CASCADE ON DELETE CASCADE" +
             ")";
         stmt.execute(createAppealsTableSQL);
 
