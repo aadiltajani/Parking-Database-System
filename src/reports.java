@@ -4,7 +4,9 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Arrays;
 
 public class reports {
     public static void generateReportCitations(Connection connection) throws SQLException {
@@ -270,12 +272,16 @@ public class reports {
             while (true) {
                 System.out.print("Enter Zone Id: ");
                 zone_id = sc.nextLine().trim();
+                
+                List<String> listOfZones = Arrays.asList("A", "B", "C", "D", "AS", "BS", "CS", "DS", "V");
 
-                if (zone_id.length() <= 2 & zone_id.length() > 0) {
+                boolean exists = listOfZones.contains(zone_id);
+
+                if (exists) {
                     System.out.println("Zone Id: " + zone_id);
                     break; // Exit the loop when a valid input with 2 characters is entered
                 } else {
-                    System.out.println("Invalid input. Please enter 1 or 2 characters.");
+                    System.out.println("Invalid input. Please input a valid zone.");
                 }
             }
 
@@ -362,11 +368,12 @@ public class reports {
                         permitIdInput = sc.nextLine().trim();
                         break;
                     } catch (InputMismatchException e) {
-                        System.out.println("Invalid input. Please enter a number.");
+                        System.out.println("Invalid input. ");
                         sc.nextLine(); // Consume the invalid input and discard it
                     }
                 }
                 query = "SELECT * FROM Permit WHERE permit_id = '" + permitIdInput + "';";
+                System.out.println(query);
             }
 
             else {
