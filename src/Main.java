@@ -14,7 +14,7 @@ public class Main {
     
 
     public static void main(String[] args) {
-
+        Scanner sc = new Scanner(System.in);
         try {
             getUser();
             connectToDatabase("jdbc:mariadb://classdb2.csc.ncsu.edu:3306/" + user, user, password);
@@ -22,7 +22,7 @@ public class Main {
                 System.out.println("Shutting down...");
                 close();
             }));
-            Scanner sc = new Scanner(System.in);
+            
             int option;
 
             do {
@@ -37,24 +37,23 @@ public class Main {
                     System.out.println("5. Display Tables");
                     System.out.println("100. Exit");
                     System.out.println("=============================================================================");
-                    System.out.print("Enter Your Choice: ");
-                    
+                    System.out.println("Enter Your Choice: ");
                     option = sc.nextInt();
                     switch (option) {
                         case 1:
-                            informationProcessingMenu();
+                            informationProcessingMenu(sc);
                             break;
                         case 2:
-                            maintainingPermitsMenu();
+                            maintainingPermitsMenu(sc);
                             break;
                         case 3:
-                            citationsMenu();
+                            citationsMenu(sc);
                             break;
                         case 4:
-                            reportsMenu();
+                            reportsMenu(sc);
                             break;
                         case 5:
-                            DisplayTables.main(connection);
+                            DisplayTables.main(connection, sc);
                             break;
                         case 100:
                             System.out.println("Exiting...");
@@ -64,16 +63,15 @@ public class Main {
                     }
                 } catch (java.util.NoSuchElementException e) {
                     System.out.println("Invalid input. Please enter a number.");
-                    // Consume the invalid input to avoid an infinite loop
-                    sc.nextLine();
-                    option = 0;
+                    e.printStackTrace();
+                    option = -1;
                 }
             } while (option != 100);
-            sc.close();
-            close();
         }  catch (Exception e) {
             System.out.println("Error Occurred");
             e.printStackTrace();
+        } finally {
+            sc.close();
             close();
         }
     }
@@ -118,10 +116,10 @@ public class Main {
         System.out.println("Database Connection Terminated");
     }
 
-    private static void informationProcessingMenu() {
+    private static void informationProcessingMenu(Scanner sc) {
         int option = 0;
         do {
-            Scanner sc = new Scanner(System.in);
+            // Scanner sc = new Scanner(System.in);
             try {
                 System.out.println("\nInformation Processing Menu:");
                 System.out.println("Choose the operation from the menu by inputting the respective number:");
@@ -146,7 +144,6 @@ public class Main {
                 System.out.println("19.Update citation payment");
                 System.out.println("100. Return to main menu");
                 option = sc.nextInt();
-                sc.nextLine();
                 infoProcessing ip = new infoProcessing();
                 switch (option) {
                     
@@ -248,7 +245,6 @@ public class Main {
                         break;
                     case 100:
                         System.out.println("Exiting...");
-                        sc.close();
                         break; // Return to main menu
                     default:
                         System.out.println("Invalid option. Please try again.");
@@ -256,16 +252,14 @@ public class Main {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number.");
-                sc.nextLine(); // Consume the invalid input and discard it
             }
-            sc.close();
         } while (option != 100);
     }
 
-    private static void maintainingPermitsMenu() {
+    private static void maintainingPermitsMenu(Scanner sc) {
         int option = 0;
         do {
-            Scanner sc = new Scanner(System.in);
+            // Scanner sc = new Scanner(System.in);
             try {
                 System.out.println("Choose the operation from the menu by inputting the respective number:");
                 System.out.println("\nMaintaining Permits Menu:");
@@ -299,7 +293,6 @@ public class Main {
                         break;
                     case 100:
                         System.out.println("Exiting...");
-                        sc.close();
                         break; // Return to main menu
                     default:
                         System.out.println("Invalid option. Please try again.");
@@ -307,15 +300,13 @@ public class Main {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number.");
-                sc.nextLine(); // Consume the invalid input and discard it
             }
-            sc.close();
         } while (option != 100);
     }
 
-    private static void citationsMenu() {
+    private static void citationsMenu(Scanner sc) {
         int option = 0;
-        Scanner sc = new Scanner(System.in);
+        // Scanner sc = new Scanner(System.in);
         do {        
             try{
                 System.out.println("=============================================================================");
@@ -327,7 +318,8 @@ public class Main {
                 System.out.println("3.Maintain a citation");
                 System.out.println("4.Pay citation");
                 System.out.println("5.Appeal citation");
-                System.out.println("6.Return to main menu");
+                System.out.println("6.Delete citation");
+                System.out.println("7.Return to main menu");
                 System.out.println("=============================================================================");
                 System.out.print("Enter Your Choice: ");
                 option = sc.nextInt();
@@ -335,40 +327,48 @@ public class Main {
                 switch (option) {
                     case 1:
                         try {
-                            Citations.detectParkingViolations(connection);       
+                            Citations.detectParkingViolations(connection,sc);       
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
+                            e.printStackTrace();
                         }
                         break;
                     case 2:
                         try {
-                            Citations.generateCitation(connection);       
+                            Citations.generateCitation(connection, sc);       
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 3:
                         try {
-                            Citations.maintainCitation(connection);       
+                            Citations.maintainCitation(connection, sc);       
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }         
                         break;
                     case 4:
                         try {
-                            Citations.payCitation(connection);       
+                            Citations.payCitation(connection, sc);       
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 5:
                         try {
-                            Citations.appealCitation(connection);       
+                            Citations.appealCitation(connection, sc);       
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 6:
+                        try {
+                            Citations.deleteCitation(connection, sc);       
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
+                        break;
+                    case 7:
                         break;
                     case 100:
                         System.out.println("Exiting...");
@@ -380,16 +380,14 @@ public class Main {
 
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number.");
-                sc.nextLine(); // Consume the invalid input and discard it
             }
         } while (option != 6);
-        sc.close();
     }
 
-    private static void reportsMenu() {
+    private static void reportsMenu(Scanner sc) {
         int option = 0;
         do {
-            Scanner sc = new Scanner(System.in);
+            // Scanner sc = new Scanner(System.in);
             try {
                 System.out.println("Choose the operation from the menu by inputting the respective number:");
                 System.out.println("\nReports Menu:");
@@ -408,42 +406,69 @@ public class Main {
 
                 switch (option) {
                     case 1:
-                        // Generate a report for citations
-                        // Implement code to generate the citation report
+                        try {
+                            reports.generateReportCitations(connection);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 2:
-                        // For each lot, generate a report for the total number of citations given in
-                        // all zones in the lot for a given month
-                        // Implement code for generating the monthly citation report for each lot
-                        break;
+                        try {
+                            reports.totalCitationsCountByTimeRange(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                     case 3:
-                        // For each lot, generate a report for the total number of citations given in
-                        // all zones in the lot for a given year
-                        // Implement code for generating the yearly citation report for each lot
+                        try {
+                            reports.totalCitationsCountByMonth(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 4:
-                        // Return the list of zones for each lot as tuple pairs (lot, zone)
-                        // Implement code to return the list of zones for each parking lot
+                        try {
+                            reports.totalCitationsCountByYear(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 5:
-                        // Return the number of cars that are currently in violation
-                        // Implement code to count the number of cars in violation
+                        try {
+                            reports.listOfZones(connection);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 6:
-                        // Return the number of employees having permits for a given parking zone
-                        // Implement code to count the employees with permits in a specific zone
+                        try {
+                            reports.carsInViolation(connection);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 7:
-                        // Return permit information given an ID or phone number
-                        // Implement code to retrieve permit information by ID or phone number
+                        try {
+                            reports.employeesHavePermits(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 8:
-                        // Return an available space number given a space type in a given parking lot
-                        // Implement code to find an available space of a specific type in a parking lot
+                        try {
+                            reports.returnPermitInfo(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
+                        break;
+                    case 9:
+                        try {
+                            reports.generateSpaceAvailable(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 100:
                         System.out.println("Exiting...");
-                        sc.close();
                         break; // Return to main menu
                     default:
                         System.out.println("Invalid option. Please try again.");
@@ -453,7 +478,6 @@ public class Main {
                 System.out.println("Invalid input. Please enter a number.");
                 sc.nextLine(); // Consume the invalid input and discard it
             }
-            sc.close();
         } while (option != 100);
     }
 }

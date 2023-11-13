@@ -10,15 +10,15 @@ import java.util.Scanner;
 public class DisplayTables {
     private static final int COLUMN_WIDTH = 22;
 
-    public static void main(Connection connection) {
+    public static void main(Connection connection, Scanner scanner) {
 
         try {
             // Get the list of tables in your database
             List<String> tableNames = getTableNames(connection);
 
             // Ask the user to choose a table
-            String selectedTable = chooseTable(tableNames);
-
+            String selectedTable = chooseTable(tableNames, scanner);
+            if (selectedTable == null) return;
             // Display records from the selected table
             displayTableRecords(connection, selectedTable);
 
@@ -51,21 +51,21 @@ public class DisplayTables {
         return tableNames;
     }
 
-    private static String chooseTable(List<String> tableNames) {
+    private static String chooseTable(List<String> tableNames, Scanner scanner) {
         System.out.println("Available Tables:");
+        int c = -2;
         for (int i = 0; i < tableNames.size(); i++) {
             System.out.println((i + 1) + ". " + tableNames.get(i));
+            c = i + 2;
         }
-
+        System.out.println(c + ". Go back.");
         int choice;
-        do {
-            System.out.print("Enter the number of the table you want to see: ");
-            Scanner scanner = new Scanner(System.in);
-            choice = scanner.nextInt();
-            scanner.close();
-        } while (choice < 1 || choice > tableNames.size());
-
-        return tableNames.get(choice - 1);
+        System.out.print("Enter the number of the table you want to see: ");
+        // Scanner scanner = new Scanner(System.in);
+        choice = scanner.nextInt();
+        // scanner.close();
+        if (choice < 1 || choice > tableNames.size()) return null;
+        else return tableNames.get(choice - 1);
     }
 
     private static void displayTableRecords(Connection connection, String tableName) throws SQLException {
