@@ -404,6 +404,7 @@ public class Main {
                 System.out.println("8. Return permit information given an ID or phone number");
                 System.out.println("9. Return an available space number given a space type in a given parking lot");
                 System.out.println("100. Return to main menu");
+                System.out.println("Enter Your Choice: ");
                 option = sc.nextInt();
 
                 switch (option) {
