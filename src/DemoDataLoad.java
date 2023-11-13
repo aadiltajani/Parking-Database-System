@@ -172,7 +172,7 @@ public class DemoDataLoad {
             "lot_name VARCHAR(128)," +
             "PRIMARY KEY (citation_number, lot_name)," +
             "FOREIGN KEY (citation_number) REFERENCES Citation(citation_number) ON UPDATE CASCADE," +
-            "FOREIGN KEY (lot_name) REFERENCES ParkingLot(lot_name) ON UPDATE CASCADE" +
+            "FOREIGN KEY (lot_name) REFERENCES ParkingLot(lot_name) ON UPDATE CASCADE ON DELETE CASCADE" +
             ")";
         stmt.execute(createShowsTableSQL);
 
@@ -191,7 +191,7 @@ public class DemoDataLoad {
             "lot_name VARCHAR(128)," +
             "PRIMARY KEY (permit_id, lot_name)," +
             "FOREIGN KEY (permit_id) REFERENCES Permit(permit_id) ON UPDATE CASCADE," +
-            "FOREIGN KEY (lot_name) REFERENCES ParkingLot(lot_name) ON UPDATE CASCADE" +
+            "FOREIGN KEY (lot_name) REFERENCES ParkingLot(lot_name) ON UPDATE CASCADE ON DELETE CASCADE" +
             ")";
         stmt.execute(createHasLotTableSQL);
 
@@ -201,8 +201,8 @@ public class DemoDataLoad {
             "lot_name VARCHAR(128)," +
             "PRIMARY KEY (permit_id, zone_id, lot_name)," +
             "FOREIGN KEY (permit_id) REFERENCES Permit(permit_id) ON UPDATE CASCADE," +
-            "FOREIGN KEY (zone_id) REFERENCES Zone(zone_id) ON UPDATE CASCADE," +
-            "FOREIGN KEY (lot_name) REFERENCES ParkingLot(lot_name) ON UPDATE CASCADE" +
+            "FOREIGN KEY (zone_id) REFERENCES Zone(zone_id) ON UPDATE CASCADE ON DELETE CASCADE," +
+            "FOREIGN KEY (lot_name) REFERENCES ParkingLot(lot_name) ON UPDATE CASCADE ON DELETE CASCADE" +
             ")";
         stmt.execute(createHasZoneTableSQL);
 
