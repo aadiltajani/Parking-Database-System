@@ -388,7 +388,6 @@ public class Main {
         int option = 0;
         do {
             // Scanner sc = new Scanner(System.in);
-            Scanner sc_reports = new Scanner(System.in);
             try {
                 System.out.println("Choose the operation from the menu by inputting the respective number:");
                 System.out.println("\nReports Menu:");
@@ -403,7 +402,7 @@ public class Main {
                 System.out.println("7. Return permit information given an ID or phone number");
                 System.out.println("8. Return an available space number given a space type in a given parking lot");
                 System.out.println("100. Return to main menu");
-                option = sc_reports.nextInt();
+                option = sc.nextInt();
 
                 switch (option) {
                     case 1:
@@ -415,20 +414,20 @@ public class Main {
                         break;
                     case 2:
                         try {
-                            reports.totalCitationsCountByTimeRange(connection, sc_reports);
+                            reports.totalCitationsCountByTimeRange(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                     case 3:
                         try {
-                            reports.totalCitationsCountByMonth(connection, sc_reports);
+                            reports.totalCitationsCountByMonth(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 4:
                         try {
-                            reports.totalCitationsCountByYear(connection, sc_reports);
+                            reports.totalCitationsCountByYear(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
@@ -449,21 +448,21 @@ public class Main {
                         break;
                     case 7:
                         try {
-                            reports.employeesHavePermits(connection, sc_reports);
+                            reports.employeesHavePermits(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 8:
                         try {
-                            reports.returnPermitInfo(connection, sc_reports);
+                            reports.returnPermitInfo(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 9:
                         try {
-                            reports.generateSpaceAvailable(connection, sc_reports);
+                            reports.generateSpaceAvailable(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
@@ -477,9 +476,8 @@ public class Main {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number.");
-                sc_reports.nextLine(); // Consume the invalid input and discard it
+                sc.nextLine(); // Consume the invalid input and discard it
             }
-            sc_reports.close();
         } while (option != 100);
     }
 }
