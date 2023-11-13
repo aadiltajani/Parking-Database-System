@@ -388,6 +388,7 @@ public class Main {
         int option = 0;
         do {
             // Scanner sc = new Scanner(System.in);
+            Scanner sc_reports = new Scanner(System.in);
             try {
                 System.out.println("Choose the operation from the menu by inputting the respective number:");
                 System.out.println("\nReports Menu:");
@@ -402,42 +403,70 @@ public class Main {
                 System.out.println("7. Return permit information given an ID or phone number");
                 System.out.println("8. Return an available space number given a space type in a given parking lot");
                 System.out.println("100. Return to main menu");
-                option = sc.nextInt();
+                option = sc_reports.nextInt();
 
                 switch (option) {
                     case 1:
-                        // Generate a report for citations
-                        // Implement code to generate the citation report
+                        try {
+                            reports.generateReportCitations(connection);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 2:
-                        // For each lot, generate a report for the total number of citations given in
-                        // all zones in the lot for a given month
-                        // Implement code for generating the monthly citation report for each lot
-                        break;
+                        try {
+                            reports.totalCitationsCountByTimeRange(connection, sc_reports);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                     case 3:
-                        // For each lot, generate a report for the total number of citations given in
-                        // all zones in the lot for a given year
-                        // Implement code for generating the yearly citation report for each lot
+                        try {
+                            reports.totalCitationsCountByMonth(connection, sc_reports);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 4:
-                        // Return the list of zones for each lot as tuple pairs (lot, zone)
-                        // Implement code to return the list of zones for each parking lot
+                        try {
+                            reports.totalCitationsCountByYear(connection, sc_reports);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 5:
-                        // Return the number of cars that are currently in violation
-                        // Implement code to count the number of cars in violation
+                        try {
+                            reports.listOfZones(connection);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 6:
-                        // Return the number of employees having permits for a given parking zone
-                        // Implement code to count the employees with permits in a specific zone
+                        try {
+                            reports.carsInViolation(connection);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 7:
-                        // Return permit information given an ID or phone number
-                        // Implement code to retrieve permit information by ID or phone number
+                        try {
+                            reports.employeesHavePermits(connection, sc_reports);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 8:
-                        // Return an available space number given a space type in a given parking lot
-                        // Implement code to find an available space of a specific type in a parking lot
+                        try {
+                            reports.returnPermitInfo(connection, sc_reports);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
+                        break;
+                    case 9:
+                        try {
+                            reports.generateSpaceAvailable(connection, sc_reports);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 100:
                         System.out.println("Exiting...");
@@ -448,7 +477,9 @@ public class Main {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number.");
+                sc_reports.nextLine(); // Consume the invalid input and discard it
             }
+            sc_reports.close();
         } while (option != 100);
     }
 }
