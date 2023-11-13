@@ -17,6 +17,7 @@ public class reports {
                     + "FROM Shows NATURAL JOIN Citation NATURAL JOIN GivenTo;";
 
             ResultSet rs = stmt.executeQuery(query);
+            System.out.println("=======================RESULTS=======================");
 
             if (!rs.next()) {
                 System.out.println("No records found");
@@ -29,6 +30,8 @@ public class reports {
                     System.out.println(numberCitations + ", " + numberVehicles + ", " + totalFees);
                 } while (rs.next());
             }
+            System.out.println("=======================END OF RESULTS=======================");
+            System.out.println();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -73,13 +76,14 @@ public class reports {
                 }
             }
 
-            String query = "SELECT lot_name, COUNT(citation_number) AS number_citations, "
-                    + "COUNT(DISTINCT car_license_number) AS number_vehicles, SUM(fee) AS total_fees "
-                    + "FROM Shows NATURAL JOIN Citation NATURAL JOIN GivenTo"
-                    + "WHERE citation_date BETWEEN '" + startDate + "' AND '" + endDate + "' "
+            String query = "SELECT lot_name, COUNT(citation_number) AS number_citations,"
+                    + " COUNT(DISTINCT car_license_number) AS number_vehicles, SUM(fee) AS total_fees"
+                    + " FROM Shows NATURAL JOIN Citation NATURAL JOIN GivenTo"
+                    + " WHERE citation_date BETWEEN '" + startDate + "' AND '" + endDate + "' "
                     + " GROUP BY lot_name;";
 
             ResultSet rs = stmt.executeQuery(query);
+            System.out.println("=======================RESULTS=======================");
 
             if (!rs.next()) {
                 System.out.println("No records found");
@@ -95,7 +99,8 @@ public class reports {
                             + numberVehicles + ", " + totalFees);
                 } while (rs.next());
             }
-
+            System.out.println("=======================END OF RESULTS=======================");
+            System.out.println();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -143,6 +148,7 @@ public class reports {
                             + numberVehicles + ", " + totalFees);
                 } while (rs.next());
             }
+            System.out.println("=======================END OF RESULTS=======================");
             System.out.println();
 
         } catch (SQLException e) {
@@ -173,12 +179,13 @@ public class reports {
             }
 
             String query = "SELECT lot_name, COUNT(citation_number) AS number_citations,"
-                    + "COUNT(DISTINCT car_license_number) AS number_vehicles, SUM(fee) AS total_fees"
-                    + "FROM Shows NATURAL JOIN Citation NATURAL JOIN GivenTo"
-                    + "WHERE YEAR(citation_date) = " + year
-                    + "GROUP BY lot_name;";
+                    + " COUNT(DISTINCT car_license_number) AS number_vehicles, SUM(fee) AS total_fees"
+                    + " FROM Shows NATURAL JOIN Citation NATURAL JOIN GivenTo"
+                    + " WHERE YEAR(citation_date) = " + year
+                    + " GROUP BY lot_name;";
 
             ResultSet rs = stmt.executeQuery(query);
+            System.out.println("=======================RESULTS=======================");
 
             if (!rs.next()) {
                 System.out.println("No records found");
@@ -193,6 +200,8 @@ public class reports {
                             + numberVehicles + ", " + totalFees);
                 } while (rs.next());
             }
+            System.out.println("=======================END OF RESULTS=======================");
+            System.out.println();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -205,6 +214,7 @@ public class reports {
             String query = "SELECT * FROM Zone ORDER  BY lot_name;";
 
             ResultSet rs = stmt.executeQuery(query);
+            System.out.println("=======================RESULTS=======================");
 
             if (!rs.next()) {
                 System.out.println("No records found");
@@ -216,7 +226,8 @@ public class reports {
                     System.out.println(zoneId + ", " + lotName);
                 } while (rs.next());
             }
-
+            System.out.println("=======================END OF RESULTS=======================");
+            System.out.println();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -227,7 +238,7 @@ public class reports {
         try (Statement stmt = connection.createStatement()) {
 
             String query = "SELECT COUNT(DISTINCT car_license_number)AS number_cars_violation"
-                    + "FROM GivenTo NATURAL JOIN Citation WHERE payment_status = 0;";
+                    + " FROM GivenTo NATURAL JOIN Citation WHERE payment_status = 0;";
 
             ResultSet rs = stmt.executeQuery(query);
 
@@ -242,6 +253,9 @@ public class reports {
                     System.out.println(numberCarsViolation);
                 } while (rs.next());
             }
+            System.out.println("=======================END OF RESULTS=======================");
+            System.out.println();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -257,17 +271,17 @@ public class reports {
                 System.out.print("Enter Zone Id: ");
                 zone_id = sc.nextLine().trim();
 
-                if (zone_id.length() == 2) {
+                if (zone_id.length() <= 2 & zone_id.length() > 0) {
                     System.out.println("Zone Id: " + zone_id);
                     break; // Exit the loop when a valid input with 2 characters is entered
                 } else {
-                    System.out.println("Invalid input. Please enter exactly 2 characters.");
+                    System.out.println("Invalid input. Please enter 1 or 2 characters.");
                 }
             }
 
-            String query = "SSELECT COUNT(DISTINCT phone) as Number_Employees"
-                    + "FROM IsAssigned NATURAL JOIN Permit NATURAL JOIN Driver NATURAL JOIN HasZone"
-                    + "WHERE zone_id= " + zone_id + " and status='E';";
+            String query = "SELECT COUNT(DISTINCT phone) as Number_Employees"
+                    + " FROM IsAssigned NATURAL JOIN Permit NATURAL JOIN Driver NATURAL JOIN HasZone"
+                    + " WHERE zone_id= '" + zone_id + "' and status='E';";
 
             ResultSet rs = stmt.executeQuery(query);
             System.out.println("=======================RESULTS=======================");
@@ -281,6 +295,9 @@ public class reports {
                     System.out.println(numberEmployees);
                 } while (rs.next());
             }
+
+            System.out.println("=======================END OF RESULTS=======================");
+            System.out.println();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -294,12 +311,13 @@ public class reports {
             int parameter = 0;
 
             // select using ID or phone number
-            do {
-                try {
+            try {
+                do {
                     System.out.println("1.Permit ID");
                     System.out.println("2.Phone Number");
                     System.out.print("Choose 1 or 2 to return permit information: ");
                     option = sc.nextInt();
+                    sc.nextLine();
 
                     switch (option) {
                         case 1:
@@ -312,28 +330,29 @@ public class reports {
                             System.out.println("Invalid option. Please try again.");
                             continue;
                     }
+                } while (parameter != 1 && parameter != 2);
                 } catch (InputMismatchException e) {
                     System.out.println("Invalid input. Please enter a number.");
                     sc.nextLine(); // Consume the invalid input and discard it
                 }
-            } while (option > 2);
-
+                
             String query = "";
-            int permitIdInput = -1;
+            String permitIdInput = "";
             String phone = "";
+
 
             if (parameter == 1) {
                 while (true) {
                     try {
-                        System.out.print("Enter Permit ID (as an integer): ");
-                        permitIdInput = sc.nextInt();
+                        System.out.print("Enter Permit ID: ");
+                        permitIdInput = sc.nextLine().trim();
                         break;
                     } catch (InputMismatchException e) {
                         System.out.println("Invalid input. Please enter a number.");
                         sc.nextLine(); // Consume the invalid input and discard it
                     }
                 }
-                query = "SELECT * FROM Permit WHERE permit_id =" + permitIdInput + ";";
+                query = "SELECT * FROM Permit WHERE permit_id = '" + permitIdInput + "';";
             }
 
             else {
@@ -341,14 +360,15 @@ public class reports {
                     try {
                         System.out.print("Enter phone number (do not include spaces or dashes): ");
                         phone = sc.nextLine().trim();
+                        sc.nextLine();
                         break;
                     } catch (InputMismatchException e) {
                         System.out.println("Invalid input. Please enter a number.");
                         sc.nextLine(); // Consume the invalid input and discard it
                     }
                 }
-                query = "SELECT * FROM Permit WHERE permit_id in (SELECT permit_id FROM IsAssigned WHERE phone = "
-                        + phone + ");";
+                query = "SELECT * FROM Permit WHERE permit_id in (SELECT permit_id FROM IsAssigned WHERE phone = '"
+                        + phone + "');";
             }
 
             ResultSet rs = stmt.executeQuery(query);
@@ -373,12 +393,12 @@ public class reports {
                                     + ", " + permitType);
                 } while (rs.next());
             }
+            System.out.println("=======================END OF RESULTS=======================");
+            System.out.println();
+
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            sc.close();
-        }
-
+        } 
     }
 
     public static void generateSpaceAvailable(Connection connection, Scanner sc) throws SQLException {
@@ -397,6 +417,7 @@ public class reports {
                     System.out.println("4.Handicap");
                     System.out.print("Enter Space Type (as an integer): ");
                     option = sc.nextInt();
+                    sc.nextLine();
 
                     switch (option) {
                         case 1:
@@ -429,6 +450,7 @@ public class reports {
                     System.out.println("3.Poulton Deck");
                     System.out.print("Enter Parking Lot (as an integer): ");
                     option = sc.nextInt();
+                    sc.nextLine();
 
                     switch (option) {
                         case 1:
@@ -451,9 +473,9 @@ public class reports {
             } while (option > 3);
 
             String query = "SELECT space_number FROM Space"
-                    + " WHERE space_type = " + space_type
-                    + " AND lot_name = " + lot_name
-                    + " AND availability_status = 1 LIMIT 1;";
+                    + " WHERE space_type = '" + space_type
+                    + "' AND lot_name = '" + lot_name
+                    + "' AND availability_status = 1 LIMIT 1;";
 
             ResultSet rs = stmt.executeQuery(query);
 
@@ -468,6 +490,8 @@ public class reports {
                     System.out.println(spaceNumber);
                 } while (rs.next());
             }
+            System.out.println("=======================END OF RESULTS=======================");
+            System.out.println();
 
         } catch (SQLException e) {
             e.printStackTrace();
