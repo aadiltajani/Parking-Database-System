@@ -6,10 +6,11 @@ import java.util.Scanner;
 
 public class Citations {
     // Function to detect violations
-    public static void detectParkingViolations(Connection connection) {
-        Scanner scanner = new Scanner(System.in);
+    public static void detectParkingViolations(Connection connection, Scanner scanner) throws Exception{
+        // Scanner scanner = new Scanner(System.in);
 
         try {
+            scanner.nextLine();
             System.out.print("Enter Lot Name: ");
             String lotName = scanner.nextLine().trim();
 
@@ -23,10 +24,13 @@ public class Citations {
             String carLicenseNumber = scanner.nextLine().trim();
 
             System.out.print("Enter Expiration Date(YYYY-MM-DD): ");
-            String expirationDate = scanner.nextLine().trim();
+            String expiration_date_str = scanner.nextLine();
+            java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(expiration_date_str);
+            Date expiration_date = new Date(utilDate.getTime());
 
             System.out.print("Enter Expiration Time(HH:MM:SS): ");
-            String expirationTime = scanner.nextLine().trim();
+            String expiration_time_str = scanner.nextLine().trim();
+            Time expiration_time = Time.valueOf(expiration_time_str);
 
             String query = "SELECT P.permit_id, P.space_type, P.expiration_date, P.expiration_time, H.zone_id, H.lot_name " +
                            "FROM IsAssigned IA " +
@@ -38,16 +42,14 @@ public class Citations {
                            "AND IA.car_license_number = ? " +
                            "AND (P.expiration_date > ? " +
                            "OR (P.expiration_time > ? AND P.expiration_date = ?))";
-
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, lotName);
                 preparedStatement.setString(2, zoneId);
                 preparedStatement.setString(3, spaceType);
                 preparedStatement.setString(4, carLicenseNumber);
-                preparedStatement.setDate(5, java.sql.Date.valueOf(expirationDate));
-                preparedStatement.setTime(6, java.sql.Time.valueOf(expirationTime));
-                preparedStatement.setDate(7, java.sql.Date.valueOf(expirationDate));
-
+                preparedStatement.setDate(5, expiration_date);
+                preparedStatement.setTime(6, expiration_time);
+                preparedStatement.setDate(7, expiration_date);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     if (resultSet.next()) {
                         System.out.println("No parking violation detected. Valid permit found.");
@@ -59,17 +61,17 @@ public class Citations {
         } catch (SQLException e) {
             System.out.println("Error occurred while detecting parking violations: " + e.getMessage());
         } finally {
-            scanner.close();
+            // scanner.close();
         }
     }
     // Function to generate a citation
-    public static void generateCitation(Connection connection) throws Exception {
+    public static void generateCitation(Connection connection, Scanner scanner) throws Exception {
         try{
             String insertCitationQuery = "INSERT INTO Citation VALUES (?, ?, ?, ?, ?, ?)";
             String insertShowsQuery = "INSERT INTO Shows VALUES (?, ?)";
             String insertGivenToQuery = "INSERT INTO GivenTo VALUES (?, ?)";
             String insertVehicleQuery = "INSERT INTO Vehicle VALUES (?, ?, ?, ?, ?)";
-            Scanner scanner = new Scanner(System.in);
+            // Scanner scanner = new Scanner(System.in);
 
             System.out.println("Enter citation details:");
 
@@ -81,7 +83,7 @@ public class Citations {
             String category = scanner.nextLine().trim();
             List<String> permitCategories = List.of("Expired Permit", "Invalid Permit", "No Permit");
             if (!permitCategories.contains(category)){
-                scanner.close();
+                // scanner.close();
                 System.out.println("Invalid Category");
                 return;
             }
@@ -152,7 +154,7 @@ public class Citations {
             boolean payment_status = scanner.nextInt() == 0 ? false : true;
             
 
-            scanner.close();
+            // scanner.close();
             // Execute insert queries in transaction in all the tables at the same time
             try{
                 connection.setAutoCommit(false);
@@ -222,8 +224,8 @@ public class Citations {
     }
 
     // Function to maintain a citation
-    public static void maintainCitation(Connection connection) throws Exception {
-        Scanner scanner = new Scanner(System.in);
+    public static void maintainCitation(Connection connection, Scanner scanner) throws Exception {
+        // Scanner scanner = new Scanner(System.in);
 
         try {
             // Take user input for Citation Number
@@ -295,7 +297,7 @@ public class Citations {
                                 category = scanner.nextLine().trim();
                                 List<String> permitCategories = List.of("Expired Permit", "Invalid Permit", "No Permit");
                                 if (!permitCategories.contains(category)) {
-                                    scanner.close();
+                                    // scanner.close();
                                     System.out.println("Invalid Category");
                                     return;
                                 }
@@ -418,7 +420,7 @@ public class Citations {
         } catch (SQLException e) {
             System.out.println("Error occurred while maintaining citation: " + e.getMessage());
         } finally {
-            scanner.close();
+            // scanner.close();
         }
     }
 
@@ -464,8 +466,8 @@ public class Citations {
     }
 
     // Function to pay a citation
-    public static void payCitation(Connection connection) throws Exception {
-        Scanner scanner = new Scanner(System.in);
+    public static void payCitation(Connection connection, Scanner scanner) throws Exception {
+        // Scanner scanner = new Scanner(System.in);
 
         try {
             System.out.print("Enter Citation Number: ");
@@ -501,13 +503,13 @@ public class Citations {
         } catch (SQLException e) {
             System.out.println("Error occurred while updating payment status: " + e.getMessage());
         } finally {
-            scanner.close();
+            // scanner.close();
         }
     }
 
     // Function to appeal a citation
-    public static void appealCitation(Connection connection) throws Exception {
-        Scanner scanner = new Scanner(System.in);
+    public static void appealCitation(Connection connection, Scanner scanner) throws Exception {
+        // Scanner scanner = new Scanner(System.in);
 
         try {
             System.out.print("Enter Citation Number: ");
@@ -571,7 +573,63 @@ public class Citations {
         } catch (SQLException e) {
             System.out.println("Error occurred while processing appeal: " + e.getMessage());
         } finally {
-            scanner.close();
+            // scanner.close();
         }
     }
+
+    public static void deleteCitation(Connection connection, Scanner scanner) {
+        try {
+            // Scanner scanner = new Scanner(System.in);
+            System.out.print("Enter Citation Number: ");
+            int citation_number = scanner.nextInt();
+            scanner.nextLine();
+            // scanner.close();
+            connection.setAutoCommit(false);
+    
+            // Delete from Appeals
+            String deleteAppealsQuery = "DELETE FROM Appeals WHERE citation_number = ?";
+            try (PreparedStatement deleteAppealsStatement = connection.prepareStatement(deleteAppealsQuery)) {
+                deleteAppealsStatement.setInt(1, citation_number);
+                deleteAppealsStatement.executeUpdate();
+            }
+    
+            // Delete from GivenTo
+            String deleteGivenToQuery = "DELETE FROM GivenTo WHERE citation_number = ?";
+            try (PreparedStatement deleteGivenToStatement = connection.prepareStatement(deleteGivenToQuery)) {
+                deleteGivenToStatement.setInt(1, citation_number);
+                deleteGivenToStatement.executeUpdate();
+            }
+    
+            // Delete from Shows
+            String deleteShowsQuery = "DELETE FROM Shows WHERE citation_number = ?";
+            try (PreparedStatement deleteShowsStatement = connection.prepareStatement(deleteShowsQuery)) {
+                deleteShowsStatement.setInt(1, citation_number);
+                deleteShowsStatement.executeUpdate();
+            }
+    
+            // Delete from Citation
+            String deleteCitationQuery = "DELETE FROM Citation WHERE citation_number = ?";
+            try (PreparedStatement deleteCitationStatement = connection.prepareStatement(deleteCitationQuery)) {
+                deleteCitationStatement.setInt(1, citation_number);
+                deleteCitationStatement.executeUpdate();
+            }
+    
+            connection.commit(); // Commit the transaction
+            System.out.println("Citation and related records deleted successfully.");
+        } catch (SQLException e) {
+            try {
+                connection.rollback(); // Rollback the transaction in case of an error
+            } catch (SQLException rollbackException) {
+                rollbackException.printStackTrace();
+            }
+            System.out.println("Error occurred while deleting citation: " + e.getMessage());
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }       
+    }
+    
 }
