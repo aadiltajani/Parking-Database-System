@@ -1,4 +1,5 @@
 package src;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
@@ -11,7 +12,6 @@ public class Main {
     public static Statement statement = null;
     public static String user = null;
     public static String password = null;
-    
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -22,7 +22,7 @@ public class Main {
                 System.out.println("Shutting down...");
                 close();
             }));
-            
+
             int option;
 
             do {
@@ -67,7 +67,7 @@ public class Main {
                     option = -1;
                 }
             } while (option != 100);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Error Occurred");
             e.printStackTrace();
         } finally {
@@ -146,7 +146,7 @@ public class Main {
                 option = sc.nextInt();
                 infoProcessing ip = new infoProcessing();
                 switch (option) {
-                    
+
                     case 1:
                         ip.enterDriverInfo(statement);
                         // Implement code for entering driver information
@@ -205,7 +205,7 @@ public class Main {
                         // Delete space info
                         // Implement code for deleting space information
                         ip.deleteSpaceInfo(statement);
-                        
+
                         break;
                     case 13:
                         // Enter permit info
@@ -307,8 +307,8 @@ public class Main {
     private static void citationsMenu(Scanner sc) {
         int option = 0;
         // Scanner sc = new Scanner(System.in);
-        do {        
-            try{
+        do {
+            try {
                 System.out.println("=============================================================================");
                 System.out.println("Generating and Maintaining Citations Menu:");
                 System.out.println("=============================================================================");
@@ -327,7 +327,7 @@ public class Main {
                 switch (option) {
                     case 1:
                         try {
-                            Citations.detectParkingViolations(connection,sc);       
+                            Citations.detectParkingViolations(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                             e.printStackTrace();
@@ -335,35 +335,35 @@ public class Main {
                         break;
                     case 2:
                         try {
-                            Citations.generateCitation(connection, sc);       
+                            Citations.generateCitation(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 3:
                         try {
-                            Citations.maintainCitation(connection, sc);       
+                            Citations.maintainCitation(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
-                        }         
+                        }
                         break;
                     case 4:
                         try {
-                            Citations.payCitation(connection, sc);       
+                            Citations.payCitation(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 5:
                         try {
-                            Citations.appealCitation(connection, sc);       
+                            Citations.appealCitation(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 6:
                         try {
-                            Citations.deleteCitation(connection, sc);       
+                            Citations.deleteCitation(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
@@ -393,14 +393,16 @@ public class Main {
                 System.out.println("\nReports Menu:");
                 System.out.println("1. Generate a report for citations");
                 System.out.println(
-                        "2. For each lot, generate a report for the total number of citations given in all zones in the lot for a given month");
+                        "2. For each lot, generate a report for the total number of citations given in all zones in the lot for a given period");
                 System.out.println(
-                        "3. For each lot, generate a report for the total number of citations given in all zones in the lot for a given year");
-                System.out.println("4. Return the list of zones for each lot as tuple pairs (lot, zone)");
-                System.out.println("5. Return the number of cars that are currently in violation");
-                System.out.println("6. Return the number of employees having permits for a given parking zone");
-                System.out.println("7. Return permit information given an ID or phone number");
-                System.out.println("8. Return an available space number given a space type in a given parking lot");
+                        "3. For each lot, generate a report for the total number of citations given in all zones in the lot for a given month");
+                System.out.println(
+                        "4. For each lot, generate a report for the total number of citations given in all zones in the lot for a given year");
+                System.out.println("5. Return the list of zones for each lot as tuple pairs (lot, zone)");
+                System.out.println("6. Return the number of cars that are currently in violation");
+                System.out.println("7. Return the number of employees having permits for a given parking zone");
+                System.out.println("8. Return permit information given an ID or phone number");
+                System.out.println("9. Return an available space number given a space type in a given parking lot");
                 System.out.println("100. Return to main menu");
                 option = sc.nextInt();
 
