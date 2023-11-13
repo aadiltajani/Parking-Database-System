@@ -1,6 +1,5 @@
 package src;
 import java.sql.*;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.*;
 import java.text.ParseException;
@@ -131,6 +130,7 @@ public class infoProcessing {
                     throw new IllegalArgumentException("Phone number must be all digits");
                 }
                 deleteDriverInfoHelper(statement, id, phoneNumber); 
+                sc.close();
                 System.out.println("Driver Deleted");
 
             }
@@ -140,6 +140,7 @@ public class infoProcessing {
                 if(id == null){
                     throw new IllegalArgumentException("ID must contain a value for deletion");
                 }
+                sc.close();
                 deleteDriverInfoHelper(statement, id, phoneNumber); 
                
             }
@@ -675,6 +676,7 @@ public class infoProcessing {
         }
     }
 
+    // appeal citation in Citations
     public void requestCitationAppeal(Statement statement){
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter phone: ");
