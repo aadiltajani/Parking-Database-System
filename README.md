@@ -19,13 +19,13 @@ Driver Information: name, status (‘S’, ‘E’, or ‘V’ depending on whet
 - Parking Lot Information: name of lot, address, zones, spaces.
 - Zone Information: zone ID (an identifier that is at most two characters long: A, B, C, D, AS, BS, CS, DS, V; zones A, B, C, D are for employees, zones with suffix ‘S’ are for students, V for visitors).
 - Space Information: space number, space type (e.g., “electric”, “handicap”, “compact car”, default is “regular”), availability status.
-- Permit Information: permit ID, lot, zone ID, space type, car license number, start date, expiration date, expiration time, vehicle list, associated UnivID or phone number, and permit type (“residential”, “commuter”, “peak hours”, “special event”, and “Park & Ride”).
-- Vehicle Information: car license number plate, model, color, manufacturer, year.
+- Permit Information: permit ID, lot, zone ID, space type, car license number, start date, expiration date, expiration time, associated UnivID or phone number, and permit type (“residential”, “commuter”, “peak hours”, “special event”, and “Park & Ride”).
+- Vehicle Information: car license number, model, color, manufacturer, year.
 - Citation Information: citation number, car license number, model, color, citation date, citation time, lot, category, fee ($25 for category “Invalid Permit,” $30 for category “Expired Permit,” $40 for category “No Permit”, but handicap users will receive a 50% discount on all citation fees), payment status.
 
 By talking to the university parking manager, we have elicited for you the following information about the Wolf Parking Management System. (Note that in working on this project, you might discover that not every bit of the information has to be explicitly captured in the database. Part of the modeling effort is to decide what to keep and what to discard. In doing your project, you will need to make additional assumptions as well as identify the potential inconsistencies and resolve them. Any reasonable assumptions are fine, but they must be documented in your reports. (You can consult with the TAs or instructor if you have questions about the assumptions.) 
 
-- Administrators of the system can add parking lots to the system, assign zones and spaces to the lots, assign a parking permit to a driver, change the vehicle list on a permit, change the availability of a space, and can check if a car has a valid permit in their lot.
+- Administrators of the system can add parking lots to the system, assign zones and spaces to the lots, assign a parking permit to a driver, change the availability of a space, and can check if a car has a valid permit in their lot.
 - To park in a lot, a user’s permit must have one of the zones designed for that lot. For example, a lot with zone designation A/B/C allows users with permits either A, B or C. The permit also must include the appropriate type designation to park in dedicated type spaces -like for electric cars.
 - Security will create/update/delete citations to vehicles that violate parking regulations; the required information for generating a citation is described above. The payment status of a citation will be changed from unpaid to paid by invoking a payment procedure.
 - Driver information, parking lots information, permit information and citation records should be kept in the database system.
