@@ -43,8 +43,16 @@ By talking to the university parking manager, we have elicited for you the follo
 ## Structure
 - `src/DemoDataLoad.java`: This file takes care of deleting any existing tables, and adding new ones with the demo data all by itself to make sure the database is loaded and ready to perform any tasks. `data/demo_data.json` is provided to view the data in json format and the script doesn't use that and is present just for reference. _Citation_number_ and _PermitId_ fields have been converted to type INT from VARCHAR for our application as that is the design that we followed prior to the availability of the demo data and as per the TAs, we are allowed to the minor changes in order to prevent last-minute design changes.
 - `src/Main.java`: This is the main script that has to be run in order to use our CLI-based menu-driven application. We have designed the application that starts with a Menu showing the various types of tasks that can be accomplished through this system. We have followed the 5 task design that includes the Information Processing Menu, Permits, and Vehicles Menu, Citations Menu, Reports Menu, Display Tables, and an Exit option. This allows us to encapsulate all tasks in their respective menu as described in the narrative, making testing and locating the needed tasks easier and simpler. We also make use of a ShutDownHook in Java that makes sure the connection to the database closes for graceful as well as erroneous shutdown of the application.
-- `src/Citations.java`: This file takes care of all the functions and tasks related to generating and maintaining citations, as well as checking for any parking violations.
+- `src/Citations.java`: This file takes care of all the functions and tasks related to generating and maintaining citations, as well as checking for any parking violations. These are the functions:
+  - `detectParkingViolations`: Take data from user and check if it violates permits
+  - `generateCitation`: Take data from user and generate a new citation
+  - `maintainCitation`: Ask user what fields are needed to be changed in an existing citation and update them
+  - `DisplayGetCitation`: Get citation information and display it before asking user to change it
+  - `payCitation`: Pay a citation.
+  - `appealCitation`: Appeal a citation, if not already appealed and set the status to Pending
+  - `deleteCitation`: Delete a citation and all related citation relationship info
 - `src/DisplayTables.java`: This file enables the user/admin to display selected tables from the database from a menu.
+  - `main`: Display menu of all table names and take user input to show table data
 - `src/InfoProcessing.java`: This file contains all the functions regarding information processing such as CRUD operations for drivers, lots, zones, space, permits, and more.
 - `src/Permits.java`: This file handles all functions and tasks related to Permits.
 - `src/Reports.java`: This file handles report generations of different kinds for the Parking Database System.
