@@ -148,100 +148,104 @@ public class Main {
                 switch (option) {
 
                     case 1:
-                        ip.enterDriverInfo(statement);
+                        ip.enterDriverInfo(statement, sc);
                         // Implement code for entering driver information
                         break;
                     case 2:
                         // Update driver info
-                        ip.updateDriverInfo(statement);
+                        ip.updateDriverInfo(statement, sc);
                         // Implement code for updating driver information
                         break;
                     case 3:
                         // Delete driver info
                         // Implement code for deleting driver information
-                        ip.deleteDriverInfo(statement);
+                        ip.deleteDriverInfo(statement, sc);
                         break;
                     case 4:
                         // Enter parking lot info
-                        ip.enterParkingLotInfo(statement);
+                        ip.enterParkingLotInfo(statement, sc);
                         // Implement code for entering parking lot information
                         break;
                     case 5:
                         // Update parking lot info
                         // Implement code for updating parking lot information
-                        ip.updateParkingLotInfo(statement);
+                        ip.updateParkingLotInfo(statement, sc);
                         break;
                     case 6:
                         // Delete parking lot info
                         // Implement code for deleting parking lot information
-                        ip.deleteParkingLotInfo(statement);
+                        ip.deleteParkingLotInfo(statement, sc);
                         break;
                     case 7:
                         // Enter zone info
                         // Implement code for entering zone information
-                        ip.enterZoneInfo(statement);
+                        ip.enterZoneInfo(statement, sc);
                         break;
                     case 8:
                         // Update zone info
                         // Implement code for updating zone information
-                        ip.updateZoneInfo(statement);
+                        ip.updateZoneInfo(statement, sc);
                         break;
                     case 9:
                         // Delete zone info
                         // Implement code for deleting zone information
-                        ip.deleteZoneInfo(statement);
+                        ip.deleteZoneInfo(statement, sc);
                         break;
                     case 10:
                         // Enter space info
                         // Implement code for entering space information
-                        ip.enterSpaceInfo(statement);
+                        ip.enterSpaceInfo(statement, sc);
                         break;
                     case 11:
                         // Update space info
                         // Implement code for updating space information
-                        ip.updateSpaceInfo(statement);
+                        ip.updateSpaceInfo(statement, sc);
                         break;
                     case 12:
                         // Delete space info
                         // Implement code for deleting space information
-                        ip.deleteSpaceInfo(statement);
+                        ip.deleteSpaceInfo(statement, sc);
 
                         break;
                     case 13:
                         // Enter permit info
                         // Implement code for entering permit information
-                        ip.enterPermitInfo(statement);
+                        ip.enterPermitInfo(statement, sc);
                         break;
                     case 14:
                         // Update permit info
                         // Implement code for updating permit information
-                        ip.updatePermitInfo();
+                        ip.updatePermitInfo(statement, sc);
                         break;
                     case 15:
                         // Delete permit info
                         // Implement code for deleting permit information
-                        ip.deletePermitInfo(statement);
+                        ip.deletePermitInfo(statement, sc);
                         break;
                     case 16:
                         // Assign zones to each parking lot
                         // Implement code for assigning zones to parking lots
                         // TODO how is this different from insert?
-                        ip.enterZoneInfo(statement);
+                        ip.enterZoneInfo(statement, sc);
                         break;
                     case 17:
                         // Assign a type to a given space
                         // Implement code for assigning space type
-                        ip.assignTypeToSpace(statement);
+                        ip.assignTypeToSpace(statement, sc);
                         break;
                     case 18:
                         // Request citation appeal
                         // Implement code for appealing a citation
-                        ip.requestCitationAppeal(statement);
+                        try {
+                            Citations.appealCitation(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                        }
                         break;
                     case 19:
                         // Update citation payment
                         // Implement code for updating citation payment
-                        ip.updateCitationPayment(statement);
+                        ip.updateCitationPayment(statement, sc);
                         break;
                     case 100:
                         System.out.println("Exiting...");

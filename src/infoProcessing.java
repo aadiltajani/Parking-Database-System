@@ -8,8 +8,7 @@ import java.util.Date;
 
 public class infoProcessing {
 
-    public void enterDriverInfo(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void enterDriverInfo(Statement statement, Scanner sc){
         System.out.print("Enter phone number: ");
         String phoneNumber = sc.nextLine().trim();
         System.out.print("\nEnter name: ");
@@ -18,7 +17,6 @@ public class infoProcessing {
         String status = sc.nextLine().trim();
         System.out.print("\nEnter university id: ");
         String id = sc.nextLine().trim();
-        sc.close();
         enterDriverInfoHelper(statement, phoneNumber, name,status, id);       
     }
 
@@ -55,10 +53,14 @@ public class infoProcessing {
 
     public void enterDriverInfoHelper(Statement statement, String phoneNumber, String name, String status, String id){
         if(!isPhone(phoneNumber)){
-            throw new IllegalArgumentException("Phone number must be all digits");
+            System.out.println("Phone number must be all digits");
+            return;
+            //throw new IllegalArgumentException("Phone number must be all digits");
         }
         if(!validStatus(status)){
-            throw new IllegalArgumentException("Status must have values 'E', 'S' or 'V'");
+            System.out.println("Status must have values 'E', 'S' or 'V'");
+            return;
+            //throw new IllegalArgumentException("Status must have values 'E', 'S' or 'V'");
         }
         String query = String.format("INSERT INTO Driver (phone, name, status, univ_id) VALUES (\'%s\', \'%s\', \'%s\', \'%s\');", phoneNumber, name, status, id);
         try{
@@ -72,8 +74,7 @@ public class infoProcessing {
     /*
      * Identify with phone or univ_id 
      */
-    public void updateDriverInfo(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void updateDriverInfo(Statement statement, Scanner sc){
         System.out.print("Enter phone number: ");
         String phoneNumber = sc.nextLine().trim();
         StringBuilder sb = new StringBuilder();
@@ -82,8 +83,10 @@ public class infoProcessing {
             System.out.print("\nEnter status : ");
             String status = sc.next().trim();
             if(!validStatus(status)){
-                sc.close();
-                throw new IllegalArgumentException("Status must have values 'E', 'S' or 'V'");
+                System.out.println("Status must have values 'E', 'S' or 'V'");
+                return;
+                // sc.close();
+                // throw new IllegalArgumentException("Status must have values 'E', 'S' or 'V'");
             }
             sb.append(String.format("status = \'%s\'", status));
         }
@@ -96,7 +99,6 @@ public class infoProcessing {
             }
             sb.append(String.format("name = \'%s\'", status));
         }
-        sc.close();
         updateDriverInfoHelper(statement, phoneNumber, sb.toString());
     }
 
@@ -115,8 +117,7 @@ public class infoProcessing {
 		}
     }
 
-    public void deleteDriverInfo(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void deleteDriverInfo(Statement statement, Scanner sc){
         int option = -1;
         String phoneNumber = null;
         String id = null;
@@ -127,10 +128,11 @@ public class infoProcessing {
                 System.out.print("\nEnter phone number: ");
                 phoneNumber = sc.nextLine().trim();
                 if(!isPhone(phoneNumber)){
-                    throw new IllegalArgumentException("Phone number must be all digits");
+                    System.out.println("Phone number must be all digits");
+                    return;
+                    //throw new IllegalArgumentException("Phone number must be all digits");
                 }
                 deleteDriverInfoHelper(statement, id, phoneNumber); 
-                sc.close();
                 System.out.println("Driver Deleted");
 
             }
@@ -138,9 +140,10 @@ public class infoProcessing {
                 System.out.print("\nEnter id: ");
                 id = sc.nextLine().trim();
                 if(id == null){
-                    throw new IllegalArgumentException("ID must contain a value for deletion");
+                    System.out.println("ID must contain a value for deletion");
+                    return;
+                    //throw new IllegalArgumentException("ID must contain a value for deletion");
                 }
-                sc.close();
                 deleteDriverInfoHelper(statement, id, phoneNumber); 
                
             }
@@ -176,13 +179,15 @@ public class infoProcessing {
      * Creates a new parking lot
      * @param statement
      */
-    public void enterParkingLotInfo(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void enterParkingLotInfo(Statement statement, Scanner sc){
         System.out.print("Enter lot name: ");
         String lot_name = sc.nextLine().trim();
+        if (lot_name == null || "".equals(lot_name)){
+            System.out.println("Lot name must have a value");
+            return;
+        }
         System.out.print("\nEnter address: ");
         String address = sc.nextLine().trim();
-        sc.close();
         enterParkingLotInfoHelper(statement, address, lot_name);
        
     }
@@ -203,15 +208,17 @@ public class infoProcessing {
 		}
     }
 
-    public void updateParkingLotInfo(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void updateParkingLotInfo(Statement statement, Scanner sc){
         String lot_name = null;
         String address = null;
         System.out.print("\nEnter lot name: ");
         lot_name = sc.nextLine().trim();
+        if (lot_name == null || "".equals(lot_name)){
+            System.out.println("Lot name must have a value");
+            return;
+        }
         System.out.print("\nUpdate address: ");
         address = sc.nextLine().trim();
-        sc.close();
         updateParkingLotInfoHelper(statement, lot_name, address);
        
     }
@@ -226,18 +233,18 @@ public class infoProcessing {
   
     }
 
-    public void deleteParkingLotInfo(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void deleteParkingLotInfo(Statement statement, Scanner sc){
         System.out.print("Enter lot name: ");
         String lot_name = sc.nextLine().trim();
-        sc.close();
         deleteParkingLotInfoHelper(statement, lot_name);
     }
 
     public int deleteParkingLotInfoHelper(Statement statement, String lot_name){
         int rowsAffected = -1;
         if(lot_name == null){
-            throw new IllegalArgumentException("Lot name must have a value");
+            System.out.println("Lot name must have a value");
+            return 0;
+            //throw new IllegalArgumentException("Lot name must have a value");
         }
         try{
             rowsAffected = statement.executeUpdate(String.format("DELETE FROM ParkingLot WHERE lot_name = \'%s\';", lot_name));
@@ -268,19 +275,19 @@ public class infoProcessing {
      * Enter zone info
      * Assign zones to each parking lot
      */
-    public void enterZoneInfo(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void enterZoneInfo(Statement statement, Scanner sc){
         System.out.print("Enter zone id: ");
         String zone_id = sc.nextLine().trim();
         System.out.print("\nEnter lot name: ");
         String lot_name = sc.nextLine().trim();
-        sc.close();
         enterZoneInfoHelper(statement, zone_id, lot_name);
     }
 
     public void enterZoneInfoHelper(Statement statement, String zone_id, String lot_name){
         if(!validZoneId(zone_id)){
-            throw new IllegalArgumentException("Zone id must be at most 2 characters");
+            System.out.println("Zone id must be at most 2 characters");
+            return;
+            //throw new IllegalArgumentException("Zone id must be at most 2 characters");
         }
         String query = String.format("INSERT INTO Zone (zone_id, lot_name) VALUES(\'%s\', \'%s\');", zone_id, lot_name);
         try{
@@ -291,13 +298,14 @@ public class infoProcessing {
 		}
     }
 
-    public void updateZoneInfo(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void updateZoneInfo(Statement statement, Scanner sc){
         System.out.print("Enter zone id: ");
         String zone_id = sc.nextLine().trim();
         if(!validZoneId(zone_id)){
-            sc.close();
-            throw new IllegalArgumentException("Zone id must be at most 2 characters");
+            System.out.println("Zone id must be at most 2 characters");
+            return;
+            // sc.close();
+            // throw new IllegalArgumentException("Zone id must be at most 2 characters");
         }
         System.out.print("\nEnter lot name: ");
         String lot_name = sc.nextLine().trim();
@@ -306,15 +314,17 @@ public class infoProcessing {
         if (option == 1){
             System.out.print("\nEnter updated zone id: ");
             String new_zone_id = sc.nextLine().trim(); 
+            if(!validZoneId(new_zone_id)){
+                System.out.println("Zone id must be at most 2 characters");
+                return;
+            }
             updateZoneInfoHelper(statement, zone_id, lot_name, new_zone_id, null);
         } else if (option == 2){
             System.out.print("\nEnter updated lot name: ");
             String new_lot_name = sc.nextLine().trim();
             updateZoneInfoHelper(statement, zone_id, lot_name, null, new_lot_name);
 
-        }
-        sc.close();
-       
+        }       
     }
 
     public void updateZoneInfoHelper(Statement statement, String zone_id, String lot_name, String new_zone_id, String new_lot_name){
@@ -335,22 +345,21 @@ public class infoProcessing {
             }
         } else {
             System.out.println("Invalid Option Selected");
-
         }
        
     }
 
-    public void deleteZoneInfo(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void deleteZoneInfo(Statement statement, Scanner sc){
         System.out.print("Enter zone id: ");
         String zone_id = sc.nextLine().trim();
         if(!validZoneId(zone_id)){
-            sc.close();
-            throw new IllegalArgumentException("Zone id must be at most 2 characters");
+            System.out.println("Zone id must be at most 2 characters");
+            return;
+            // sc.close();
+            // throw new IllegalArgumentException("Zone id must be at most 2 characters");
         }
         System.out.print("\nEnter lot name: ");
         String lot_name = sc.nextLine().trim();
-        sc.close();
         
         deleteZoneInfoHelper(statement, zone_id, lot_name);
     }
@@ -387,23 +396,25 @@ public class infoProcessing {
         return false;
     }
 
-    public void enterSpaceInfo(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void enterSpaceInfo(Statement statement, Scanner sc){
         System.out.print("Enter space number: ");
         int space_number = sc.nextInt();
         System.out.print("\nEnter zone id: ");
         String zone_id = sc.nextLine().trim();
         if(!validZoneId(zone_id)){
-            sc.close();
-            throw new IllegalArgumentException("Zone id must be at most 2 characters");
+            System.out.println("Zone id must be at most 2 characters");
+            return;
+            // sc.close();
+            // throw new IllegalArgumentException("Zone id must be at most 2 characters");
         }
         System.out.print("\nEnter lot name: ");
         String lot_name = sc.nextLine().trim();
         System.out.print("\nEnter space type: ");
         String space_type = sc.nextLine().trim();
-        sc.close();
         if(!validSpaceType(space_type)){
-            throw new IllegalArgumentException("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
+            System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
+            return;
+            //throw new IllegalArgumentException("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
         }
         enterSpaceInfoHelper(statement, space_number, zone_id, lot_name, space_type);
      
@@ -418,29 +429,33 @@ public class infoProcessing {
         }
     }
 
-    public void updateSpaceInfo(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void updateSpaceInfo(Statement statement, Scanner sc){
         System.out.print("Enter space number: ");
         int space_number = sc.nextInt();
         System.out.print("\nEnter zone id: ");
         String zone_id = sc.nextLine().trim().trim();
         if(!validZoneId(zone_id)){
-            sc.close();
-            throw new IllegalArgumentException("Zone id must be at most 2 characters");
+            System.out.println("Zone id must be at most 2 characters");
+            return;
+            // sc.close();
+            // throw new IllegalArgumentException("Zone id must be at most 2 characters");
         }
         System.out.print("\nEnter lot name: ");
         String lot_name = sc.nextLine().trim().trim();
         System.out.print("\nUpdate space type: ");
         String space_type = sc.nextLine().trim();
         if(!validSpaceType(space_type)){
-            sc.close();
-            throw new IllegalArgumentException("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
+            System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
+            return;
+            // sc.close();
+            // throw new IllegalArgumentException("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
         }
         System.out.print("\nUpdate availability status (0 or 1): ");
         int availability_status = sc.nextInt();
-        sc.close();
         if (availability_status != 1 && availability_status != 0){
-            throw new IllegalArgumentException("Availability status must have value 0 or 1");
+            //throw new IllegalArgumentException("Availability status must have value 0 or 1");
+            System.out.println("Availability status must have value 0 or 1");
+            return;
         }
         
         updateSpaceInfoHelper(statement, zone_id, lot_name, space_number, space_type, availability_status);
@@ -458,19 +473,19 @@ public class infoProcessing {
         
     }
 
-    public void deleteSpaceInfo(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void deleteSpaceInfo(Statement statement, Scanner sc){
         System.out.print("Enter space number: ");
         int space_number = sc.nextInt();
         System.out.print("\nEnter zone id: ");
         String zone_id = sc.nextLine().trim();
         if(!validZoneId(zone_id)){
-            sc.close();
-            throw new IllegalArgumentException("Zone id must be at most 2 characters");
+            System.out.println("Zone id must be at most 2 characters");
+            return;
+            // sc.close();
+            // throw new IllegalArgumentException("Zone id must be at most 2 characters");
         }
         System.out.print("\nEnter lot name: ");
         String lot_name = sc.nextLine().trim();
-        sc.close();
         deleteSpaceInfoHelper(statement, space_number, zone_id, lot_name);
     }
 
@@ -507,37 +522,44 @@ public class infoProcessing {
     /*
      * TODO possible other way to enter date
      */
-    public void enterPermitInfo(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void enterPermitInfo(Statement statement, Scanner sc){
         System.out.print("Enter permit id: ");
         int permit_id = sc.nextInt();
         System.out.print("\nEnter space type: ");
         String space_type = sc.nextLine().trim();
         if(!validSpaceType(space_type)){
-            sc.close();
-            throw new IllegalArgumentException("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
+            System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
+            return;
+            // sc.close();
+            // throw new IllegalArgumentException("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
         }
         System.out.print("\nEnter permit type: ");
         String permit_type = sc.nextLine().trim();
         System.out.print("\nEnter Start Date in format YYYY-MM-DD: ");
         String start_date = sc.nextLine().trim();
         if (!isValidDate("YYYY-MM-DD", start_date)){
-            sc.close();
-            throw new IllegalArgumentException("Date must be in format YYYY-MM-DD");
+            System.out.println("Date must be in format YYYY-MM-DD");
+            return;
+            // sc.close();
+            // throw new IllegalArgumentException("Date must be in format YYYY-MM-DD");
         }
         System.out.print("\nEnter Expiration Date in format YYYY-MM-DD: ");
         String expiration_date = sc.nextLine().trim();
         if (!isValidDate("YYYY-MM-DD", expiration_date)){
-            sc.close();
-            throw new IllegalArgumentException("Date must be in format YYYY-MM-DD");
+            System.out.println("Date must be in format YYYY-MM-DD");
+            return;
+            // sc.close();
+            // throw new IllegalArgumentException("Date must be in format YYYY-MM-DD");
         }
         System.out.print("\nEnter Expiration Time in format HH:MM:SS: ");
         String expiration_time = sc.nextLine().trim();
         if (!isValidDate("HH:MM:SS", expiration_time)){
-            sc.close();
-            throw new IllegalArgumentException("Time must be in format HH:MM:SS");
+            System.out.println("Time must be in format HH:MM:SS");
+            return;
+            // sc.close();
+            // throw new IllegalArgumentException("Time must be in format HH:MM:SS");
         }
-        sc.close();
+        //sc.close();
         enterPermitInfoHelper(statement, permit_id, space_type, permit_type, start_date, expiration_date, expiration_time);
   
     }
@@ -554,8 +576,7 @@ public class infoProcessing {
         }
     }
 
-    public void updatePermitInfo(){
-        Scanner sc = new Scanner(System.in);
+    public void updatePermitInfo(Statement statement, Scanner sc){
         System.out.print("Enter permit id: ");
         int permit_id = sc.nextInt();
         StringBuilder sb = new StringBuilder();
@@ -576,8 +597,10 @@ public class infoProcessing {
         String start_date = sc.nextLine().trim();
         if (!start_date.equals("-1")){
             if (!isValidDate("YYYY-MM-DD", start_date)){
-                sc.close();
-                throw new IllegalArgumentException("Date must be in format YYYY-MM-DD");
+                System.out.println("Date must be in format YYYY-MM-DD");
+                return;
+                // sc.close();
+                // throw new IllegalArgumentException("Date must be in format YYYY-MM-DD");
             }
             if(sb.length() > 0){
                 sb.append(", ");
@@ -588,8 +611,10 @@ public class infoProcessing {
         String expiration_date = sc.nextLine().trim();
         if (!expiration_date.equals("-1")){
             if (!isValidDate("YYYY-MM-DD", expiration_date)){
-                sc.close();
-                throw new IllegalArgumentException("Date must be in format YYYY-MM-DD");
+                System.out.println("Date must be in format YYYY-MM-DD");
+                return;
+                // sc.close();
+                // throw new IllegalArgumentException("Date must be in format YYYY-MM-DD");
             }
             if(sb.length() > 0){
                 sb.append(", ");
@@ -600,16 +625,18 @@ public class infoProcessing {
         String expiration_time = sc.nextLine().trim();
          if (!expiration_time.equals("-1")){
             if (!isValidDate("HH:MM:SS", expiration_time)){
-                sc.close();
-                throw new IllegalArgumentException("Time must be in format HH:MM:SS");
+                System.out.println("Time must be in format HH:MM:SS");
+                return;
+                // sc.close();
+                // throw new IllegalArgumentException("Time must be in format HH:MM:SS");
             }
             if(sb.length() > 0){
                 sb.append(", ");
             }
             sb.append("expiration_time = \'" + expiration_time + "\'");
         }
-        sc.close();
-        updatePermitInfoHelper(null, permit_id, expiration_time);
+        //sc.close();
+        updatePermitInfoHelper(statement, permit_id, expiration_time);
 
     }
 
@@ -623,11 +650,9 @@ public class infoProcessing {
         }
     }
 
-    public void deletePermitInfo(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void deletePermitInfo(Statement statement, Scanner sc){
         System.out.print("Enter permit id: ");
         int permit_id = sc.nextInt();
-        sc.close();
         deletePermitInfoHelper(statement, permit_id);
     }
 
@@ -649,19 +674,27 @@ public class infoProcessing {
         return 0;
     }
 
-    public void assignTypeToSpace(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void assignTypeToSpace(Statement statement, Scanner sc){
         System.out.print("Enter space number: ");
         int space_number = sc.nextInt();
         System.out.print("\nEnter zone id: ");
         String zone_id = sc.nextLine().trim();
+        if(!validZoneId(zone_id)){
+            System.out.println("Zone id must be at max two characters");
+            return;
+        }
         System.out.print("\nEnter lot name: ");
         String lot_name = sc.nextLine().trim();
+        if(lot_name == null || lot_name.equals("")){
+            System.out.println("Lot name must have a value");
+            return;
+        }
         System.out.print("\nEnter space type: ");
         String space_type = sc.nextLine().trim();
-        sc.close();
         if(!validSpaceType(space_type)){
-            throw new IllegalArgumentException("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
+            System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
+            return;
+            // throw new IllegalArgumentException("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
         }
         assignTypeToSpaceHelper(statement, space_type, space_number, lot_name, zone_id);
         
@@ -676,7 +709,7 @@ public class infoProcessing {
         }
     }
 
-    // appeal citation in Citations
+    // appeal citation in Citations, NOT USED
     public void requestCitationAppeal(Statement statement){
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter phone: ");
@@ -691,6 +724,7 @@ public class infoProcessing {
         requestCitationAppealHelper(statement, phone, citation_number);
     }
 
+    // NOT USED
     public void requestCitationAppealHelper(Statement statement, String phone, int citation_number){
         try{
             statement.executeUpdate(String.format("INSERT INTO Appeals VALUES (\'%s\', %d, 'Pending');", phone, citation_number));
@@ -700,8 +734,7 @@ public class infoProcessing {
         }
     }
 
-    public void updateCitationPayment(Statement statement){
-        Scanner sc = new Scanner(System.in);
+    public void updateCitationPayment(Statement statement, Scanner sc){
         System.out.print("\nEnter citation number: ");
         int citation_number = sc.nextInt();
         sc.close();
