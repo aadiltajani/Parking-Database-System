@@ -56,6 +56,15 @@ By talking to the university parking manager, we have elicited for you the follo
 - `src/InfoProcessing.java`: This file contains all the functions regarding information processing such as CRUD operations for drivers, lots, zones, space, permits, and more.
 - `src/Permits.java`: This file handles all functions and tasks related to Permits.
 - `src/Reports.java`: This file handles report generations of different kinds for the Parking Database System.
+   - `generateReportCitations`: Generates a report that includes the number of citations, the total number of vehicles to which citations were given, and the total fee
+   - `totalCitationsCountByTimeRange`: Generates a report for the total number of citations given in all zones in a parking lot for a specified time range (e.g. 2020-01-01 to 2021-03-15)
+   - `totalCitationsCountByMonth`: Generates a report for the total number of citations given in all zones in a parking lot for a given month
+   - `totalCitationsCountByYear`: Generates a report for the total number of citations given in all zones in a parking lot for a given year
+   - `listOfZones`: Lists all the parking zones
+   - `carsInViolation`: Returns the number of cars that are currently in violation
+   - `employeesHavePermits`: Returns the number of employees having permits for a given parking zone
+   - `returnPermitInfo`: Returns permit information given a permit ID or phone number
+   - `generateSpaceAvailable`: Returns an available space number given a space type in a given parking lot
 
 ## Design Decisions:
 
