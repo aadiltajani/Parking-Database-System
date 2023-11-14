@@ -41,6 +41,7 @@ public class maintainPermit {
 		         String permit_time_str = scanner.next();
 		         Time expiration_time = Time.valueOf(permit_time_str);
 		         scanner.nextLine();
+		         
 		         System.out.print("Permit Type (Residential, Commuter, Special Event, Peak Hours, Park & Ride): ");
 		         String permit_type = scanner.nextLine().trim();
 		         List<String> permitCategories = List.of("Residential", "Commuter", "Special Event", "Peak Hours", "Park & Ride");
@@ -111,6 +112,7 @@ public class maintainPermit {
 			                             flag=true;
 			                         } else {
 			                             System.out.println("Visitor already has a permit. Cannot assign another permit.");
+			                             return;
 			                         }
 			                         break;
 			                         
@@ -120,15 +122,17 @@ public class maintainPermit {
 			                             // No existing permits, assign permit
 			                             flag=true;
 			                         } 
-			                    	 else if (existingPermits > 0 && existingPermits <2) {
+			                    	 else if (existingPermits == 1) {
 			                             // Check permit type from Permit table
-			                             if (checkPermitType(connection, permit_id, "Special Event") || checkPermitType(connection, permit_id, "Park & Ride")) {
+			                             if (permit_type.equals("Special Event") || permit_type.equals("Park & Ride")) {
 			                                 flag=true;
 			                             } else {
-			                                 System.out.println("Invalid permit type. Cannot assign permit.");
+			                                 System.out.println("Invalid permit type for additional permit. Cannot assign permit.");
+			                                 return;
 			                             }
 			                         } else {
 			                             System.out.println("Student already has 2 permits. Cannot assign permit.");
+			                             return;
 			                         }
 			                         break;
 			                         
@@ -138,16 +142,19 @@ public class maintainPermit {
 				                             // No existing permits, assign permit
 				                             flag=true;
 				                       } 
-			                    	  else if (existingPermits > 0 && existingPermits <3) {
+			                    	  else if (existingPermits == 2) {
 			                              // Check permit type from Permit table
-			                              if (checkPermitType(connection, permit_id, "Special Event") || checkPermitType(connection, permit_id, "Park & Ride")) {
+			                              if (permit_type.equals("Special Event") || permit_type.equals("Park & Ride")) {
 			                                  flag= true;
 			                              } else {
-			                                  System.out.println("Invalid permit type. Cannot assign permit.");
+			                                  System.out.println("Invalid permit type for additional permit. Cannot assign permit.");
+			                                  return;
 			                              }
 			                          } else {
 			                              System.out.println("Maximum number of permits reached. Cannot assign another permit.");
+			                              return;
 			                          }
+			                    	  
 			                          break; 
 		                     }
 		            	 }
@@ -239,18 +246,16 @@ public class maintainPermit {
 		 }
 	
 }
-		                 
-     private static boolean checkPermitType(Connection connection, int permit_id, String permit_type) throws SQLException {
-		    String checkTypeQuery = "SELECT permit_type FROM Permit WHERE permit_id = ?";
-		    try (PreparedStatement typeStatement = connection.prepareStatement(checkTypeQuery)) {
-		               typeStatement.setInt(1, permit_id);
-		               ResultSet typeResult = typeStatement.executeQuery();
-		               return typeResult.next() && permit_type.equals(typeResult.getString("permit_type"));
-		    }
-     }
-	 
+		                  
      public static void updatePermit(Connection connection, Scanner scanner) throws Exception {
-    	 
+    	 try {
+    		 
+    	 }
+    	 catch (Exception e) {
+             System.out.println("Error occurred while updating permit: " + e.getMessage());
+         } finally {
+             // scanner.close();
+         }
      }
 	 
      public static void addVehicle(Connection connection, Scanner scanner) throws Exception{
