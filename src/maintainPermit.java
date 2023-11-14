@@ -1,8 +1,11 @@
 package src;
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class maintainPermit {
 	 public static void addPermit(Connection connection, Scanner scanner) throws Exception{
@@ -99,11 +102,19 @@ public class maintainPermit {
 		             
 		             if (statusResult.next()) { 
 		            	 String driverStatus = statusResult.getString("status");
-		            	 String checkPermitQuery = "SELECT COUNT(*) AS count FROM IsAssigned WHERE phone = ?";
+		            	 String checkPermitQuery = "SELECT COUNT(*) AS count, car_license_number FROM IsAssigned WHERE phone = ? GROUP BY car_license_number";
 		            	 try (PreparedStatement permitStatement = connection.prepareStatement(checkPermitQuery)) {
 		            		 permitStatement.setString(1, phone);
 		                     ResultSet permitResult = permitStatement.executeQuery();
-		                     int existingPermits = permitResult.next() ? permitResult.getInt("count") : 0;
+		                     
+		                     int existingPermits = 0;
+		                     Set<String> carLicenseNumbers = new HashSet<String>();
+
+		                     while (permitResult.next()) {
+		                         existingPermits++;
+		                         carLicenseNumbers.add(permitResult.getString("car_license_number"));
+		                     }
+		                     
 		                     switch (driverStatus) { 
 			                     case "V":
 			                         // Driver status is V
@@ -118,22 +129,30 @@ public class maintainPermit {
 			                         
 			                      case "S":
 			                         // Driver status is S
-			                    	 if (existingPermits == 0) {
-			                             // No existing permits, assign permit
-			                             flag=true;
-			                         } 
-			                    	 else if (existingPermits == 1) {
-			                             // Check permit type from Permit table
-			                             if (permit_type.equals("Special Event") || permit_type.equals("Park & Ride")) {
-			                                 flag=true;
-			                             } else {
-			                                 System.out.println("Invalid permit type for additional permit. Cannot assign permit.");
-			                                 return;
-			                             }
-			                         } else {
-			                             System.out.println("Student already has 2 permits. Cannot assign permit.");
-			                             return;
-			                         }
+			                    	  if (existingPermits == 0) {
+				                             // No existing permits, assign permit
+				                             flag=true;
+				                             break;
+				                      }
+				                      if (existingPermits == 1) {
+				                    	  //check if student is getting permits for at most 1 car.
+				                    	  if (carLicenseNumbers.contains(car_license_number)) {
+				                             // Check permit type from Permit table
+				                             if (permit_type.equals("Special Event") || permit_type.equals("Park & Ride")) {
+				                                 flag=true;
+				                                 break;
+				                             }else {
+				                                 System.out.println("Invalid permit type for additional permit. Cannot assign permit.");
+				                                 return;
+				                             }
+				                            }else {
+					                    		 System.out.println("Student can get permit for only 1 car.");
+					                    		 return;
+				                         }
+			                    	 
+			                    	}if(existingPermits >=2) {
+			                    		System.out.println("Student already has 2 permits. Cannot assign permit.");
+			                    		return; }
 			                         break;
 			                         
 			                      case "E":
@@ -141,16 +160,28 @@ public class maintainPermit {
 			                    	  if (existingPermits == 0 || existingPermits == 1) {
 				                             // No existing permits, assign permit
 				                             flag=true;
-				                       } 
-			                    	  else if (existingPermits == 2) {
-			                              // Check permit type from Permit table
-			                              if (permit_type.equals("Special Event") || permit_type.equals("Park & Ride")) {
-			                                  flag= true;
-			                              } else {
-			                                  System.out.println("Invalid permit type for additional permit. Cannot assign permit.");
-			                                  return;
-			                              }
-			                          } else {
+				                             break;
+				                       }
+			                    	  
+			                    	if (existingPermits == 2) {
+				                         //check employee can get permits for upto 2 cars only.
+			                    		if (carLicenseNumbers.size()==1 || (carLicenseNumbers.size()==2 && carLicenseNumbers.contains(car_license_number)) ) { 
+			                    			// Check permit type from Permit table
+			                    			if (permit_type.equals("Special Event") || permit_type.equals("Park & Ride")) {
+				                                  flag= true;
+				                                  break;
+				                              } else {
+				                                  System.out.println("Invalid permit type for additional permit. Cannot assign permit.");
+				                                  return;
+				                              }
+			                    		}
+				                    	  else {	 
+				                    		 System.out.println("Employee can get permit for upto 2 cars only.");
+				                    		 return;
+				                    		}
+				                    }
+			                    	  
+			                    	   if(existingPermits == 3) {
 			                              System.out.println("Maximum number of permits reached. Cannot assign another permit.");
 			                              return;
 			                          }

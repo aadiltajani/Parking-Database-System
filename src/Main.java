@@ -81,7 +81,7 @@ public class Main {
         Properties properties = new Properties();
         FileInputStream input = null;
         try {
-            input = new FileInputStream("../db_keys");
+            input = new FileInputStream("C:\\Users\\tekem\\Documents\\Parking-Database-System\\db_keys");
             properties.load(input);
             user = properties.getProperty("username");
             password = properties.getProperty("password");
