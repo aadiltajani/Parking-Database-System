@@ -4,7 +4,9 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Arrays;
 
 public class reports {
     public static void generateReportCitations(Connection connection) throws SQLException {
@@ -154,17 +156,13 @@ public class reports {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        // finally {
-        // sc.close();
-        // }
-
     }
 
     public static void totalCitationsCountByYear(Connection connection, Scanner sc) throws SQLException {
         // For each lot, generate a report for the total number of citations given in
         // all zones in the lot for a given year
         try (Statement stmt = connection.createStatement()) {
-
+            connection.setAutoCommit(false); // start transaction
             int year;
 
             while (true) {
@@ -184,27 +182,40 @@ public class reports {
                     + " WHERE YEAR(citation_date) = " + year
                     + " GROUP BY lot_name;";
 
-            ResultSet rs = stmt.executeQuery(query);
-            System.out.println("=======================RESULTS=======================");
-
-            if (!rs.next()) {
-                System.out.println("No records found");
-            } else {
-                System.out.println("Lot Name, Number of Citations, Number of Vehicles, Total Fees");
-                do {
-                    String lotName = rs.getString("lot_name");
-                    int numberCitations = rs.getInt("number_citations");
-                    int numberVehicles = rs.getInt("number_vehicles");
-                    float totalFees = rs.getFloat("total_fees");
-                    System.out.println(lotName + ", " + numberCitations + ", "
-                            + numberVehicles + ", " + totalFees);
-                } while (rs.next());
+            try (PreparedStatement totalCitationCountByYearStatement = connection.prepareStatement(query)) {
+                try (ResultSet rs = totalCitationCountByYearStatement.executeQuery()) {
+                    System.out.println("=======================RESULTS=======================");
+                    if (!rs.next()) {
+                        System.out.println("No records found");
+                    } else {
+                        System.out.println("Lot Name, Number of Citations, Number of Vehicles, Total Fees");
+                        do {
+                            String lotName = rs.getString("lot_name");
+                            int numberCitations = rs.getInt("number_citations");
+                            int numberVehicles = rs.getInt("number_vehicles");
+                            float totalFees = rs.getFloat("total_fees");
+                            System.out.println(lotName + ", " + numberCitations + ", "
+                                    + numberVehicles + ", " + totalFees);
+                        } while (rs.next());
+                    }
+                    System.out.println("=======================END OF RESULTS=======================");
+                }
             }
-            System.out.println("=======================END OF RESULTS=======================");
+            connection.commit(); // end transaction
             System.out.println();
-
         } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                connection.rollback(); // Rollback the transaction in case of an error
+            } catch (SQLException rollbackException) {
+                rollbackException.printStackTrace();
+            }
+            System.out.println("Error occurred while counting total citations in the year: " + e.getMessage());
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -263,43 +274,61 @@ public class reports {
 
     public static void employeesHavePermits(Connection connection, Scanner sc) throws SQLException {
         // Return the number of employees having permits for a given parking zone
-        try (Statement stmt = connection.createStatement()) {
-
+        try {
             String zone_id = "";
+            connection.setAutoCommit(false); // start transaction
 
             while (true) {
                 System.out.print("Enter Zone Id: ");
                 zone_id = sc.nextLine().trim();
 
-                if (zone_id.length() <= 2 & zone_id.length() > 0) {
+                List<String> listOfZones = Arrays.asList("A", "B", "C", "D", "AS", "BS", "CS", "DS", "V");
+
+                boolean exists = listOfZones.contains(zone_id);
+
+                if (exists) {
                     System.out.println("Zone Id: " + zone_id);
                     break; // Exit the loop when a valid input with 2 characters is entered
                 } else {
-                    System.out.println("Invalid input. Please enter 1 or 2 characters.");
+                    System.out.println("Invalid input. Please input a valid zone.");
                 }
             }
 
             String query = "SELECT COUNT(DISTINCT phone) as Number_Employees"
                     + " FROM IsAssigned NATURAL JOIN Permit NATURAL JOIN Driver NATURAL JOIN HasZone"
-                    + " WHERE zone_id= '" + zone_id + "' and status='E';";
+                    + " WHERE zone_id = ? and status='E';";
 
-            ResultSet rs = stmt.executeQuery(query);
-            System.out.println("=======================RESULTS=======================");
-
-            if (!rs.next()) {
-                System.out.println("No records found");
-            } else {
-                System.out.println("Number of Employees");
-                do {
-                    int numberEmployees = rs.getInt("number_employees");
-                    System.out.println(numberEmployees);
-                } while (rs.next());
+            try (PreparedStatement employeeHavePermitsStatement = connection.prepareStatement(query)) {
+                employeeHavePermitsStatement.setString(1, zone_id);
+                try (ResultSet rs = employeeHavePermitsStatement.executeQuery()) {
+                    System.out.println("=======================RESULTS=======================");
+                    if (!rs.next()) {
+                        System.out.println("No records found");
+                    } else {
+                        System.out.println("Number of Employees");
+                        do {
+                            int numberEmployees = rs.getInt("number_employees");
+                            System.out.println(numberEmployees);
+                        } while (rs.next());
+                    }
+                    System.out.println("=======================END OF RESULTS=======================");
+                }
             }
-
-            System.out.println("=======================END OF RESULTS=======================");
+            connection.commit(); // end transaction
             System.out.println();
         } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                connection.rollback(); // Rollback the transaction in case of an error
+            } catch (SQLException rollbackException) {
+                rollbackException.printStackTrace();
+            }
+            System.out.println("Error occurred while counting employee permit: " + e.getMessage());
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -331,15 +360,14 @@ public class reports {
                             continue;
                     }
                 } while (parameter != 1 && parameter != 2);
-                } catch (InputMismatchException e) {
-                    System.out.println("Invalid input. Please enter a number.");
-                    sc.nextLine(); // Consume the invalid input and discard it
-                }
-                
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                sc.nextLine(); // Consume the invalid input and discard it
+            }
+
             String query = "";
             String permitIdInput = "";
             String phone = "";
-
 
             if (parameter == 1) {
                 while (true) {
@@ -348,11 +376,12 @@ public class reports {
                         permitIdInput = sc.nextLine().trim();
                         break;
                     } catch (InputMismatchException e) {
-                        System.out.println("Invalid input. Please enter a number.");
+                        System.out.println("Invalid input. ");
                         sc.nextLine(); // Consume the invalid input and discard it
                     }
                 }
                 query = "SELECT * FROM Permit WHERE permit_id = '" + permitIdInput + "';";
+                System.out.println(query);
             }
 
             else {
@@ -398,7 +427,7 @@ public class reports {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } 
+        }
     }
 
     public static void generateSpaceAvailable(Connection connection, Scanner sc) throws SQLException {

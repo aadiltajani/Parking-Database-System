@@ -65,7 +65,8 @@ public class Main {
                     System.out.println("Invalid input. Please enter a number.");
                     e.printStackTrace();
                     option = -1;
-                }
+                    sc.next();
+                } 
             } while (option != 100);
         } catch (Exception e) {
             System.out.println("Error Occurred");
@@ -255,6 +256,7 @@ public class Main {
                         break;
                 }
             } catch (InputMismatchException e) {
+                sc.next();
                 System.out.println("Invalid input. Please enter a number.");
             }
         } while (option != 100);
