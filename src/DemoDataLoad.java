@@ -16,7 +16,7 @@ public class DemoDataLoad {
         String password = null;
 
         try {
-            input = new FileInputStream("../db_keys");
+            input = new FileInputStream("./db_keys");
             properties.load(input);
 
             user = properties.getProperty("username");
@@ -200,7 +200,7 @@ public class DemoDataLoad {
             "zone_id VARCHAR(2)," +
             "lot_name VARCHAR(128)," +
             "PRIMARY KEY (permit_id, zone_id, lot_name)," +
-            "FOREIGN KEY (permit_id) REFERENCES Permit(permit_id) ON UPDATE CASCADE," +
+            "FOREIGN KEY (permit_id) REFERENCES Permit(permit_id) ON UPDATE CASCADE ON DELETE CASCADE," +
             "FOREIGN KEY (zone_id) REFERENCES Zone(zone_id) ON UPDATE CASCADE ON DELETE CASCADE," +
             "FOREIGN KEY (lot_name) REFERENCES ParkingLot(lot_name) ON UPDATE CASCADE ON DELETE CASCADE" +
             ")";

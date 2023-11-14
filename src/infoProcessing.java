@@ -87,7 +87,7 @@ public class infoProcessing {
             statement.executeUpdate(query);
             System.out.println("Driver Added");
         } catch (Throwable oops) {
-			oops.printStackTrace();
+			System.out.println("Error Occurred while getting data " + oops.getMessage());
 		}
     }
 
@@ -349,8 +349,6 @@ public class infoProcessing {
         if(!validZoneId(zone_id)){
             System.out.println("Zone id must be at least 1 character and at most 2 characters");
             return;
-            // sc.close();
-            // throw new IllegalArgumentException("Zone id must be at most 2 characters");
         }
         System.out.print("\nEnter lot name: ");
         String lot_name = sc.nextLine().trim();
@@ -649,31 +647,47 @@ public class infoProcessing {
         }
     }
 
+    private boolean validPermitType(String permit_type){
+        if(permit_type == null || "".equals(permit_type)){
+            return false;
+        }
+        String[] types = {"Commuter", "Residential", "Special Event", "Peak Hours", "Park & Ride"};
+        for(int i = 0; i < types.length; i++){
+            if(types[i].toLowerCase().equals(permit_type.toLowerCase())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void updatePermitInfo(Statement statement, Scanner sc){
         System.out.print("Enter permit id: ");
         int permit_id = sc.nextInt();
+        sc.nextLine();
         StringBuilder sb = new StringBuilder();
-        System.out.print("\nUpdate space type (-1 to not update): ");
+        System.out.print("\nUpdate space type ('electric', 'handicap', 'compact car', or 'regular')\n or (-1 to not update): ");
         String space_type = sc.nextLine().trim();
         if (!space_type.equals("-1")){
             sb.append("space_type = \'" + space_type + "\'");
         } 
-        System.out.print("\nUpdate permit type (-1 to not update): ");
+        System.out.print("\nUpdate permit type ('Commuter', 'Residential', 'Special Evenet', 'Peak Hours', and 'Park & Ride')\n or (-1 to not update): ");
         String permit_type = sc.nextLine().trim();
         if (!permit_type.equals("-1")){
             if(sb.length() > 0){
                 sb.append(", ");
+            }
+            if(!validPermitType(permit_type)){ 
+                System.out.println("Invalid permit type. Must be 'Commuter', 'Residential', 'Special Evenet', 'Peak Hours', and 'Park & Ride'");
+                return;
             }
             sb.append("permit_type = \'" + permit_type + "\'");
         } 
         System.out.print("\nUpdate Start Date in format YYYY-MM-DD (-1 to not update): ");
         String start_date = sc.nextLine().trim();
         if (!start_date.equals("-1")){
-            if (!isValidDate("YYYY-MM-DD", start_date)){
+            if (!isValidDate("yyyy-MM-dd", start_date)){
                 System.out.println("Date must be in format YYYY-MM-DD");
                 return;
-                // sc.close();
-                // throw new IllegalArgumentException("Date must be in format YYYY-MM-DD");
             }
             if(sb.length() > 0){
                 sb.append(", ");
@@ -683,11 +697,9 @@ public class infoProcessing {
         System.out.print("\nUpdate Expiration Date in format YYYY-MM-DD (-1 to not update): ");
         String expiration_date = sc.nextLine().trim();
         if (!expiration_date.equals("-1")){
-            if (!isValidDate("YYYY-MM-DD", expiration_date)){
+            if (!isValidDate("yyyy-MM-dd", expiration_date)){
                 System.out.println("Date must be in format YYYY-MM-DD");
                 return;
-                // sc.close();
-                // throw new IllegalArgumentException("Date must be in format YYYY-MM-DD");
             }
             if(sb.length() > 0){
                 sb.append(", ");
@@ -695,21 +707,31 @@ public class infoProcessing {
             sb.append("expiration_date = \'" + expiration_date + "\'");
         }
         System.out.print("\nUpdate Expiration Time in format HH:MM:SS (-1 to not update): ");
-        String expiration_time = sc.nextLine().trim();
-         if (!expiration_time.equals("-1")){
-            if (!isValidDate("HH:MM:SS", expiration_time)){
+        String expiration_time_str = sc.nextLine().trim();
+
+         if (!expiration_time_str.equals("-1")){
+            try{
+                Time expiration_time = Time.valueOf(expiration_time_str);
+                if(sb.length() > 0){
+                    sb.append(", ");
+                }
+            
+            sb.append("expiration_time = \'" + expiration_time.toString() + "\'");
+
+            } catch(IllegalArgumentException e){
                 System.out.println("Time must be in format HH:MM:SS");
                 return;
-                // sc.close();
-                // throw new IllegalArgumentException("Time must be in format HH:MM:SS");
             }
-            if(sb.length() > 0){
-                sb.append(", ");
-            }
-            sb.append("expiration_time = \'" + expiration_time + "\'");
+
+            
+           
         }
-        //sc.close();
-        updatePermitInfoHelper(statement, permit_id, expiration_time);
+        if(sb.length() > 0){
+            updatePermitInfoHelper(statement, permit_id, sb.toString());
+
+        } else{
+            System.out.println("No updates were indicated for permit");
+        }
 
     }
 
@@ -719,13 +741,14 @@ public class infoProcessing {
             statement.executeUpdate(String.format(query,permit_id));
             System.out.println("Permit Updated");
         } catch (Throwable oops) {
-            oops.printStackTrace();
+            System.out.println("Error Occurred while getting data " + oops.getMessage());
         }
     }
 
     public void deletePermitInfo(Statement statement, Scanner sc){
         System.out.print("Enter permit id: ");
         int permit_id = sc.nextInt();
+        sc.nextLine();
         deletePermitInfoHelper(statement, permit_id);
     }
 
@@ -762,7 +785,7 @@ public class infoProcessing {
             System.out.println("Lot name must have a value");
             return;
         }
-        System.out.print("\nEnter space type: ");
+        System.out.print("\nEnter space type ('electric', 'handicap', 'compact car', or 'regular'): ");
         String space_type = sc.nextLine().trim();
         if(!validSpaceType(space_type)){
             System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
