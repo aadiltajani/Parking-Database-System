@@ -156,17 +156,13 @@ public class reports {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        // finally {
-        // sc.close();
-        // }
-
     }
 
     public static void totalCitationsCountByYear(Connection connection, Scanner sc) throws SQLException {
         // For each lot, generate a report for the total number of citations given in
         // all zones in the lot for a given year
         try (Statement stmt = connection.createStatement()) {
-
+            connection.setAutoCommit(false); // start transaction
             int year;
 
             while (true) {
@@ -186,27 +182,40 @@ public class reports {
                     + " WHERE YEAR(citation_date) = " + year
                     + " GROUP BY lot_name;";
 
-            ResultSet rs = stmt.executeQuery(query);
-            System.out.println("=======================RESULTS=======================");
-
-            if (!rs.next()) {
-                System.out.println("No records found");
-            } else {
-                System.out.println("Lot Name, Number of Citations, Number of Vehicles, Total Fees");
-                do {
-                    String lotName = rs.getString("lot_name");
-                    int numberCitations = rs.getInt("number_citations");
-                    int numberVehicles = rs.getInt("number_vehicles");
-                    float totalFees = rs.getFloat("total_fees");
-                    System.out.println(lotName + ", " + numberCitations + ", "
-                            + numberVehicles + ", " + totalFees);
-                } while (rs.next());
+            try (PreparedStatement totalCitationCountByYearStatement = connection.prepareStatement(query)) {
+                try (ResultSet rs = totalCitationCountByYearStatement.executeQuery()) {
+                    System.out.println("=======================RESULTS=======================");
+                    if (!rs.next()) {
+                        System.out.println("No records found");
+                    } else {
+                        System.out.println("Lot Name, Number of Citations, Number of Vehicles, Total Fees");
+                        do {
+                            String lotName = rs.getString("lot_name");
+                            int numberCitations = rs.getInt("number_citations");
+                            int numberVehicles = rs.getInt("number_vehicles");
+                            float totalFees = rs.getFloat("total_fees");
+                            System.out.println(lotName + ", " + numberCitations + ", "
+                                    + numberVehicles + ", " + totalFees);
+                        } while (rs.next());
+                    }
+                    System.out.println("=======================END OF RESULTS=======================");
+                }
             }
-            System.out.println("=======================END OF RESULTS=======================");
+            connection.commit(); // end transaction
             System.out.println();
-
         } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                connection.rollback(); // Rollback the transaction in case of an error
+            } catch (SQLException rollbackException) {
+                rollbackException.printStackTrace();
+            }
+            System.out.println("Error occurred while counting total citations in the year: " + e.getMessage());
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -267,12 +276,12 @@ public class reports {
         // Return the number of employees having permits for a given parking zone
         try {
             String zone_id = "";
-            connection.setAutoCommit(false); //start transaction 
+            connection.setAutoCommit(false); // start transaction
 
             while (true) {
                 System.out.print("Enter Zone Id: ");
                 zone_id = sc.nextLine().trim();
-                
+
                 List<String> listOfZones = Arrays.asList("A", "B", "C", "D", "AS", "BS", "CS", "DS", "V");
 
                 boolean exists = listOfZones.contains(zone_id);
@@ -305,7 +314,7 @@ public class reports {
                     System.out.println("=======================END OF RESULTS=======================");
                 }
             }
-            connection.commit(); //end transaction
+            connection.commit(); // end transaction
             System.out.println();
         } catch (SQLException e) {
             try {
@@ -313,7 +322,7 @@ public class reports {
             } catch (SQLException rollbackException) {
                 rollbackException.printStackTrace();
             }
-            System.out.println("Error occurred while deleting citation: " + e.getMessage());
+            System.out.println("Error occurred while counting employee permit: " + e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -351,15 +360,14 @@ public class reports {
                             continue;
                     }
                 } while (parameter != 1 && parameter != 2);
-                } catch (InputMismatchException e) {
-                    System.out.println("Invalid input. Please enter a number.");
-                    sc.nextLine(); // Consume the invalid input and discard it
-                }
-                
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                sc.nextLine(); // Consume the invalid input and discard it
+            }
+
             String query = "";
             String permitIdInput = "";
             String phone = "";
-
 
             if (parameter == 1) {
                 while (true) {
@@ -419,7 +427,7 @@ public class reports {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } 
+        }
     }
 
     public static void generateSpaceAvailable(Connection connection, Scanner sc) throws SQLException {
