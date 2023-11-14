@@ -274,19 +274,17 @@ public class Main {
                 System.out.println("Choose the operation from the menu by inputting the respective number:");
                 System.out.println("\nMaintaining Permits Menu:");
                 System.out.println("1. Assign permits to drivers");
-                System.out.println("2. Enter permit information");
-                System.out.println("3. Update permit information");
-                System.out.println("4. Add vehicle");
+                System.out.println("2. Update permit information");
+                System.out.println("3. Add vehicle");
+                System.out.println("4. Update vehicle information");
                 System.out.println("5. Update vehicle ownership information");
                 System.out.println("6. Remove vehicle");
                 System.out.println("100. Return to main menu");
                 option = sc.nextInt();
 
                 switch (option) {
+                    
                     case 1:
-                        // Logic to assign permits to drivers
-                        break;
-                    case 2:
                     	try {
                             maintainPermit.addPermit(connection, sc);
                         } catch (Exception e) {
@@ -294,7 +292,7 @@ public class Main {
                             e.printStackTrace();
                         }
                         break;
-                    case 3:
+                    case 2:
                     	try {
                             maintainPermit.updatePermit(connection, sc);
                         } catch (Exception e) {
@@ -302,7 +300,7 @@ public class Main {
                             e.printStackTrace();
                         }
                         break;  
-                    case 4:
+                    case 3:
                     	try {
                             maintainPermit.addVehicle(connection, sc);
                         } catch (Exception e) {
@@ -310,9 +308,17 @@ public class Main {
                             e.printStackTrace();
                         }
                         break;
-                    case 5:
+                    case 4:
                     	try {
                             maintainPermit.updateVehicle(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                            e.printStackTrace();
+                        }
+                        break;
+                    case 5:
+                    	try {
+                            maintainPermit.updateVehicleOwnership(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                             e.printStackTrace();
