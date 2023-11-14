@@ -211,7 +211,11 @@ public class Main {
                     case 13:
                         // Enter permit info
                         // Implement code for entering permit information
-                        ip.enterPermitInfo(statement, sc);
+                        try {
+                            maintainPermit.addPermit(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Error occurred while adding permit: " + e.getMessage());
+                        }
                         break;
                     case 14:
                         // Update permit info
