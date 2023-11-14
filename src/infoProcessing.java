@@ -401,8 +401,6 @@ public class infoProcessing {
         if(!validZoneId(zone_id)){
             System.out.println("Zone id must be at most 2 characters");
             return;
-            // sc.close();
-            // throw new IllegalArgumentException("Zone id must be at most 2 characters");
         }
         System.out.print("\nEnter lot name: ");
         String lot_name = sc.nextLine().trim();
@@ -445,22 +443,24 @@ public class infoProcessing {
     public void enterSpaceInfo(Statement statement, Scanner sc){
         System.out.print("Enter space number: ");
         int space_number = sc.nextInt();
+        sc.nextLine();
         System.out.print("\nEnter zone id: ");
         String zone_id = sc.nextLine().trim();
         if(!validZoneId(zone_id)){
             System.out.println("Zone id must be at most 2 characters");
             return;
-            // sc.close();
-            // throw new IllegalArgumentException("Zone id must be at most 2 characters");
         }
         System.out.print("\nEnter lot name: ");
         String lot_name = sc.nextLine().trim();
-        System.out.print("\nEnter space type: ");
+        if(lot_name == null || "".equals(lot_name)){
+            System.out.println("Lot name must have a value");
+            return;
+        }
+        System.out.print("\nEnter space type ('electric', 'handicap', 'compact car', or 'regular'): ");
         String space_type = sc.nextLine().trim();
         if(!validSpaceType(space_type)){
             System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
             return;
-            //throw new IllegalArgumentException("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
         }
         enterSpaceInfoHelper(statement, space_number, zone_id, lot_name, space_type);
      
@@ -478,38 +478,60 @@ public class infoProcessing {
     public void updateSpaceInfo(Statement statement, Scanner sc){
         System.out.print("Enter space number: ");
         int space_number = sc.nextInt();
+        sc.nextLine();
         System.out.print("\nEnter zone id: ");
         String zone_id = sc.nextLine().trim().trim();
         if(!validZoneId(zone_id)){
             System.out.println("Zone id must be at most 2 characters");
             return;
-            // sc.close();
-            // throw new IllegalArgumentException("Zone id must be at most 2 characters");
         }
         System.out.print("\nEnter lot name: ");
         String lot_name = sc.nextLine().trim().trim();
-        System.out.print("\nUpdate space type: ");
-        String space_type = sc.nextLine().trim();
-        if(!validSpaceType(space_type)){
-            System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
+        if(lot_name == null || "".equals(lot_name)){
+            System.out.println("Lot name must have a value");
             return;
-            // sc.close();
-            // throw new IllegalArgumentException("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
         }
-        System.out.print("\nUpdate availability status (0 or 1): ");
-        int availability_status = sc.nextInt();
-        if (availability_status != 1 && availability_status != 0){
-            //throw new IllegalArgumentException("Availability status must have value 0 or 1");
-            System.out.println("Availability status must have value 0 or 1");
+          // TODO
+        String space_type = null;
+        int availability_status = -1;
+        StringBuilder sb = new StringBuilder();
+        System.out.print("\nUpdate space type? (y/n): ");
+        if(sc.nextLine().equals("y")){
+            System.out.print("\nUpdate space type ('electric', 'handicap', 'compact car', or 'regular'): ");
+            space_type = sc.nextLine().trim();
+            if(!validSpaceType(space_type)){
+                System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
+                return;
+            }
+            sb.append(String.format("space_type = \'%s\'", space_type));
+        }
+        System.out.print("\nUpdate availability status? (y/n): ");
+         if(sc.nextLine().equals("y")){
+            System.out.print("\nUpdate availability status (0 or 1): ");
+            availability_status = sc.nextInt();
+            if (availability_status != 1 && availability_status != 0){
+                System.out.println("Availability status must have value 0 or 1");
+                return; 
+            }
+            if(sb.length() != 0){
+                sb.append(String.format(" , availability_status = %d", availability_status));
+
+            } else {
+                sb.append(String.format("availability_status = %d", availability_status));
+            }
+        }
+        
+        if(sb.length() == 0){
+            System.out.println("No updates to space indicated");
             return;
         }
         
-        updateSpaceInfoHelper(statement, zone_id, lot_name, space_number, space_type, availability_status);
+        updateSpaceInfoHelper(statement, zone_id, lot_name, space_number, sb.toString());
     }
 
-    public void updateSpaceInfoHelper(Statement statement, String zone_id, String lot_name, int space_number, String space_type, int availability_status){
-        String query = String.format("UPDATE Space SET availability_status = %d, space_type = \'%s\' " +
-        "WHERE zone_id = \'%s\' AND lot_name = \'%s\' AND space_number = %d;",  availability_status, space_type, zone_id, lot_name, space_number);
+    public void updateSpaceInfoHelper(Statement statement, String zone_id, String lot_name, int space_number, String updates){
+        String query = String.format("UPDATE Space SET " + updates +
+        " WHERE zone_id = \'%s\' AND lot_name = \'%s\' AND space_number = %d;",  zone_id, lot_name, space_number);
         try{
             statement.executeUpdate(query);
             System.out.println("Space Updated");
@@ -522,6 +544,7 @@ public class infoProcessing {
     public void deleteSpaceInfo(Statement statement, Scanner sc){
         System.out.print("Enter space number: ");
         int space_number = sc.nextInt();
+        sc.nextLine();
         System.out.print("\nEnter zone id: ");
         String zone_id = sc.nextLine().trim();
         if(!validZoneId(zone_id)){
@@ -532,6 +555,10 @@ public class infoProcessing {
         }
         System.out.print("\nEnter lot name: ");
         String lot_name = sc.nextLine().trim();
+        if(lot_name == null || "".equals(lot_name)){
+            System.out.println("Lot name must have a value");
+            return;
+        }
         deleteSpaceInfoHelper(statement, space_number, zone_id, lot_name);
     }
 
