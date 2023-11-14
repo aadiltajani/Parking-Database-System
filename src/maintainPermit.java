@@ -332,6 +332,18 @@ public class maintainPermit {
 	            // Scanner scanner = new Scanner(System.in);
 	            System.out.print("Enter Car licence Number: ");
 	            String car_license_number = scanner.next().trim();
+	            boolean isAssignedFlag= false;
+	            
+	            String checkIsAssignedQuery = "SELECT 1 FROM IsAssigned WHERE car_license_number = ?";
+	            try (PreparedStatement checkIsAssignedStatement = connection.prepareStatement(checkIsAssignedQuery)) { 
+	            	checkIsAssignedStatement.setString(1, car_license_number);
+	                try (ResultSet resultSet = checkIsAssignedStatement.executeQuery()) { 
+	                	if (resultSet.next()) { 
+	                		isAssignedFlag= true;
+	                     }
+	                }
+	             }
+	            
 	            connection.setAutoCommit(false);
 	    
 	            // Delete from Vehicle
@@ -340,20 +352,21 @@ public class maintainPermit {
 	                deleteVehicleStatement.setString(1, car_license_number);
 	                deleteVehicleStatement.executeUpdate();
 	            }
-	    
-//	            // Delete from GivenTo -- seems unnecessary
-//	            String deleteGivenToQuery = "DELETE FROM GivenTo WHERE car_license_number = ?";
-//	            try (PreparedStatement deleteGivenToStatement = connection.prepareStatement(deleteGivenToQuery)) {
-//	                deleteGivenToStatement.setString(1, car_license_number);
-//	                deleteGivenToStatement.executeUpdate();
-//	            }
-//	    
-//	            // Delete from IsAssigned
-//	            String deleteIsAssignedQuery = "DELETE FROM IsAssigned WHERE car_license_number = ?";
-//	            try (PreparedStatement deleteShowsStatement = connection.prepareStatement(deleteIsAssignedQuery)) {
-//	                deleteShowsStatement.setString(1, car_license_number);
-//	                deleteShowsStatement.executeUpdate();
-//	            }
+	        
+	            //if present in IsAssigned then delete from IsAssigned and also delete corresponding permits
+	            if(isAssignedFlag) { 
+	            String deleteIsAssignedQuery = "DELETE FROM IsAssigned WHERE car_license_number = ?";
+                String deletePermitQuery = "DELETE FROM Permit WHERE permit_id IN (SELECT permit_id FROM IsAssigned WHERE car_license_number = ?)";
+                try (PreparedStatement deleteIsAssignedStatement = connection.prepareStatement(deleteIsAssignedQuery);
+                        PreparedStatement deletePermitStatement = connection.prepareStatement(deletePermitQuery)) { 
+                	deleteIsAssignedStatement.setString(1, car_license_number);
+                    deletePermitStatement.setString(1, car_license_number);
+
+                    deleteIsAssignedStatement.executeUpdate();
+                    deletePermitStatement.executeUpdate(); }
+	            }
+	            
+	           
 	            connection.commit(); // Commit the transaction
 	            System.out.println("Vehicle and related records deleted successfully.");
 	        } catch (SQLException e) {
