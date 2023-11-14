@@ -65,12 +65,10 @@ public class infoProcessing {
         if(!isPhone(phoneNumber)){
             System.out.println("Phone number must be all digits");
             return;
-            //throw new IllegalArgumentException("Phone number must be all digits");
         }
         if(!validStatus(status)){
             System.out.println("Status must have values 'E', 'S' or 'V'");
             return;
-            //throw new IllegalArgumentException("Status must have values 'E', 'S' or 'V'");
         }
         String query = null;
         if (!checkID(status, id)){
@@ -87,7 +85,7 @@ public class infoProcessing {
             statement.executeUpdate(query);
             System.out.println("Driver Added");
         } catch (Throwable oops) {
-			System.out.println("Error Occurred while getting data " + oops.getMessage());
+			System.out.println("Error Occurred while inserting data " + oops.getMessage());
 		}
     }
 
@@ -107,8 +105,6 @@ public class infoProcessing {
             if(!validStatus(status)){
                 System.out.println("Status must have values 'E', 'S' or 'V'");
                 return;
-                // sc.close();
-                // throw new IllegalArgumentException("Status must have values 'E', 'S' or 'V'");
             }
             sb.append(String.format("status = \'%s\'", status));
         }
@@ -154,7 +150,8 @@ public class infoProcessing {
             }
             
         } catch (Throwable oops) {
-			oops.printStackTrace();
+			System.out.println("Error Occurred while updating data " + oops.getMessage());
+
 		}
     }
 
@@ -172,7 +169,6 @@ public class infoProcessing {
                 if(!isPhone(phoneNumber)){
                     System.out.println("Phone number must be all digits");
                     return;
-                    //throw new IllegalArgumentException("Phone number must be all digits");
                 }
                 deleteDriverInfoHelper(statement, id, phoneNumber); 
 
@@ -183,7 +179,6 @@ public class infoProcessing {
                 if(id == null || "".equals(id)){
                     System.out.println("ID must contain a value for deletion");
                     return;
-                    //throw new IllegalArgumentException("ID must contain a value for deletion");
                 }
                 deleteDriverInfoHelper(statement, id, phoneNumber); 
                
@@ -210,7 +205,8 @@ public class infoProcessing {
             return rowsAffected;
            
         } catch (Throwable oops) {
-            oops.printStackTrace();
+            System.out.println("Error Occurred while deleting data " + oops.getMessage());
+
         }
         return 0;
 
@@ -245,7 +241,8 @@ public class infoProcessing {
             statement.executeUpdate(query);
             System.out.println("Parking Lot Added");
         } catch (Throwable oops) {
-			oops.printStackTrace();
+			System.out.println("Error Occurred while inserting data " + oops.getMessage());
+
 		}
     }
 
@@ -273,7 +270,8 @@ public class infoProcessing {
                 System.out.println("Could not update parking lot");
             }
         } catch (Throwable oops) {
-			oops.printStackTrace();
+			System.out.println("Error Occurred while updating data " + oops.getMessage());
+
 		}
   
     }
@@ -289,7 +287,6 @@ public class infoProcessing {
         if(lot_name == null){
             System.out.println("Lot name must have a value");
             return 0;
-            //throw new IllegalArgumentException("Lot name must have a value");
         }
         try{
             rowsAffected = statement.executeUpdate(String.format("DELETE FROM ParkingLot WHERE lot_name = \'%s\';", lot_name));
@@ -301,7 +298,8 @@ public class infoProcessing {
             }
             return rowsAffected;
         } catch (Throwable oops) {
-            oops.printStackTrace();
+            System.out.println("Error Occurred while deleting data " + oops.getMessage());
+
         }
         return 0;
     }
@@ -332,14 +330,13 @@ public class infoProcessing {
         if(!validZoneId(zone_id)){
             System.out.println("Zone id must be at least 1 character and at most 2 characters");
             return;
-            //throw new IllegalArgumentException("Zone id must be at most 2 characters");
         }
         String query = String.format("INSERT INTO Zone (zone_id, lot_name) VALUES(\'%s\', \'%s\');", zone_id, lot_name);
         try{
             statement.executeUpdate(query);
             System.out.println("Zone Added");
         } catch (Throwable oops) {
-			oops.printStackTrace();
+			System.out.println("Error Occurred while inserting data " + oops.getMessage());
 		}
     }
 
@@ -385,7 +382,8 @@ public class infoProcessing {
                 statement.executeUpdate(query);
                 System.out.println("Zone Updated");
             } catch (Throwable oops) {
-                oops.printStackTrace();
+                System.out.println("Error Occurred while updating data " + oops.getMessage());
+
             }
         } else {
             System.out.println("Invalid opt Selected");
@@ -419,7 +417,7 @@ public class infoProcessing {
             }
             return rowsAffected;
         } catch (Throwable oops) {
-            oops.printStackTrace();
+            System.out.println("Error Occurred while deleting data " + oops.getMessage());
         }
         return 0;
     }
@@ -469,7 +467,8 @@ public class infoProcessing {
             statement.executeUpdate(String.format("INSERT INTO Space (space_number, lot_name, zone_id, space_type, availability_status) VALUES(%d, \'%s\', \'%s\', \'%s\', 1);", space_number, lot_name, zone_id, space_type));
             System.out.println("Space Added");
         } catch (Throwable oops) {
-            oops.printStackTrace();
+            System.out.println("Error Occurred while inserting data " + oops.getMessage());
+
         }
     }
 
@@ -489,7 +488,6 @@ public class infoProcessing {
             System.out.println("Lot name must have a value");
             return;
         }
-          // TODO
         String space_type = null;
         int availability_status = -1;
         StringBuilder sb = new StringBuilder();
@@ -534,7 +532,7 @@ public class infoProcessing {
             statement.executeUpdate(query);
             System.out.println("Space Updated");
         } catch (Throwable oops) {
-            oops.printStackTrace();
+			System.out.println("Error Occurred while updating data " + oops.getMessage());
         }
         
     }
@@ -548,8 +546,6 @@ public class infoProcessing {
         if(!validZoneId(zone_id)){
             System.out.println("Zone id must be at most 2 characters");
             return;
-            // sc.close();
-            // throw new IllegalArgumentException("Zone id must be at most 2 characters");
         }
         System.out.print("\nEnter lot name: ");
         String lot_name = sc.nextLine().trim();
@@ -572,7 +568,8 @@ public class infoProcessing {
             }
             return rowsAffected;
         } catch (Throwable oops) {
-            oops.printStackTrace();
+            System.out.println("Error Occurred while deleting data " + oops.getMessage());
+
         }
         return 0;
     }
@@ -590,9 +587,7 @@ public class infoProcessing {
         }
         return date != null;
     }
-    /*
-     * TODO possible other way to enter date
-     */
+    
     public void enterPermitInfo(Statement statement, Scanner sc){
         System.out.print("Enter permit id: ");
         int permit_id = sc.nextInt();
@@ -601,8 +596,6 @@ public class infoProcessing {
         if(!validSpaceType(space_type)){
             System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
             return;
-            // sc.close();
-            // throw new IllegalArgumentException("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
         }
         System.out.print("\nEnter permit type: ");
         String permit_type = sc.nextLine().trim();
@@ -611,26 +604,19 @@ public class infoProcessing {
         if (!isValidDate("YYYY-MM-DD", start_date)){
             System.out.println("Date must be in format YYYY-MM-DD");
             return;
-            // sc.close();
-            // throw new IllegalArgumentException("Date must be in format YYYY-MM-DD");
         }
         System.out.print("\nEnter Expiration Date in format YYYY-MM-DD: ");
         String expiration_date = sc.nextLine().trim();
         if (!isValidDate("YYYY-MM-DD", expiration_date)){
             System.out.println("Date must be in format YYYY-MM-DD");
             return;
-            // sc.close();
-            // throw new IllegalArgumentException("Date must be in format YYYY-MM-DD");
         }
         System.out.print("\nEnter Expiration Time in format HH:MM:SS: ");
         String expiration_time = sc.nextLine().trim();
         if (!isValidDate("HH:MM:SS", expiration_time)){
             System.out.println("Time must be in format HH:MM:SS");
             return;
-            // sc.close();
-            // throw new IllegalArgumentException("Time must be in format HH:MM:SS");
         }
-        //sc.close();
         enterPermitInfoHelper(statement, permit_id, space_type, permit_type, start_date, expiration_date, expiration_time);
   
     }
@@ -643,7 +629,7 @@ public class infoProcessing {
             statement.executeUpdate(String.format(query,permit_id, space_type, permit_type, start_date, expiration_date, expiration_time));
             System.out.println("Permit Added");
         } catch (Throwable oops) {
-            oops.printStackTrace();
+            System.out.println("Error Occurred while inserting data " + oops.getMessage());
         }
     }
 
@@ -741,7 +727,7 @@ public class infoProcessing {
             statement.executeUpdate(String.format(query,permit_id));
             System.out.println("Permit Updated");
         } catch (Throwable oops) {
-            System.out.println("Error Occurred while getting data " + oops.getMessage());
+            System.out.println("Error Occurred while updating data " + oops.getMessage());
         }
     }
 
@@ -765,7 +751,7 @@ public class infoProcessing {
             }
             return rowsDeleted;
         } catch (Throwable oops) {
-            oops.printStackTrace();
+			System.out.println("Error Occurred while deleting data " + oops.getMessage());
         }
         return 0;
     }
@@ -790,7 +776,6 @@ public class infoProcessing {
         if(!validSpaceType(space_type)){
             System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
             return;
-            // throw new IllegalArgumentException("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
         }
         assignTypeToSpaceHelper(statement, space_type, space_number, lot_name, zone_id);
         
@@ -801,7 +786,7 @@ public class infoProcessing {
             statement.executeUpdate(String.format("UPDATE Space SET space_type = \'%s\' WHERE space_number = %d AND lot_name = \'%s\' AND zone_id = \'%s\';", space_type, space_number, lot_name, zone_id));
             System.out.println("Space Type Assigned");
         } catch (Throwable oops) {
-            oops.printStackTrace();
+            System.out.println("Error Occurred while inserting data " + oops.getMessage());
         }
     }
 
@@ -833,7 +818,7 @@ public class infoProcessing {
     public void updateCitationPayment(Statement statement, Scanner sc){
         System.out.print("\nEnter citation number: ");
         int citation_number = sc.nextInt();
-        //sc.close();
+        sc.nextLine();
         updateCitationPaymentHelper(statement, citation_number);
     }
 
@@ -842,7 +827,8 @@ public class infoProcessing {
             statement.executeUpdate(String.format("UPDATE Citation set payment_status = 1 WHERE citation_number = %d;", citation_number));
             System.out.println("Citation Payment Successful");
         } catch (Throwable oops) {
-            oops.printStackTrace();
+            System.out.println("Error Occurred while updating data " + oops.getMessage());
+
         }
     }
 
