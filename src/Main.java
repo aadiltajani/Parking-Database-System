@@ -281,19 +281,44 @@ public class Main {
                         // Logic to assign permits to drivers
                         break;
                     case 2:
-                        // Logic to enter permit information
+                    	try {
+                            maintainPermit.addPermit(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                            e.printStackTrace();
+                        }
                         break;
                     case 3:
-                        // Logic to update permit information
-                        break;
+                    	try {
+                            maintainPermit.updatePermit(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                            e.printStackTrace();
+                        }
+                        break;  
                     case 4:
-                        // Logic to add vehicle
+                    	try {
+                            maintainPermit.addVehicle(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                            e.printStackTrace();
+                        }
                         break;
                     case 5:
-                        // Logic to update vehicle ownership information
+                    	try {
+                            maintainPermit.updateVehicle(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                            e.printStackTrace();
+                        }
                         break;
                     case 6:
-                        // Logic to remove vehicle
+                    	try {
+                            maintainPermit.deleteVehicle(connection, sc);
+                        } catch (Exception e) {
+                            System.out.println("Sorry. Try Again.");
+                            e.printStackTrace();
+                        }
                         break;
                     case 100:
                         System.out.println("Exiting...");
