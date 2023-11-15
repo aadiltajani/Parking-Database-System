@@ -294,7 +294,8 @@ public class Main {
                         break;
                     case 2:
                     	try {
-                            maintainPermit.updatePermit(connection, sc);
+                            infoProcessing ip = new infoProcessing();
+                            ip.updatePermitInfo(statement, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                             e.printStackTrace();
@@ -340,6 +341,7 @@ public class Main {
                         break;
                 }
             } catch (InputMismatchException e) {
+                sc.next();
                 System.out.println("Invalid input. Please enter a number.");
             }
         } while (option != 100);
@@ -420,9 +422,10 @@ public class Main {
                 }
 
             } catch (InputMismatchException e) {
+                sc.next();
                 System.out.println("Invalid input. Please enter a number.");
             }
-        } while (option != 6);
+        } while (option != 7);
     }
 
     private static void reportsMenu(Scanner sc) {
@@ -520,7 +523,7 @@ public class Main {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number.");
-                sc.nextLine(); // Consume the invalid input and discard it
+                sc.next(); // Consume the invalid input and discard it
             }
         } while (option != 100);
     }
