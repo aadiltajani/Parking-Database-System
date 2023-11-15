@@ -505,13 +505,13 @@ public class infoProcessing {
          if(sc.nextLine().equals("y")){
             System.out.print("\nUpdate availability status (0 or 1): ");
             availability_status = sc.nextInt();
+            sc.nextLine();
             if (availability_status != 1 && availability_status != 0){
                 System.out.println("Availability status must have value 0 or 1");
                 return; 
             }
             if(sb.length() != 0){
                 sb.append(String.format(" , availability_status = %d", availability_status));
-
             } else {
                 sb.append(String.format("availability_status = %d", availability_status));
             }
@@ -588,50 +588,50 @@ public class infoProcessing {
         return date != null;
     }
     
-    public void enterPermitInfo(Statement statement, Scanner sc){
-        System.out.print("Enter permit id: ");
-        int permit_id = sc.nextInt();
-        System.out.print("\nEnter space type: ");
-        String space_type = sc.nextLine().trim();
-        if(!validSpaceType(space_type)){
-            System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
-            return;
-        }
-        System.out.print("\nEnter permit type: ");
-        String permit_type = sc.nextLine().trim();
-        System.out.print("\nEnter Start Date in format YYYY-MM-DD: ");
-        String start_date = sc.nextLine().trim();
-        if (!isValidDate("YYYY-MM-DD", start_date)){
-            System.out.println("Date must be in format YYYY-MM-DD");
-            return;
-        }
-        System.out.print("\nEnter Expiration Date in format YYYY-MM-DD: ");
-        String expiration_date = sc.nextLine().trim();
-        if (!isValidDate("YYYY-MM-DD", expiration_date)){
-            System.out.println("Date must be in format YYYY-MM-DD");
-            return;
-        }
-        System.out.print("\nEnter Expiration Time in format HH:MM:SS: ");
-        String expiration_time = sc.nextLine().trim();
-        if (!isValidDate("HH:MM:SS", expiration_time)){
-            System.out.println("Time must be in format HH:MM:SS");
-            return;
-        }
-        enterPermitInfoHelper(statement, permit_id, space_type, permit_type, start_date, expiration_date, expiration_time);
+    // public void enterPermitInfo(Statement statement, Scanner sc){
+    //     System.out.print("Enter permit id: ");
+    //     int permit_id = sc.nextInt();
+    //     System.out.print("\nEnter space type: ");
+    //     String space_type = sc.nextLine().trim();
+    //     if(!validSpaceType(space_type)){
+    //         System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
+    //         return;
+    //     }
+    //     System.out.print("\nEnter permit type: ");
+    //     String permit_type = sc.nextLine().trim();
+    //     System.out.print("\nEnter Start Date in format YYYY-MM-DD: ");
+    //     String start_date = sc.nextLine().trim();
+    //     if (!isValidDate("YYYY-MM-DD", start_date)){
+    //         System.out.println("Date must be in format YYYY-MM-DD");
+    //         return;
+    //     }
+    //     System.out.print("\nEnter Expiration Date in format YYYY-MM-DD: ");
+    //     String expiration_date = sc.nextLine().trim();
+    //     if (!isValidDate("YYYY-MM-DD", expiration_date)){
+    //         System.out.println("Date must be in format YYYY-MM-DD");
+    //         return;
+    //     }
+    //     System.out.print("\nEnter Expiration Time in format HH:MM:SS: ");
+    //     String expiration_time = sc.nextLine().trim();
+    //     if (!isValidDate("HH:MM:SS", expiration_time)){
+    //         System.out.println("Time must be in format HH:MM:SS");
+    //         return;
+    //     }
+    //     enterPermitInfoHelper(statement, permit_id, space_type, permit_type, start_date, expiration_date, expiration_time);
   
-    }
+    // }
 
-    public void enterPermitInfoHelper(Statement statement, int permit_id, String space_type, String permit_type, String start_date, String expiration_date, String expiration_time){
-      try{
-            String query = "INSERT INTO Permit (permit_id, space_type, permit_type, start_date, expiration_date, expiration_time)" +
-            "VALUES (%d,\'%s\', \'%s\', \'%s\', \'%s\', \'%s\');";
+    // public void enterPermitInfoHelper(Statement statement, int permit_id, String space_type, String permit_type, String start_date, String expiration_date, String expiration_time){
+    //   try{
+    //         String query = "INSERT INTO Permit (permit_id, space_type, permit_type, start_date, expiration_date, expiration_time)" +
+    //         "VALUES (%d,\'%s\', \'%s\', \'%s\', \'%s\', \'%s\');";
             
-            statement.executeUpdate(String.format(query,permit_id, space_type, permit_type, start_date, expiration_date, expiration_time));
-            System.out.println("Permit Added");
-        } catch (Throwable oops) {
-            System.out.println("Error Occurred while inserting data " + oops.getMessage());
-        }
-    }
+    //         statement.executeUpdate(String.format(query,permit_id, space_type, permit_type, start_date, expiration_date, expiration_time));
+    //         System.out.println("Permit Added");
+    //     } catch (Throwable oops) {
+    //         System.out.println("Error Occurred while inserting data " + oops.getMessage());
+    //     }
+    // }
 
     private boolean validPermitType(String permit_type){
         if(permit_type == null || "".equals(permit_type)){
@@ -791,29 +791,29 @@ public class infoProcessing {
     }
 
     // appeal citation in Citations, NOT USED
-    public void requestCitationAppeal(Statement statement){
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Enter phone: ");
-        String phone = sc.nextLine().trim();
-        if(!isPhone(phone)){
-            sc.close();
-            throw new IllegalArgumentException("Phone number must be all digits");
-        }
-        System.out.print("\nEnter citation number: ");
-        int citation_number = sc.nextInt();
-        sc.close();
-        requestCitationAppealHelper(statement, phone, citation_number);
-    }
+    // public void requestCitationAppeal(Statement statement){
+    //     Scanner sc = new Scanner(System.in);
+    //     System.out.print("Enter phone: ");
+    //     String phone = sc.nextLine().trim();
+    //     if(!isPhone(phone)){
+    //         sc.close();
+    //         throw new IllegalArgumentException("Phone number must be all digits");
+    //     }
+    //     System.out.print("\nEnter citation number: ");
+    //     int citation_number = sc.nextInt();
+    //     sc.close();
+    //     requestCitationAppealHelper(statement, phone, citation_number);
+    // }
 
     // NOT USED
-    public void requestCitationAppealHelper(Statement statement, String phone, int citation_number){
-        try{
-            statement.executeUpdate(String.format("INSERT INTO Appeals VALUES (\'%s\', %d, 'Pending');", phone, citation_number));
-            System.out.println("Citation Appealed");
-        } catch (Throwable oops) {
-            oops.printStackTrace();
-        }
-    }
+    // public void requestCitationAppealHelper(Statement statement, String phone, int citation_number){
+    //     try{
+    //         statement.executeUpdate(String.format("INSERT INTO Appeals VALUES (\'%s\', %d, 'Pending');", phone, citation_number));
+    //         System.out.println("Citation Appealed");
+    //     } catch (Throwable oops) {
+    //         oops.printStackTrace();
+    //     }
+    // }
 
     public void updateCitationPayment(Statement statement, Scanner sc){
         System.out.print("\nEnter citation number: ");

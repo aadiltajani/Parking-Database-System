@@ -54,6 +54,23 @@ By talking to the university parking manager, we have elicited for you the follo
 - `src/DisplayTables.java`: This file enables the user/admin to display selected tables from the database from a menu.
   - `main`: Display menu of all table names and take user input to show table data
 - `src/InfoProcessing.java`: This file contains all the functions regarding information processing such as CRUD operations for drivers, lots, zones, space, permits, and more.
+  - `enterDriverInfo`: Creates a new entry in Driver from the information input by a user.
+  - `updateDriverInfo`: Updates an entry in Driver with the information input by a user.
+  - `deleteDriverInfo`: Removes entry in Driver with the phone number or university id input by the user.
+  - `enterParkingLotInfo`: Creates a new entry in ParkingLot from the information input by a user.
+  - `updateParkingLotInfo`: Updates an entry in ParkingLot with the information input by a user.
+  - `deleteParkingLotInfo`: Removes entry in ParkingLot with the lot name input by a user.
+  - `enterZoneInfo`: Creates a new entry in Zone with a zone id and lot name input by a user.
+  - `updateZoneInfo`: Updates an entry in Zone with a different zone id or lot names as input by a user.
+  - `deleteZoneInfo`: Removes an entry from Zone with the zone id and lot name input by a user.
+  - `enterSpaceInfo`: Creates a new entry in Space with the space number, zone id, and lot name input by a user.
+  - `updateSpaceInfo`: Updates an entry in Space with the space number, zone id, and lot name with information as specified by the user.
+  - `deleteSpaceInfo`: Remove an entry in Space with the space number, zone id, and lot name input by a user.
+  - `updatePermitInfo`: Updates an entry in Permit with the information specified by a user.
+  - `deletePermitInfo`: Removes and entry in Permit with the permit id specified by a user.
+  - `assignTypeToSpace`: Given a space number, zone id, and lot name, update the space with the space type input by a user.
+  - `updateCitationPayment`: Update the payment status of the given permit to paid.
+
 - `src/Permits.java`: This file handles all functions and tasks related to Permits.
 - `src/Reports.java`: This file handles report generations of different kinds for the Parking Database System.
    - `generateReportCitations`: Generates a report that includes the number of citations, the total number of vehicles to which citations were given, and the total fee
