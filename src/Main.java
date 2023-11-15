@@ -111,6 +111,7 @@ public class Main {
                 statement.close();
             } catch (SQLException e) {
                 e.printStackTrace();
+                
             }
         }
         System.out.println("Database Connection Terminated");
@@ -381,7 +382,7 @@ public class Main {
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number.");
             }
-        } while (option != 6);
+        } while (option != 7);
     }
 
     private static void reportsMenu(Scanner sc) {

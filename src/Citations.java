@@ -153,11 +153,9 @@ public class Citations {
             System.out.print("Payment Status (0 for unpaid, 1 for paid): ");
             boolean payment_status = scanner.nextInt() == 0 ? false : true;
             
-
-            // scanner.close();
             // Execute insert queries in transaction in all the tables at the same time
             try{
-                connection.setAutoCommit(false);
+                connection.setAutoCommit(false); // set autocommit to false before executing statements
                 try (PreparedStatement preparedStatement = connection.prepareStatement(insertCitationQuery)) {
                     preparedStatement.setInt(1, citation_number);
                     preparedStatement.setDate(2, citation_date);
@@ -165,11 +163,9 @@ public class Citations {
                     preparedStatement.setString(4, category);
                     preparedStatement.setFloat(5, fee);
                     preparedStatement.setBoolean(6, payment_status);
-
                     preparedStatement.executeUpdate();
-                    System.out.println("Citation generated successfully.");
                 } catch (Exception e) {
-                    connection.rollback();
+                    connection.rollback(); // in case there is an issue, rollback and return back to menu to avoid any further 
                     System.out.println("Error Occurred while inserting citation data " + e.getMessage());
                     return;
                 }
@@ -187,7 +183,6 @@ public class Citations {
                     preparedStatement.setInt(1, citation_number);
                     preparedStatement.setString(2, car_license_number);
                     preparedStatement.executeUpdate();
-                    System.out.println("Citation assigned to vehicle successfully.");
                 } catch (Exception e) {
                     connection.rollback();
                     System.out.println("Error Occurred while inserting lot data " + e.getMessage());
@@ -201,7 +196,6 @@ public class Citations {
                         preparedStatement.setString(4, color);
                         preparedStatement.setString(5, "N/A");
                         preparedStatement.executeUpdate();
-                        System.out.println("Vehicle data added successfully.");
                     } catch (Exception e) {
                         connection.rollback();
                         System.out.println("Error Occurred while inserting vehicle data " + e.getMessage());
@@ -209,10 +203,12 @@ public class Citations {
                     }   
                 }
                 connection.commit();
+                System.out.println("Citation generated successfully.");
             } catch (SQLException e) {
                 System.out.println("Error Occurred while managing transaction: " + e.getMessage());
             } finally {
                 try {
+                    System.out.println("setting autocommit true");
                     connection.setAutoCommit(true);
                 } catch (SQLException e) {
                     e.printStackTrace();
