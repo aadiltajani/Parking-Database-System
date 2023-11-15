@@ -281,7 +281,7 @@ public class Main {
                 System.out.println("6. Remove vehicle");
                 System.out.println("100. Return to main menu");
                 option = sc.nextInt();
-
+                sc.nextLine();
                 switch (option) {
                     
                     case 1:
