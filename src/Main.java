@@ -450,6 +450,7 @@ public class Main {
                 System.out.println("100. Return to main menu");
                 System.out.println("Enter Your Choice: ");
                 option = sc.nextInt();
+                sc.nextLine();
 
                 switch (option) {
                     case 1:
