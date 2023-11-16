@@ -23,12 +23,12 @@ public class Citations {
             System.out.print("Enter Car License Number: ");
             String carLicenseNumber = scanner.nextLine().trim();
 
-            System.out.print("Enter Expiration Date(YYYY-MM-DD): ");
+            System.out.print("Enter Citation Date(YYYY-MM-DD): ");
             String expiration_date_str = scanner.nextLine();
             java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(expiration_date_str);
             Date expiration_date = new Date(utilDate.getTime());
 
-            System.out.print("Enter Expiration Time(HH:MM:SS): ");
+            System.out.print("Enter Citation Time(HH:MM:SS): ");
             String expiration_time_str = scanner.nextLine().trim();
             Time expiration_time = Time.valueOf(expiration_time_str);
 

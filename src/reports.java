@@ -49,6 +49,7 @@ public class reports {
             Date startDate = null;
 
             while (true) {
+                //take user input for start date
                 System.out.print("Enter Start Date (yyyy-MM-dd): ");
                 startDateStr = sc.nextLine().trim();
 
@@ -67,6 +68,7 @@ public class reports {
             Date endDate = null;
 
             while (true) {
+                //take user input for end date
                 System.out.print("Enter End Date(yyyy-MM-dd): ");
                 endDateStr = sc.nextLine().trim();
                 try {
@@ -117,6 +119,7 @@ public class reports {
             int month;
 
             while (true) {
+                //take user input for month
                 System.out.print("Enter Month as an integer: ");
                 try {
                     month = sc.nextInt();
@@ -166,6 +169,7 @@ public class reports {
             int year;
 
             while (true) {
+                //take user input for year
                 System.out.print("Enter Year: ");
                 try {
                     year = sc.nextInt();
@@ -220,9 +224,10 @@ public class reports {
     }
 
     public static void listOfZones(Connection connection) throws SQLException {
+        // this function lists all zones 
         try (Statement stmt = connection.createStatement()) {
 
-            String query = "SELECT * FROM Zone ORDER  BY lot_name;";
+            String query = "SELECT * FROM Zone ORDER BY lot_name;";
 
             ResultSet rs = stmt.executeQuery(query);
             System.out.println("=======================RESULTS=======================");
@@ -279,6 +284,7 @@ public class reports {
             connection.setAutoCommit(false); // start transaction
 
             while (true) {
+                //take zone id as an input
                 System.out.print("Enter Zone Id: ");
                 zone_id = sc.nextLine().trim();
 
@@ -389,7 +395,6 @@ public class reports {
                     try {
                         System.out.print("Enter phone number (do not include spaces or dashes): ");
                         phone = sc.nextLine().trim();
-                        sc.nextLine();
                         break;
                     } catch (InputMismatchException e) {
                         System.out.println("Invalid input. Please enter a number.");

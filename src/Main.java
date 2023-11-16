@@ -276,7 +276,7 @@ public class Main {
                         break;
                     case 2:
                     	try {
-                            InfoProcessing ip = new InfoProcessing();
+                    		InfoProcessing ip = new InfoProcessing();
                             ip.updatePermitInfo(statement, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
