@@ -11,14 +11,14 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
 
-import src.infoProcessing;
+import src.InfoProcessing;
 
 public class infoProcessingTest {
     private static Connection connection = null;
     private static Statement statement = null;
     private static String user = null;
     private static String password = null;
-    private infoProcessing IP = new infoProcessing();
+    private InfoProcessing IP = new InfoProcessing();
 
 
 

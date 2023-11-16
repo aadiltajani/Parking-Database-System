@@ -17,12 +17,24 @@ public class InfoProcessing {
     public void enterDriverInfo(Statement statement, Scanner sc){
         System.out.print("Enter phone number: ");
         String phoneNumber = sc.nextLine().trim();
+         if(!isPhone(phoneNumber)){
+            System.out.println("Phone number must be all digits");
+            return;
+        }
         System.out.print("\nEnter name: ");
         String name = sc.nextLine().trim();
         System.out.print("\nEnter status E, V, or S: ");
         String status = sc.nextLine().trim();
-        System.out.print("\nEnter university id: ");
-        String id = sc.nextLine().trim();
+        if(!validStatus(status)){
+            System.out.println("Status must have values 'E', 'S' or 'V'");
+            return;
+        }
+        String id = null;
+        if(!"V".equals(status)){
+            System.out.print("\nEnter university id: ");
+            id = sc.nextLine().trim();
+        }
+
         if("".equals(id)){
             id = null;
         }
@@ -69,7 +81,7 @@ public class InfoProcessing {
     /*
      * checks if there is an id provided for employees and students
      */
-    private boolean checkID(String status, String id){
+    private boolean checkID(String status,  String id){
         if ((status.equals("E") || status.equals("S")) && id == null ){
             return false;
         }
@@ -78,14 +90,6 @@ public class InfoProcessing {
     }
     // checks inputs and executes query to insert a new entry in Driver
     public void enterDriverInfoHelper(Statement statement, String phoneNumber, String name, String status, String id){
-        if(!isPhone(phoneNumber)){
-            System.out.println("Phone number must be all digits");
-            return;
-        }
-        if(!validStatus(status)){
-            System.out.println("Status must have values 'E', 'S' or 'V'");
-            return;
-        }
         String query = null;
         if (!checkID(status, id)){
             System.out.println("Students and Employees must have an id");
@@ -120,10 +124,10 @@ public class InfoProcessing {
         StringBuilder sb = new StringBuilder();
         System.out.print("\nUpdate status? (y/n): ");
         if(sc.nextLine().equals("y")){
-            System.out.print("\nEnter status : ");
+            System.out.print("\nEnter status ('E', 'S', or 'V') : ");
             status = sc.nextLine().trim();
             if(!validStatus(status)){
-                System.out.println("Status must have values 'E', 'S' or 'V'");
+                System.out.println("Status must have values 'E', 'S', or 'V'");
                 return;
             }
             sb.append(String.format("status = \'%s\'", status));
@@ -137,16 +141,29 @@ public class InfoProcessing {
             }
             sb.append(String.format("name = \'%s\'", name));
         }
+        if(!"V".equals(status)){
 
-        System.out.print("\nUpdate university id? (y/n): ");
-        if(sc.nextLine().equals("y")){
-            System.out.print("\nEnter university id : ");
-            id = sc.nextLine().trim();
+            System.out.print("\nUpdate university id? (y/n): ");
+            if(sc.nextLine().equals("y")){
+                System.out.print("\nEnter university id : ");
+                id = sc.nextLine().trim();
+                if(sb.length() != 0){
+                    sb.append(" , ");
+                }
+                sb.append(String.format("univ_id = \'%s\'", id));
+            }
+            if(id == null && !prevEorS(statement, phoneNumber)){
+                System.out.println("Id must be entered if not previously an employee or student");
+                return;
+            }
+        } else {
             if(sb.length() != 0){
                 sb.append(" , ");
             }
-            sb.append(String.format("univ_id = \'%s\'", id));
+            sb.append(" univ_id = NULL ");
         }
+        
+        
         System.out.print("\nUpdate phone number? (y/n): ");
         if(sc.nextLine().equals("y")){
             System.out.print("\nEnter new phone number : ");
@@ -160,10 +177,7 @@ public class InfoProcessing {
             }
             sb.append(String.format(" phone = \'%s\' ", phone));
         }
-        if(status != null && !checkID(status, id)){
-            System.out.println("When updating the status to Student or Employee, an updated id must be assigned");
-            return;
-        }
+       
         if(sb.length() != 0){
             updateDriverInfoHelper(statement, phoneNumber, sb.toString());
         } else {
@@ -172,11 +186,30 @@ public class InfoProcessing {
         
     }
 
+    // checks the previous status of the driver to see if they need to update univ_id
+    private boolean prevEorS(Statement statement, String phone){
+        String getPrevStatus = String.format("SELECT * FROM Driver WHERE phone = \'%s\';", phone);
+        try{
+            ResultSet resultSet = statement.executeQuery(getPrevStatus);
+            if(resultSet.next()){
+                
+                String stat = resultSet.getString("status");
+                System.out.println(stat);
+                if("E".equals(stat) || "S".equals(stat)){
+                    return true;
+                }
+            } 
+        }catch (Throwable oops) {
+			System.out.println("Error while checking previous status: " + oops.getMessage());
+		}
+        return false;
+    }
     /*
      * Executes query to update driver and returns whether it was successful
      */
     public void updateDriverInfoHelper(Statement statement, String phone, String update){
         try{
+            
             int rowsAffected = 0;
             rowsAffected = statement.executeUpdate(String.format("UPDATE Driver SET %s WHERE phone = \'%s\';", update, phone));
             if(rowsAffected > 0){
@@ -731,50 +764,6 @@ public class InfoProcessing {
         return date != null;
     }
     
-    // public void enterPermitInfo(Statement statement, Scanner sc){
-    //     System.out.print("Enter permit id: ");
-    //     int permit_id = sc.nextInt();
-    //     System.out.print("\nEnter space type: ");
-    //     String space_type = sc.nextLine().trim();
-    //     if(!validSpaceType(space_type)){
-    //         System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
-    //         return;
-    //     }
-    //     System.out.print("\nEnter permit type: ");
-    //     String permit_type = sc.nextLine().trim();
-    //     System.out.print("\nEnter Start Date in format YYYY-MM-DD: ");
-    //     String start_date = sc.nextLine().trim();
-    //     if (!isValidDate("YYYY-MM-DD", start_date)){
-    //         System.out.println("Date must be in format YYYY-MM-DD");
-    //         return;
-    //     }
-    //     System.out.print("\nEnter Expiration Date in format YYYY-MM-DD: ");
-    //     String expiration_date = sc.nextLine().trim();
-    //     if (!isValidDate("YYYY-MM-DD", expiration_date)){
-    //         System.out.println("Date must be in format YYYY-MM-DD");
-    //         return;
-    //     }
-    //     System.out.print("\nEnter Expiration Time in format HH:MM:SS: ");
-    //     String expiration_time = sc.nextLine().trim();
-    //     if (!isValidDate("HH:MM:SS", expiration_time)){
-    //         System.out.println("Time must be in format HH:MM:SS");
-    //         return;
-    //     }
-    //     enterPermitInfoHelper(statement, permit_id, space_type, permit_type, start_date, expiration_date, expiration_time);
-  
-    // }
-
-    // public void enterPermitInfoHelper(Statement statement, int permit_id, String space_type, String permit_type, String start_date, String expiration_date, String expiration_time){
-    //   try{
-    //         String query = "INSERT INTO Permit (permit_id, space_type, permit_type, start_date, expiration_date, expiration_time)" +
-    //         "VALUES (%d,\'%s\', \'%s\', \'%s\', \'%s\', \'%s\');";
-            
-    //         statement.executeUpdate(String.format(query,permit_id, space_type, permit_type, start_date, expiration_date, expiration_time));
-    //         System.out.println("Permit Added");
-    //     } catch (Throwable oops) {
-    //         System.out.println("Error Occurred while inserting data " + oops.getMessage());
-    //     }
-    // }
 
     /*
      * Checks whether permit is of type commuter residential, special event, peak hours, or park & ride
@@ -954,31 +943,6 @@ public class InfoProcessing {
             System.out.println("Error Occurred while inserting data " + oops.getMessage());
         }
     }
-
-    // appeal citation in Citations, NOT USED
-    // public void requestCitationAppeal(Statement statement){
-    //     Scanner sc = new Scanner(System.in);
-    //     System.out.print("Enter phone: ");
-    //     String phone = sc.nextLine().trim();
-    //     if(!isPhone(phone)){
-    //         sc.close();
-    //         throw new IllegalArgumentException("Phone number must be all digits");
-    //     }
-    //     System.out.print("\nEnter citation number: ");
-    //     int citation_number = sc.nextInt();
-    //     sc.close();
-    //     requestCitationAppealHelper(statement, phone, citation_number);
-    // }
-
-    // NOT USED
-    // public void requestCitationAppealHelper(Statement statement, String phone, int citation_number){
-    //     try{
-    //         statement.executeUpdate(String.format("INSERT INTO Appeals VALUES (\'%s\', %d, 'Pending');", phone, citation_number));
-    //         System.out.println("Citation Appealed");
-    //     } catch (Throwable oops) {
-    //         oops.printStackTrace();
-    //     }
-    // }
 
     /*
      * Updates a citation to paid or unpaid
