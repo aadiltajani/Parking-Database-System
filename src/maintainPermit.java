@@ -20,6 +20,7 @@ public class maintainPermit {
 				 System.out.print("Permit ID: ");
 		         int permit_id = scanner.nextInt();
 		         scanner.nextLine();
+		        
 	         
 		         System.out.print("Space Type (Electric, Handicap, Compact Car, Regular): ");
 		         String space_type = scanner.nextLine().trim();
@@ -207,7 +208,6 @@ public class maintainPermit {
 		                    preparedStatement.setTime(5, expiration_time);
 		                    preparedStatement.setString(6, permit_type);
 		                    preparedStatement.executeUpdate();
-		                    System.out.println("Permit Added successfully.");
 		                } catch (Exception e) {
 		                    connection.rollback();
 		                    System.out.println("Error Occurred while inserting permit data " + e.getMessage());
@@ -263,6 +263,7 @@ public class maintainPermit {
 		                    return;
 		                }
 		                connection.commit();
+		                System.out.println("Permit Added successfully.");
 		            } catch (SQLException e) {
 		                System.out.println("Error Occurred while managing transaction: " + e.getMessage());
 		            } finally {
@@ -447,9 +448,10 @@ public class maintainPermit {
                  preparedStatementPermit.setString(1, phone);
                  preparedStatementPermit.setString(2, car_license_number);
                  preparedStatementPermit.executeUpdate();
+                 System.out.println("Vehicle Owner updated");
              } catch (Exception e) {
                  connection.rollback();
-                 System.out.println("Error Occurred while updating citation data " + e.getMessage());
+                 System.out.println("Error Occurred while updating car_license data " + e.getMessage());
                  return;
              }  
     		 
@@ -457,7 +459,8 @@ public class maintainPermit {
              System.out.println("Error occurred while updating Permit: " + e.getMessage());
          }
      }
-	 public static void deleteVehicle(Connection connection, Scanner scanner) {
+	 
+     public static void deleteVehicle(Connection connection, Scanner scanner) {
 	        try {
 	            // Scanner scanner = new Scanner(System.in);
 	            System.out.print("Enter Car licence Number: ");
