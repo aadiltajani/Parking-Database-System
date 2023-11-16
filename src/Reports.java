@@ -4,9 +4,7 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
-import java.util.Arrays;
 
 public class Reports {
     public static void generateReportCitations(Connection connection) throws SQLException {
@@ -41,25 +39,22 @@ public class Reports {
 
     public static void totalCitationsCountByTimeRange(Connection connection, Scanner sc) throws SQLException {
         // For each lot, generate a report for the total number of citations given in
-        // all zones in the lot for a given time range (e.g., monthly or annually).
+        // all zones in the lot for a given time range
         try (Statement stmt = connection.createStatement()) {
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String startDateStr;
             Date startDate = null;
 
-            while (true) {
-                // take user input for start date
-                System.out.print("Enter Start Date (yyyy-MM-dd): ");
-                startDateStr = sc.nextLine().trim();
+            // take user input for start date
+            System.out.print("Enter Start Date (yyyy-MM-dd): ");
+            startDateStr = sc.nextLine().trim();
 
-                try {
-                    startDate = new Date(dateFormat.parse(startDateStr).getTime());
-                    System.out.println("Start Date: " + startDateStr);
-                    break; // Exit the loop when a valid date is entered
-                } catch (ParseException e) {
-                    System.out.println("Invalid input for Start Date. Please use the format yyyy-MM-dd.");
-                }
+            try {
+                startDate = new Date(dateFormat.parse(startDateStr).getTime());
+                System.out.println("Start Date: " + startDateStr);
+            } catch (ParseException e) {
+                System.out.println("Invalid input for Start Date. Please use the format yyyy-MM-dd.");
             }
 
             System.out.println("You entered the Start Date: " + startDate);
@@ -67,17 +62,14 @@ public class Reports {
             String endDateStr;
             Date endDate = null;
 
-            while (true) {
-                // take user input for end date
-                System.out.print("Enter End Date(yyyy-MM-dd): ");
-                endDateStr = sc.nextLine().trim();
-                try {
-                    endDate = new Date(dateFormat.parse(endDateStr).getTime());
-                    System.out.println("End Date: " + endDateStr);
-                    break; // Exit the loop when a valid date is entered
-                } catch (ParseException e) {
-                    System.out.println("Invalid input for End Date. Please use the format yyyy-MM-dd.");
-                }
+            // take user input for end date
+            System.out.print("Enter End Date(yyyy-MM-dd): ");
+            endDateStr = sc.nextLine().trim();
+            try {
+                endDate = new Date(dateFormat.parse(endDateStr).getTime());
+                System.out.println("End Date: " + endDateStr);
+            } catch (ParseException e) {
+                System.out.println("Invalid input for End Date. Please use the format yyyy-MM-dd.");
             }
 
             String query = "SELECT lot_name, COUNT(citation_number) AS number_citations,"
@@ -116,18 +108,15 @@ public class Reports {
         // sc sc = new sc(System.in);
         try (Statement stmt = connection.createStatement()) {
 
-            int month;
+            int month = 0;
 
-            while (true) {
-                // take user input for month
-                System.out.print("Enter Month as an integer: ");
-                try {
-                    month = sc.nextInt();
-                    System.out.println("Month: " + month);
-                    break;
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid input. Please enter an integer.");
-                }
+            // take user input for month
+            System.out.print("Enter Month as an integer: ");
+            try {
+                month = sc.nextInt();
+                System.out.println("Month: " + month);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter an integer.");
             }
 
             String query = "SELECT lot_name, COUNT(citation_number) AS number_citations, "
@@ -166,18 +155,15 @@ public class Reports {
         // all zones in the lot for a given year
         try (Statement stmt = connection.createStatement()) {
             connection.setAutoCommit(false); // start transaction
-            int year;
+            int year = 0;
 
-            while (true) {
-                // take user input for year
-                System.out.print("Enter Year: ");
-                try {
-                    year = sc.nextInt();
-                    System.out.println("Year: " + year);
-                    break; // Exit the loop when a valid date is entered
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid input. Please enter an integer.");
-                }
+            // take user input for year
+            System.out.print("Enter Year: ");
+            try {
+                year = sc.nextInt();
+                System.out.println("Year: " + year);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter an integer.");
             }
 
             String query = "SELECT lot_name, COUNT(citation_number) AS number_citations,"
@@ -287,9 +273,9 @@ public class Reports {
             try {
                 // take zone id as an input
                 System.out.print("Enter Zone Id: ");
-                zone_id = sc.nextLine().trim(); 
+                zone_id = sc.nextLine().trim();
                 System.out.print("Enter parking lot name: ");
-                lot_name = sc.nextLine().trim(); 
+                lot_name = sc.nextLine().trim();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -371,30 +357,26 @@ public class Reports {
             String phone = "";
 
             if (parameter == 1) {
-                while (true) {
-                    try {
-                        System.out.print("Enter Permit ID: ");
-                        permitIdInput = sc.nextLine().trim();
-                        break;
-                    } catch (InputMismatchException e) {
-                        System.out.println("Invalid input. ");
-                        sc.nextLine(); // Consume the invalid input and discard it
-                    }
+
+                try {
+                    System.out.print("Enter Permit ID: ");
+                    permitIdInput = sc.nextLine().trim();
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. ");
+                    sc.nextLine(); // Consume the invalid input and discard it
                 }
+
                 query = "SELECT * FROM Permit WHERE permit_id = '" + permitIdInput + "';";
                 System.out.println(query);
             }
 
             else {
-                while (true) {
-                    try {
-                        System.out.print("Enter phone number (do not include spaces or dashes): ");
-                        phone = sc.nextLine().trim();
-                        break;
-                    } catch (InputMismatchException e) {
-                        System.out.println("Invalid input. Please enter a number.");
-                        sc.nextLine(); // Consume the invalid input and discard it
-                    }
+                try {
+                    System.out.print("Enter phone number (do not include spaces or dashes): ");
+                    phone = sc.nextLine().trim();
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter a number.");
+                    sc.nextLine(); // Consume the invalid input and discard it
                 }
                 query = "SELECT * FROM Permit WHERE permit_id in (SELECT permit_id FROM IsAssigned WHERE phone = '"
                         + phone + "');";
@@ -472,19 +454,14 @@ public class Reports {
             } while (option > 4);
 
             String lot_name = "";
-            do {
-                try {
-                    System.out.println("1.Dan Allen Parking Deck");
-                    System.out.println("2.Partners Way Deck");
-                    System.out.println("3.Poulton Deck");
-                    System.out.print("Enter Parking Lot: ");
-                    lot_name = sc.nextLine().trim();
 
-                } catch (InputMismatchException e) {
-                    System.out.println("Invalid input. Please enter a number.");
-                    sc.nextLine(); // Consume the invalid input and discard it
-                }
-            } while (option > 3);
+            try {
+                lot_name = sc.nextLine().trim();
+
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input");
+                sc.nextLine(); // Consume the invalid input and discard it
+            }
 
             String query = "SELECT space_number FROM Space"
                     + " WHERE space_type = '" + space_type
