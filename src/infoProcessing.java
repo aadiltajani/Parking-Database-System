@@ -45,20 +45,18 @@ public class InfoProcessing {
      * Checks that the string is all digits
      */
     private boolean isPhone(String phone){
+        // regex for all digits
         String regex = "[0-9]+"; 
  
-        // Compile the ReGex 
         Pattern p = Pattern.compile(regex); 
  
-        // If the string is empty 
-        // return false 
+       
         if (phone == null) { 
             return false; 
         } 
         Matcher m = p.matcher(phone); 
  
-        // Return if the string 
-        // matched the ReGex 
+        // Return if the match
         return m.matches(); 
     }
 
@@ -88,6 +86,7 @@ public class InfoProcessing {
         return true;
 
     }
+
     // checks inputs and executes query to insert a new entry in Driver
     public void enterDriverInfoHelper(Statement statement, String phoneNumber, String name, String status, String id){
         String query = null;
@@ -110,7 +109,7 @@ public class InfoProcessing {
     }
 
     /*
-     * Identify with phone or univ_id 
+     * Updates driver identified with phone or univ_id, and update specified fields
      */
     public void updateDriverInfo(Statement statement, Scanner sc){
         String id = null;
@@ -500,7 +499,7 @@ public class InfoProcessing {
     }
 
     /*
-     * Removes entry from zone
+     * Removes entry from zone given zone id and lot name
      */
     public void deleteZoneInfo(Statement statement, Scanner sc){
         System.out.print("Enter zone id: ");
@@ -705,7 +704,7 @@ public class InfoProcessing {
     }
 
     /*
-     * Removes entry from Space
+     * Removes entry from Space given space number, zone id, and lot name
      */
     public void deleteSpaceInfo(Statement statement, Scanner sc){
         System.out.print("Enter space number: ");
