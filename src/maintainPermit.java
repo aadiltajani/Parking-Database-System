@@ -32,17 +32,17 @@ public class maintainPermit {
 		          }
 		         
 		         System.out.print("Start Date (YYYY-MM-DD): ");
-		         String start_date_str = scanner.next();
+		         String start_date_str = scanner.nextLine();
 		         java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(start_date_str);
 		         Date start_date = new Date(utilDate.getTime());
 		         
 		         System.out.print("Expiration Date (YYYY-MM-DD): ");
-		         String expiration_date_str = scanner.next();
+		         String expiration_date_str = scanner.nextLine();
 		         java.util.Date utilDate2 = new SimpleDateFormat("yyyy-MM-dd").parse(expiration_date_str);
 		         Date expiration_date = new Date(utilDate2.getTime());
 		         
 		         System.out.print("Expiration Time (HH:mm:ss): ");
-		         String permit_time_str = scanner.next();
+		         String permit_time_str = scanner.nextLine();
 		         Time expiration_time = Time.valueOf(permit_time_str);
 		         scanner.nextLine();
 		         
@@ -62,7 +62,7 @@ public class maintainPermit {
 		         String zone_id = scanner.nextLine().trim();
 		         
 		         System.out.print("Car License Number: ");
-		         String car_license_number = scanner.next().trim();
+		         String car_license_number = scanner.nextLine().trim();
 		         boolean insertVehicle = false;
 		         String model= null;
 		         String color= null;
@@ -93,7 +93,7 @@ public class maintainPermit {
                      }
 		         insertVehicle = false;
 		         System.out.print("Driver Phone: ");
-		         String phone = scanner.next().trim();
+		         String phone = scanner.nextLine().trim();
 		         
 		         boolean flag= false;
 		         String checkDriverStatusQuery = "SELECT status FROM Driver WHERE phone = ?";
@@ -103,7 +103,7 @@ public class maintainPermit {
 		             
 		             if (statusResult.next()) { 
 		            	 String driverStatus = statusResult.getString("status");
-		            	 String checkPermitQuery = "SELECT COUNT(*) AS count, car_license_number FROM IsAssigned WHERE phone = ? GROUP BY car_license_number";
+		            	 String checkPermitQuery = "SELECT COUNT(*) AS count, permit_id, car_license_number FROM IsAssigned WHERE phone = ? GROUP BY car_license_number, permit_id";
 		            	 try (PreparedStatement permitStatement = connection.prepareStatement(checkPermitQuery)) {
 		            		 permitStatement.setString(1, phone);
 		                     ResultSet permitResult = permitStatement.executeQuery();
@@ -114,6 +114,17 @@ public class maintainPermit {
 		                     while (permitResult.next()) {
 		                         existingPermits++;
 		                         carLicenseNumbers.add(permitResult.getString("car_license_number"));
+		                     }
+		                     
+		                     if(driverStatus.equals("V") && !zone_id.equals("V")) { 
+		                    	 System.out.println("Invalid zone for Visitor Permit. Can assign V only");
+		                    	 return;
+		                     }if (driverStatus.equals("S") && !zone_id.endsWith("S")) {
+		                    	 System.out.println("Invalid zone for Student Permit. Can assign AS BS CS DS only");
+		                    	 return;
+		                     }if (driverStatus.equals("E") && (zone_id.endsWith("S") || zone_id.equals("V"))) {
+		                    	 System.out.println("Invalid zone for Employee Permit. Can assign A B C D only");
+		                    	 return;
 		                     }
 		                     
 		                     switch (driverStatus) { 
@@ -136,8 +147,8 @@ public class maintainPermit {
 				                             break;
 				                      }
 				                      if (existingPermits == 1) {
-				                    	  //check if student is getting permits for at most 1 car.
-				                    	  if (carLicenseNumbers.contains(car_license_number)) {
+				                    	 
+				                    	  
 				                             // Check permit type from Permit table
 				                             if (permit_type.equals("Special Event") || permit_type.equals("Park & Ride")) {
 				                                 flag=true;
@@ -146,10 +157,7 @@ public class maintainPermit {
 				                                 System.out.println("Invalid permit type for additional permit. Cannot assign permit.");
 				                                 return;
 				                             }
-				                            }else {
-					                    		 System.out.println("Student can get permit for only 1 car.");
-					                    		 return;
-				                         }
+				                           
 			                    	 
 			                    	}if(existingPermits >=2) {
 			                    		System.out.println("Student already has 2 permits. Cannot assign permit.");
@@ -165,8 +173,7 @@ public class maintainPermit {
 				                       }
 			                    	  
 			                    	if (existingPermits == 2) {
-				                         //check employee can get permits for upto 2 cars only.
-			                    		if (carLicenseNumbers.size()==1 || (carLicenseNumbers.size()==2 && carLicenseNumbers.contains(car_license_number)) ) { 
+				        
 			                    			// Check permit type from Permit table
 			                    			if (permit_type.equals("Special Event") || permit_type.equals("Park & Ride")) {
 				                                  flag= true;
@@ -175,11 +182,7 @@ public class maintainPermit {
 				                                  System.out.println("Invalid permit type for additional permit. Cannot assign permit.");
 				                                  return;
 				                              }
-			                    		}
-				                    	  else {	 
-				                    		 System.out.println("Employee can get permit for upto 2 cars only.");
-				                    		 return;
-				                    		}
+			                    		
 				                    }
 			                    	  
 			                    	   if(existingPermits == 3) {
@@ -279,32 +282,21 @@ public class maintainPermit {
 	
 }
 		                  
-     public static void updatePermit(Connection connection, Scanner scanner) throws Exception {
-    	 try {
-    		 
-    	 }
-    	 catch (Exception e) {
-             System.out.println("Error occurred while updating permit: " + e.getMessage());
-         } finally {
-             // scanner.close();
-         }
-     }
-	 
      public static void addVehicle(Connection connection, Scanner scanner) throws Exception{
 	 try {
 		 String insertVehicleQuery = "INSERT INTO Vehicle VALUES (?, ?, ?, ?, ?)";
 		 System.out.println("Enter vehicle details: ");
 		 System.out.print("Car License Number: ");
-         String car_license_number = scanner.next().trim();
+         String car_license_number = scanner.nextLine().trim();
          System.out.print("Model: ");
-         String model = scanner.next().trim();
+         String model = scanner.nextLine().trim();
          System.out.print("Year: ");
          int year = scanner.nextInt();
          scanner.nextLine();
          System.out.print("Color: ");
-         String color = scanner.next().trim();
+         String color = scanner.nextLine().trim();
          System.out.print("Manufacturer: ");
-         String manufacturer = scanner.next().trim();
+         String manufacturer = scanner.nextLine().trim();
          try (PreparedStatement preparedStatement = connection.prepareStatement(insertVehicleQuery)) {
          	preparedStatement.setString(1, car_license_number);
          	preparedStatement.setString(2, model);
@@ -443,16 +435,20 @@ public class maintainPermit {
     		 String car_license_number = scanner.nextLine().trim();
     		 System.out.print("Enter new phone Number: ");
     		 String phone = scanner.nextLine().trim();
-    		 String updateIsAssignedQuery = "UPDATE IsAssigned set phone = ? WHERE car_license_number = ? ";
+    		 System.out.print("Permit ID: ");
+	         int permit_id = scanner.nextInt();
+	         scanner.nextLine();
+	         
+	         String insertPermitQuery = "INSERT INTO Permit VALUES (?, ?, ?, ?, ?, ?)";
+    		 String updateIsAssignedQuery = "UPDATE IsAssigned set phone = ? and permit_id = ? WHERE car_license_number = ? ";
     		 try (PreparedStatement preparedStatementPermit = connection.prepareStatement(updateIsAssignedQuery)) {
                  preparedStatementPermit.setString(1, phone);
-                 preparedStatementPermit.setString(2, car_license_number);
+                 preparedStatementPermit.setInt(2,permit_id);
+                 preparedStatementPermit.setString(3, car_license_number);
                  preparedStatementPermit.executeUpdate();
-<<<<<<< HEAD
+
                  System.out.println("Vehicle Owner updated");
-=======
-				 System.out.println("Vehicle owner updated");
->>>>>>> 061962a35d2ef68f8cef68947fdef219dbe3e1b7
+
              } catch (Exception e) {
                  connection.rollback();
                  System.out.println("Error Occurred while updating car_license data " + e.getMessage());
@@ -468,7 +464,7 @@ public class maintainPermit {
 	        try {
 	            // Scanner scanner = new Scanner(System.in);
 	            System.out.print("Enter Car licence Number: ");
-	            String car_license_number = scanner.next().trim();
+	            String car_license_number = scanner.nextLine().trim();
 	            boolean isAssignedFlag= false;
 	            
 	            String checkIsAssignedQuery = "SELECT 1 FROM IsAssigned WHERE car_license_number = ?";
