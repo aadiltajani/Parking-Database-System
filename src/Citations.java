@@ -156,6 +156,7 @@ public class Citations {
             // Execute insert queries in transaction in all the tables at the same time
             try{
                 connection.setAutoCommit(false); // set autocommit to false before executing statements
+                // insert in citation
                 try (PreparedStatement preparedStatement = connection.prepareStatement(insertCitationQuery)) {
                     preparedStatement.setInt(1, citation_number);
                     preparedStatement.setDate(2, citation_date);
@@ -163,33 +164,36 @@ public class Citations {
                     preparedStatement.setString(4, category);
                     preparedStatement.setFloat(5, fee);
                     preparedStatement.setBoolean(6, payment_status);
-                    preparedStatement.executeUpdate();
+                    preparedStatement.executeUpdate(); // execute query
                 } catch (Exception e) {
-                    connection.rollback(); // in case there is an issue, rollback and return back to menu to avoid any further 
+                    connection.rollback(); // in case there is an issue, rollback, return back to menu to avoid any further and go to finally
                     System.out.println("Error Occurred while inserting citation data " + e.getMessage());
                     return;
                 }
                 try (PreparedStatement preparedStatement = connection.prepareStatement(insertShowsQuery)) {
+                    // insert in shows
                     preparedStatement.setInt(1, citation_number);
                     preparedStatement.setString(2, lot_name);
                     preparedStatement.executeUpdate();
                     System.out.println("Citation Lot Assigned successfully.");
                 } catch (Exception e) {
-                    connection.rollback();
+                    connection.rollback(); // in case there is an issue, rollback, return back to menu to avoid any further and go to finally
                     System.out.println("Error Occurred while inserting lot data " + e.getMessage());
                     return;
                 }
                 try (PreparedStatement preparedStatement = connection.prepareStatement(insertGivenToQuery)) {
+                    // insert in givento
                     preparedStatement.setInt(1, citation_number);
                     preparedStatement.setString(2, car_license_number);
                     preparedStatement.executeUpdate();
                 } catch (Exception e) {
-                    connection.rollback();
+                    connection.rollback(); // in case there is an issue, rollback, return back to menu to avoid any further and go to finally
                     System.out.println("Error Occurred while inserting lot data " + e.getMessage());
                     return;
                 }
                 if (insertVehicle && !model.equals(null) && !color.equals(null)){
                     try (PreparedStatement preparedStatement = connection.prepareStatement(insertVehicleQuery)) {
+                        // insert in vehicle if not found in DB
                         preparedStatement.setString(1, car_license_number);
                         preparedStatement.setString(2, model);
                         preparedStatement.setInt(3, 0000);
@@ -197,18 +201,17 @@ public class Citations {
                         preparedStatement.setString(5, "N/A");
                         preparedStatement.executeUpdate();
                     } catch (Exception e) {
-                        connection.rollback();
+                        connection.rollback(); // in case there is an issue, rollback, return back to menu to avoid any further and go to finally
                         System.out.println("Error Occurred while inserting vehicle data " + e.getMessage());
                         return;
                     }   
                 }
-                connection.commit();
+                connection.commit(); // all execution went well, so commit the transaction
                 System.out.println("Citation generated successfully.");
             } catch (SQLException e) {
                 System.out.println("Error Occurred while managing transaction: " + e.getMessage());
             } finally {
-                try {
-                    System.out.println("setting autocommit true");
+                try { // transaction is complete so set autocommit back to true
                     connection.setAutoCommit(true);
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -587,28 +590,44 @@ public class Citations {
             try (PreparedStatement deleteAppealsStatement = connection.prepareStatement(deleteAppealsQuery)) {
                 deleteAppealsStatement.setInt(1, citation_number);
                 deleteAppealsStatement.executeUpdate();
-            }
+            } catch (Exception e) {
+                connection.rollback();
+                System.out.println("Error Occurred while deleting citation " + e.getMessage());
+                return;
+            }  
     
             // Delete from GivenTo
             String deleteGivenToQuery = "DELETE FROM GivenTo WHERE citation_number = ?";
             try (PreparedStatement deleteGivenToStatement = connection.prepareStatement(deleteGivenToQuery)) {
                 deleteGivenToStatement.setInt(1, citation_number);
                 deleteGivenToStatement.executeUpdate();
-            }
+            } catch (Exception e) {
+                connection.rollback();
+                System.out.println("Error Occurred while deleting citation " + e.getMessage());
+                return;
+            }  
     
             // Delete from Shows
             String deleteShowsQuery = "DELETE FROM Shows WHERE citation_number = ?";
             try (PreparedStatement deleteShowsStatement = connection.prepareStatement(deleteShowsQuery)) {
                 deleteShowsStatement.setInt(1, citation_number);
                 deleteShowsStatement.executeUpdate();
-            }
+            } catch (Exception e) {
+                connection.rollback();
+                System.out.println("Error Occurred while deleting citation " + e.getMessage());
+                return;
+            }  
     
             // Delete from Citation
             String deleteCitationQuery = "DELETE FROM Citation WHERE citation_number = ?";
             try (PreparedStatement deleteCitationStatement = connection.prepareStatement(deleteCitationQuery)) {
                 deleteCitationStatement.setInt(1, citation_number);
                 deleteCitationStatement.executeUpdate();
-            }
+            } catch (Exception e) {
+                connection.rollback();
+                System.out.println("Error Occurred while deleting citation " + e.getMessage());
+                return;
+            }  
     
             connection.commit(); // Commit the transaction
             System.out.println("Citation and related records deleted successfully.");
