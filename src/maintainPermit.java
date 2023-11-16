@@ -91,7 +91,7 @@ public class maintainPermit {
                              }
                          }
                      }
-		         
+		         insertVehicle = false;
 		         System.out.print("Driver Phone: ");
 		         String phone = scanner.next().trim();
 		         
@@ -327,10 +327,9 @@ public class maintainPermit {
      public static void updateVehicle(Connection connection, Scanner scanner) throws Exception {
     	 try { 
     		 System.out.print("Enter Car License Number: ");
-    		 String car_license_number = scanner.next().trim();
-    		 
+    		 String car_license_number = scanner.nextLine().trim();
     		// Check if the vehicle exists
-             String selectQuery = "SELECT * FROM Vehicle WHERE car_license_number = ?";
+             String selectQuery = "SELECT * FROM Vehicle WHERE car_license_number = ? ";
              try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
                  preparedStatement.setString(1, car_license_number);
                  try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -358,25 +357,25 @@ public class maintainPermit {
                          
                          if (userChoice.equals("yes")) { 
                         	 System.out.print("Do you want to change the Car Model? (yes/no): ");
-                             if (scanner.next().trim().equalsIgnoreCase("yes")) {
+                             if (scanner.nextLine().trim().equalsIgnoreCase("yes")) {
                                  System.out.print("Model: ");
-                                 model = scanner.next().trim();
+                                 model = scanner.nextLine().trim();
                              }
                              
                              System.out.print("Do you want to change the Car Color? (yes/no): ");
-                             if (scanner.next().trim().equalsIgnoreCase("yes")) {
+                             if (scanner.nextLine().trim().equalsIgnoreCase("yes")) {
                                  System.out.print("Color: ");
-                                 color = scanner.next().trim();
+                                 color = scanner.nextLine().trim();
                              }
                              
                              System.out.print("Do you want to change the Car Manufacturer? (yes/no): ");
-                             if (scanner.next().trim().equalsIgnoreCase("yes")) {
+                             if (scanner.nextLine().trim().equalsIgnoreCase("yes")) {
                                  System.out.print("Manufacturer: ");
-                                 manufacturer = scanner.next().trim();
+                                 manufacturer = scanner.nextLine().trim();
                              }
                              
                              System.out.print("Do you want to change the Car Year? (yes/no): ");
-                             if (scanner.next().trim().equalsIgnoreCase("yes")) {
+                             if (scanner.nextLine().trim().equalsIgnoreCase("yes")) {
                                  System.out.print("Year: ");
                                  year = scanner.nextInt();
                              }
@@ -390,6 +389,7 @@ public class maintainPermit {
                                      preparedStatementCitation.setString(4, manufacturer);
                                      preparedStatementCitation.setString(5, car_license_number);
                                      preparedStatementCitation.executeUpdate();
+									 System.out.println("Vehicle information updated");
                                  } catch (Exception e) {
                                      connection.rollback();
                                      System.out.println("Error Occurred while updating vehicle data " + e.getMessage());
@@ -410,7 +410,7 @@ public class maintainPermit {
      }
      
      public static void  DisplayGetVehicle(Connection connection, String car_license_number) throws Exception {
-         String selectQuery = "SELECT * from Vehicle where car_license_number";
+         String selectQuery = "SELECT * from Vehicle where car_license_number = ?";
                  
          try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
              preparedStatement.setString(1, car_license_number);
@@ -440,15 +440,19 @@ public class maintainPermit {
      public static void updateVehicleOwnership(Connection connection, Scanner scanner) throws Exception {
     	 try {
     		 System.out.print("Enter Car License Number: ");
-    		 String car_license_number = scanner.next().trim();
+    		 String car_license_number = scanner.nextLine().trim();
     		 System.out.print("Enter new phone Number: ");
-    		 String phone = scanner.next().trim();
+    		 String phone = scanner.nextLine().trim();
     		 String updateIsAssignedQuery = "UPDATE IsAssigned set phone = ? WHERE car_license_number = ? ";
     		 try (PreparedStatement preparedStatementPermit = connection.prepareStatement(updateIsAssignedQuery)) {
                  preparedStatementPermit.setString(1, phone);
                  preparedStatementPermit.setString(2, car_license_number);
                  preparedStatementPermit.executeUpdate();
+<<<<<<< HEAD
                  System.out.println("Vehicle Owner updated");
+=======
+				 System.out.println("Vehicle owner updated");
+>>>>>>> 061962a35d2ef68f8cef68947fdef219dbe3e1b7
              } catch (Exception e) {
                  connection.rollback();
                  System.out.println("Error Occurred while updating car_license data " + e.getMessage());
@@ -479,12 +483,7 @@ public class maintainPermit {
 	            
 	            connection.setAutoCommit(false);
 	    
-	            // Delete from Vehicle
-	            String deleteVehicleQuery = "DELETE FROM Vehicle WHERE car_license_number = ?";
-	            try (PreparedStatement deleteVehicleStatement = connection.prepareStatement(deleteVehicleQuery)) {
-	                deleteVehicleStatement.setString(1, car_license_number);
-	                deleteVehicleStatement.executeUpdate();
-	            }
+	            
 	        
 	            //if present in IsAssigned then delete from IsAssigned and also delete corresponding permits
 	            if(isAssignedFlag) { 
@@ -499,7 +498,12 @@ public class maintainPermit {
                     deletePermitStatement.executeUpdate(); }
 	            }
 	            
-	           
+	           	// Delete from Vehicle
+	            String deleteVehicleQuery = "DELETE FROM Vehicle WHERE car_license_number = ?";
+	            try (PreparedStatement deleteVehicleStatement = connection.prepareStatement(deleteVehicleQuery)) {
+	                deleteVehicleStatement.setString(1, car_license_number);
+	                deleteVehicleStatement.executeUpdate();
+	            }
 	            connection.commit(); // Commit the transaction
 	            System.out.println("Vehicle and related records deleted successfully.");
 	        } catch (SQLException e) {
