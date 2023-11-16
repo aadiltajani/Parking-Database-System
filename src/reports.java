@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Arrays;
 
-public class reports {
+public class Reports {
     public static void generateReportCitations(Connection connection) throws SQLException {
         // This query gives us the number of citations, the total number of vehicles to
         // which citations were given and the total fee.
@@ -49,7 +49,7 @@ public class reports {
             Date startDate = null;
 
             while (true) {
-                //take user input for start date
+                // take user input for start date
                 System.out.print("Enter Start Date (yyyy-MM-dd): ");
                 startDateStr = sc.nextLine().trim();
 
@@ -68,7 +68,7 @@ public class reports {
             Date endDate = null;
 
             while (true) {
-                //take user input for end date
+                // take user input for end date
                 System.out.print("Enter End Date(yyyy-MM-dd): ");
                 endDateStr = sc.nextLine().trim();
                 try {
@@ -119,7 +119,7 @@ public class reports {
             int month;
 
             while (true) {
-                //take user input for month
+                // take user input for month
                 System.out.print("Enter Month as an integer: ");
                 try {
                     month = sc.nextInt();
@@ -169,7 +169,7 @@ public class reports {
             int year;
 
             while (true) {
-                //take user input for year
+                // take user input for year
                 System.out.print("Enter Year: ");
                 try {
                     year = sc.nextInt();
@@ -224,7 +224,7 @@ public class reports {
     }
 
     public static void listOfZones(Connection connection) throws SQLException {
-        // this function lists all zones 
+        // this function lists all zones
         try (Statement stmt = connection.createStatement()) {
 
             String query = "SELECT * FROM Zone ORDER BY lot_name;";
@@ -281,31 +281,26 @@ public class reports {
         // Return the number of employees having permits for a given parking zone
         try {
             String zone_id = "";
+            String lot_name = "";
             connection.setAutoCommit(false); // start transaction
 
-            while (true) {
-                //take zone id as an input
+            try {
+                // take zone id as an input
                 System.out.print("Enter Zone Id: ");
-                zone_id = sc.nextLine().trim();
-
-                List<String> listOfZones = Arrays.asList("A", "B", "C", "D", "AS", "BS", "CS", "DS", "V");
-
-                boolean exists = listOfZones.contains(zone_id);
-
-                if (exists) {
-                    System.out.println("Zone Id: " + zone_id);
-                    break; // Exit the loop when a valid input with 2 characters is entered
-                } else {
-                    System.out.println("Invalid input. Please input a valid zone.");
-                }
+                zone_id = sc.nextLine().trim(); 
+                System.out.print("Enter parking lot name: ");
+                lot_name = sc.nextLine().trim(); 
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             String query = "SELECT COUNT(DISTINCT phone) as Number_Employees"
                     + " FROM IsAssigned NATURAL JOIN Permit NATURAL JOIN Driver NATURAL JOIN HasZone"
-                    + " WHERE zone_id = ? and status='E';";
+                    + " WHERE zone_id = ? and status='E' and lot_name = ?;";
 
             try (PreparedStatement employeeHavePermitsStatement = connection.prepareStatement(query)) {
                 employeeHavePermitsStatement.setString(1, zone_id);
+                employeeHavePermitsStatement.setString(2, lot_name);
                 try (ResultSet rs = employeeHavePermitsStatement.executeQuery()) {
                     System.out.println("=======================RESULTS=======================");
                     if (!rs.next()) {
@@ -482,24 +477,9 @@ public class reports {
                     System.out.println("1.Dan Allen Parking Deck");
                     System.out.println("2.Partners Way Deck");
                     System.out.println("3.Poulton Deck");
-                    System.out.print("Enter Parking Lot (as an integer): ");
-                    option = sc.nextInt();
-                    sc.nextLine();
+                    System.out.print("Enter Parking Lot: ");
+                    lot_name = sc.nextLine().trim();
 
-                    switch (option) {
-                        case 1:
-                            lot_name = "Dan Allen Parking Deck";
-                            break;
-                        case 2:
-                            lot_name = "Partners Way Deck";
-                            break;
-                        case 3:
-                            lot_name = "Poulton Deck";
-                            break;
-                        default:
-                            System.out.println("Invalid option. Please try again.");
-                            continue;
-                    }
                 } catch (InputMismatchException e) {
                     System.out.println("Invalid input. Please enter a number.");
                     sc.nextLine(); // Consume the invalid input and discard it
