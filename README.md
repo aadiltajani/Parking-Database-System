@@ -71,7 +71,14 @@ By talking to the university parking manager, we have elicited for you the follo
   - `assignTypeToSpace`: Given a space number, zone id, and lot name, update the space with the space type input by a user.
   - `updateCitationPayment`: Update the payment status of the given permit to paid.
 
-- `src/Permits.java`: This file handles all functions and tasks related to Permits.
+- `src/MaintainPermits.java`: This file handles all functions and tasks related to handling permits and vehicle data.
+  - `addPermit` : Takes permit data from the user and assigns permits to driver.
+  - `addVehicle`: Creates a new vehicle in Vehicle table with information input from the user.
+  - `updateVehicle`: Allows user to update the attributes for the given vehicle.
+  - `DisplayGetVehicle`: Helper function for updateVehicle used to display all information for the given vehicle.
+  - `updateVehicleOwnership`: Updates the owner for given vehicle.
+  - `deleteVehicle`: Removes the vehicle and all related records from the database.
+    
 - `src/Reports.java`: This file handles report generations of different kinds for the Parking Database System.
    - `generateReportCitations`: Generates a report that includes the number of citations, the total number of vehicles to which citations were given, and the total fee
    - `totalCitationsCountByTimeRange`: Generates a report for the total number of citations given in all zones in a parking lot for a specified time range (e.g. 2020-01-01 to 2021-03-15)
