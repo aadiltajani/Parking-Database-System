@@ -395,7 +395,6 @@ public class reports {
                     try {
                         System.out.print("Enter phone number (do not include spaces or dashes): ");
                         phone = sc.nextLine().trim();
-                        sc.nextLine();
                         break;
                     } catch (InputMismatchException e) {
                         System.out.println("Invalid input. Please enter a number.");
