@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class MaintainPermit {
 
+	//addPermit: a function to assign permit to driver
 	 public static void addPermit(Connection connection, Scanner scanner) throws Exception{
 		 try { 
 				 String insertPermitQuery = "INSERT INTO Permit VALUES (?, ?, ?, ?, ?, ?)";
