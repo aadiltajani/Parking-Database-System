@@ -366,7 +366,8 @@ public class Reports {
                     sc.nextLine(); // Consume the invalid input and discard it
                 }
 
-                query = "SELECT * FROM Permit WHERE permit_id = '" + permitIdInput + "';";
+                query = "SELECT * FROM Permit JOIN IsAssigned ON Permit.permit_id = IsAssigned.permit_id JOIN HasZone ON Permit.permit_id = HasZone.permit_id WHERE Permit.permit_id = '"
+                        + permitIdInput + "';";
                 System.out.println(query);
             }
 
@@ -378,8 +379,8 @@ public class Reports {
                     System.out.println("Invalid input. Please enter a number.");
                     sc.nextLine(); // Consume the invalid input and discard it
                 }
-                query = "SELECT * FROM Permit WHERE permit_id in (SELECT permit_id FROM IsAssigned WHERE phone = '"
-                        + phone + "');";
+                query = "SELECT * FROM Permit JOIN IsAssigned ON Permit.permit_id = IsAssigned.permit_id " 
+                + "JOIN HasZone ON Permit.permit_id = HasZone.permit_id WHERE Permit.permit_id in (SELECT permit_id FROM IsAssigned WHERE phone = '" + phone + "');";
             }
 
             ResultSet rs = stmt.executeQuery(query);
@@ -390,7 +391,8 @@ public class Reports {
             if (!rs.next()) {
                 System.out.println("No records found");
             } else {
-                System.out.println("Permit Id, Space Type, Start Date, Expiration Date, Expiration Time, Permit Time");
+                System.out.println(
+                        "Permit Id Space Type, Start Date, Expiration Date, Expiration Time, Permit Type, Car License Number, Zone Id, Lot Name");
                 do {
                     int permitId = rs.getInt("permit_id");
                     String spaceType = rs.getString("space_type");
@@ -398,10 +400,12 @@ public class Reports {
                     Date expirationDate = rs.getDate("expiration_date");
                     Time expirationTime = rs.getTime("expiration_time");
                     String permitType = rs.getString("permit_type");
-                    System.out.println(
-                            permitId + ", " + spaceType + ", " + startDate + ", " + expirationDate + ", "
-                                    + expirationTime
-                                    + ", " + permitType);
+                    String carLicenseNumber = rs.getString("car_license_number");
+                    String zoneId = rs.getString("zone_id");
+                    String lotName = rs.getString("lot_name");
+                    System.out.println(permitId + ", " + spaceType + ", "
+                            + startDate + ", " + expirationDate + ", " + expirationTime + ", "
+                            + permitType + ", " + carLicenseNumber + ", " + zoneId + ", " + lotName);
                 } while (rs.next());
             }
             System.out.println("=======================END OF RESULTS=======================");
