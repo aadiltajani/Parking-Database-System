@@ -212,7 +212,10 @@ public class MaintainPermit {
 			                          break; 
 		                     }
 		            	 }
-		             }
+		             } else {
+						System.out.println("No driver records found");
+						return;
+					 }
 	                    
 	                } catch (Exception e) {
 	                    connection.rollback();
@@ -443,37 +446,26 @@ public class MaintainPermit {
      
      public static void updateVehicleOwnership(Connection connection, Scanner scanner) throws Exception {
     	 try {
-    		 System.out.print("Enter Car License Number: ");
-    		 String car_license_number = scanner.nextLine().trim();
-    		 System.out.print("Enter new phone Number: ");
-    		 String phone = scanner.nextLine().trim();
-    		 System.out.print("Permit ID: ");
-	         int permit_id = scanner.nextInt();
-	         
-	         //String insertPermitQuery = "INSERT INTO Permit VALUES (?, ?, ?, ?, ?, ?)";
-    		 String updateIsAssignedQuery = "UPDATE IsAssigned set phone = ? and permit_id = ? WHERE car_license_number = ? ";
-    		 try (PreparedStatement preparedStatementPermit = connection.prepareStatement(updateIsAssignedQuery)) {
-                 preparedStatementPermit.setString(1, phone);
-                 preparedStatementPermit.setInt(2,permit_id);
-                 preparedStatementPermit.setString(3, car_license_number);
-                 preparedStatementPermit.executeUpdate();
+    		System.out.print("Enter Car License Number: ");
+    		String car_license_number = scanner.nextLine().trim();
 
-                 System.out.println("Vehicle Owner updated");
-
-             } catch (Exception e) {
-                 connection.rollback();
-                 System.out.println("Error Occurred while updating car_license data " + e.getMessage());
-                 return;
-             }  
-    		 
-    	 }catch (Exception e) {
-             System.out.println("Error occurred while updating Permit: " + e.getMessage());
-         }
+				String deletePermitQuery = "DELETE FROM Permit WHERE permit_id IN (SELECT permit_id FROM IsAssigned WHERE car_license_number = ?)";
+				try (PreparedStatement preparedStatement = connection.prepareStatement(deletePermitQuery)) {
+					preparedStatement.setString(1, car_license_number);
+					int rowsAffected = preparedStatement.executeUpdate();
+					if (rowsAffected > 0) {
+						System.out.println("Vehicle Ownership Removed Successfully. Please assign a new Permit to the vehicle with the intended new Owner.");
+					} else {
+						System.out.println("No records were found for the specified car license number.");
+					}
+				}
+			} catch (Exception e) {
+				System.out.println("Error Occurred while managing transaction: " + e.getMessage());
+			}   
      }
 	 
      public static void deleteVehicle(Connection connection, Scanner scanner) {
 	        try {
-	            // Scanner scanner = new Scanner(System.in);
 	            System.out.print("Enter Car licence Number: ");
 	            String car_license_number = scanner.nextLine().trim();
 	            boolean isAssignedFlag= false;
