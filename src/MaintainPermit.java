@@ -327,6 +327,7 @@ public class MaintainPermit {
          String model = scanner.nextLine().trim();
          System.out.print("Year: ");
          int year = scanner.nextInt();
+         scanner.nextLine();
          System.out.print("Color: ");
          String color = scanner.nextLine().trim();
          System.out.print("Manufacturer: ");
