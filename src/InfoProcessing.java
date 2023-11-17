@@ -536,16 +536,15 @@ public class InfoProcessing {
     }
 
     /*
-     * checks if the value of space type is electric, handicap, regular, or compact car
+     * checks if the value of space type is Electric, Handicap, Regular, or Compact Car
      */
     private boolean validSpaceType(String space_type){
-        String[] types = {"electric", "handicap", "regular", "compact car"};
+        String[] types = {"Electric", "Handicap", "Regular", "Compact Car"};
         if(space_type == null){
             return false;
         }
-        String space = space_type.toLowerCase();
         for(int i = 0; i < types.length; i++){
-            if(types[i].equals(space)){
+            if(types[i].equals(space_type)){
                 return true;
             }
         }
@@ -571,10 +570,10 @@ public class InfoProcessing {
             System.out.println("Lot name must have a value");
             return;
         }
-        System.out.print("\nEnter space type ('electric', 'handicap', 'compact car', or 'regular'): ");
+        System.out.print("\nEnter space type ('Electric', 'Handicap', 'Compact Car', or 'Regular'): ");
         String space_type = sc.nextLine().trim();
         if(!validSpaceType(space_type)){
-            System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
+            System.out.println("Space must be of type 'Electric', 'Handicap', 'Compact Car', or 'Regular'");
             return;
         }
         enterSpaceInfoHelper(statement, space_number, zone_id, lot_name, space_type);
@@ -618,10 +617,10 @@ public class InfoProcessing {
         StringBuilder sb = new StringBuilder();
         System.out.print("\nUpdate space type? (y/n): ");
         if(sc.nextLine().equals("y")){
-            System.out.print("\nUpdate space type ('electric', 'handicap', 'compact car', or 'regular'): ");
+            System.out.print("\nUpdate space type ('Electric', 'Handicap', 'Compact Car', or 'Regular'): ");
             space_type = sc.nextLine().trim();
             if(!validSpaceType(space_type)){
-                System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
+                System.out.println("Space must be of type 'Electric', 'Handicap', 'Compact Car', or 'Regular'");
                 return;
             }
             sb.append(String.format("space_type = \'%s\'", space_type));
@@ -788,7 +787,7 @@ public class InfoProcessing {
         int permit_id = sc.nextInt();
         sc.nextLine();
         StringBuilder sb = new StringBuilder();
-        System.out.print("\nUpdate space type ('electric', 'handicap', 'compact car', or 'regular')\n or (-1 to not update): ");
+        System.out.print("\nUpdate space type ('Electric', 'Handicap', 'Compact Car', or 'Regular')\n or (-1 to not update): ");
         String space_type = sc.nextLine().trim();
         if (!space_type.equals("-1")){
             sb.append("space_type = \'" + space_type + "\'");
@@ -921,10 +920,10 @@ public class InfoProcessing {
             System.out.println("Lot name must have a value");
             return;
         }
-        System.out.print("\nEnter space type ('electric', 'handicap', 'compact car', or 'regular'): ");
+        System.out.print("\nEnter space type ('Electric', 'Handicap', 'Compact Car', or 'Regular'): ");
         String space_type = sc.nextLine().trim();
         if(!validSpaceType(space_type)){
-            System.out.println("Space must be of type 'electric', 'handicap', 'compact car', or 'regular'");
+            System.out.println("Space must be of type 'Electric', 'Handicap', 'Compact Car', or 'Regular'");
             return;
         }
         assignTypeToSpaceHelper(statement, space_type, space_number, lot_name, zone_id);
