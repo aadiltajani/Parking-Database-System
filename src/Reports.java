@@ -460,6 +460,7 @@ public class Reports {
             String lot_name = "";
 
             try {
+                System.out.println("Enter Lot Name:");
                 lot_name = sc.nextLine().trim();
 
             } catch (InputMismatchException e) {
