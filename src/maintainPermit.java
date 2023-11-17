@@ -8,6 +8,8 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class maintainPermit {
+	
+	 //addPermit: function to take permit data from the user and assigns permits to driver.
 	 public static void addPermit(Connection connection, Scanner scanner) throws Exception{
 		 try { 
 				 String insertPermitQuery = "INSERT INTO Permit VALUES (?, ?, ?, ?, ?, ?)";
@@ -103,7 +105,7 @@ public class maintainPermit {
 		             
 		             if (statusResult.next()) { 
 		            	 String driverStatus = statusResult.getString("status");
-		            	 String checkPermitQuery = "SELECT COUNT(*) AS count, permit_id, car_license_number FROM IsAssigned WHERE phone = ? GROUP BY car_license_number, permit_id";
+		            	 String checkPermitQuery = "SELECT COUNT(*) AS count,car_license_number FROM IsAssigned WHERE phone = ? ";
 		            	 try (PreparedStatement permitStatement = connection.prepareStatement(checkPermitQuery)) {
 		            		 permitStatement.setString(1, phone);
 		                     ResultSet permitResult = permitStatement.executeQuery();
@@ -115,7 +117,27 @@ public class maintainPermit {
 		                         existingPermits++;
 		                         carLicenseNumbers.add(permitResult.getString("car_license_number"));
 		                     }
-		                     
+		                 String checkCountPhone = "SELECT COUNT(*) AS count FROM IsAssigned WHERE phone = ? ";
+		                 String checkCountPhoneAndPermit = "SELECT COUNT(*) AS count FROM IsAssigned WHERE phone = ? AND permit_id = ? ";
+		                 
+		                 try (PreparedStatement preparedStatementCountPhone = connection.prepareStatement(checkCountPhone)) {
+		                     preparedStatementCountPhone.setString(1, phone);
+		                     ResultSet resultSetCountPhone = preparedStatementCountPhone.executeQuery();
+		                     if (resultSetCountPhone.next()) {
+		                         int allPermits = resultSetCountPhone.getInt("count");
+		             
+		                     }
+		                 }
+		                 try (PreparedStatement preparedStatementCountPhone = connection.prepareStatement(checkCountPhoneAndPermit)) {
+		                     preparedStatementCountPhone.setString(1, phone);
+		                     preparedStatementCountPhone.setInt(2, permit_id);
+		                     ResultSet resultSetCountPhone = preparedStatementCountPhone.executeQuery();
+		                     if (resultSetCountPhone.next()) {
+		                         int allCars = resultSetCountPhone.getInt("count");
+		             
+		                     }
+		                 }
+		                     //Checking valid zone according to driver status
 		                     if(driverStatus.equals("V") && !zone_id.equals("V")) { 
 		                    	 System.out.println("Invalid zone for Visitor Permit. Can assign V only");
 		                    	 return;
@@ -127,6 +149,7 @@ public class maintainPermit {
 		                    	 return;
 		                     }
 		                     
+		                     //Check if driver is eligible to get new permit based on their status.
 		                     switch (driverStatus) { 
 			                     case "V":
 			                         // Driver status is V
@@ -147,8 +170,6 @@ public class maintainPermit {
 				                             break;
 				                      }
 				                      if (existingPermits == 1) {
-				                    	 
-				                    	  
 				                             // Check permit type from Permit table
 				                             if (permit_type.equals("Special Event") || permit_type.equals("Park & Ride")) {
 				                                 flag=true;
@@ -201,8 +222,10 @@ public class maintainPermit {
 	                    return;
 	                }
 		         
+		         //Using transaction to execute insert queries in all the tables at the same time
 		         try{
-		                connection.setAutoCommit(false);
+		                connection.setAutoCommit(false); //setting auto-commit to false before executing statements
+		                //insert into Permit
 		                try (PreparedStatement preparedStatement = connection.prepareStatement(insertPermitQuery)) {
 		                    preparedStatement.setInt(1, permit_id);
 		                    preparedStatement.setString(2, space_type);
@@ -210,12 +233,15 @@ public class maintainPermit {
 		                    preparedStatement.setDate(4, expiration_date);
 		                    preparedStatement.setTime(5, expiration_time);
 		                    preparedStatement.setString(6, permit_type);
-		                    preparedStatement.executeUpdate();
+		                    preparedStatement.executeUpdate(); //execute the query for insertion
+		                    
 		                } catch (Exception e) {
+		                	//in case there is an issue in inserting data in Permit table, rollback the transaction
 		                    connection.rollback();
 		                    System.out.println("Error Occurred while inserting permit data " + e.getMessage());
 		                    return;
 		                }
+		                //if vehicle not found in Vehicles table, add new entry into Vehicle.
 		                if (insertVehicle && !model.equals(null) && !color.equals(null) && !manufacturer.equals(null) && year!=-1){
 		                    try (PreparedStatement preparedStatement = connection.prepareStatement(insertVehicleQuery)) {
 		                        preparedStatement.setString(1, car_license_number);
@@ -223,54 +249,51 @@ public class maintainPermit {
 		                        preparedStatement.setInt(3, year);
 		                        preparedStatement.setString(4, color);
 		                        preparedStatement.setString(5, manufacturer);
-		                        preparedStatement.executeUpdate();
+		                        preparedStatement.executeUpdate(); //execute the query for insertion
 		                        System.out.println("Vehicle data added successfully.");
 		                    } catch (Exception e) {
+		                    	//in case there is an issue in inserting data in Vehicle table, rollback the transaction
 		                        connection.rollback();
 		                        System.out.println("Error Occurred while inserting vehicle data " + e.getMessage());
 		                        return;
 		                    }   
 		                }
+		                //if driver is eligible for the permit, assign permit to the driver
 		                if (flag == true) {
 		                	try (PreparedStatement preparedStatement = connection.prepareStatement(insertIsAssignedQuery)) {
 			                	preparedStatement.setString(1, phone);
 			                	preparedStatement.setInt(2, permit_id);
 				                preparedStatement.setString(3, car_license_number);
-			                    preparedStatement.executeUpdate();
+			                    preparedStatement.executeUpdate(); //execute the query for insertion into IsAssigned table
 			                    System.out.println("Permit Assigned to Driver successfully.");
 			                } catch (Exception e) {
+			                	//in case there is an issue in inserting data in IsAssigned table, rollback the transaction
 			                    connection.rollback();
 			                    System.out.println("Error Occurred while assigning permit " + e.getMessage());
 			                    return;
 			                }
 		                }
-		                try (PreparedStatement preparedStatement = connection.prepareStatement(insertHasLotQuery)) {
-		                	preparedStatement.setInt(1, permit_id);
-		                    preparedStatement.setString(2, lot_name);
-		                    preparedStatement.executeUpdate();
-		                    System.out.println("Added permit lot");
-		                } catch (Exception e) {
-		                    connection.rollback();
-		                    System.out.println("Error Occurred while inserting permit lot " + e.getMessage());
-		                    return;
-		                }
+
+		              //insert information of zone, lot related to the permit
 		                try (PreparedStatement preparedStatement = connection.prepareStatement(insertHasZoneQuery)) {
 		                	preparedStatement.setInt(1, permit_id);
 		                	preparedStatement.setString(2, zone_id);
 		                    preparedStatement.setString(3, lot_name);
-		                    preparedStatement.executeUpdate();
+		                    preparedStatement.executeUpdate();//execute the query for insertion
 		                    System.out.println("Added permit zone");
 		                } catch (Exception e) {
+		                	//in case there is an issue in inserting data in HasZone table, rollback the transaction
 		                    connection.rollback();
 		                    System.out.println("Error Occurred while inserting permit zone " + e.getMessage());
 		                    return;
 		                }
-		                connection.commit();
+		                connection.commit(); //all queries executed successfully, so commit the transaction
 		                System.out.println("Permit Added successfully.");
 		            } catch (SQLException e) {
 		                System.out.println("Error Occurred while managing transaction: " + e.getMessage());
 		            } finally {
 		                try {
+		                	//transaction is completed, so set auto-commit to true
 		                    connection.setAutoCommit(true);
 		                } catch (SQLException e) {
 		                    e.printStackTrace();
@@ -281,7 +304,9 @@ public class maintainPermit {
 		 }
 	
 }
-		                  
+	
+	 //addVehicle: Creates a new vehicle in Vehicle table with information input from the user.
+	 //addVehicle: a function to create new vehicle in Vehicle table with information input from the user.
      public static void addVehicle(Connection connection, Scanner scanner) throws Exception{
 	 try {
 		 String insertVehicleQuery = "INSERT INTO Vehicle VALUES (?, ?, ?, ?, ?)";
@@ -316,6 +341,8 @@ public class maintainPermit {
 	 }
 	 }
 	 
+     //updateVehicle: Allows user to update the attributes for the given vehicle.
+     //updateVehicle: function to update the attributes for the given vehicle.
      public static void updateVehicle(Connection connection, Scanner scanner) throws Exception {
     	 try { 
     		 System.out.print("Enter Car License Number: ");
@@ -401,6 +428,8 @@ public class maintainPermit {
          }
      }
      
+     //DisplayGetVehicle: Used to display all information for the given vehicle.
+     //DisplayGetVehicle: function to display all information about the vehicle.
      public static void  DisplayGetVehicle(Connection connection, String car_license_number) throws Exception {
          String selectQuery = "SELECT * from Vehicle where car_license_number = ?";
                  
@@ -429,6 +458,8 @@ public class maintainPermit {
          }
      }
      
+     //updateVehicleOwnership: Updates the owner for given vehicle.
+     //updateVehicleOwnership: function to change owner of the vehicle by updating IsAssigned table
      public static void updateVehicleOwnership(Connection connection, Scanner scanner) throws Exception {
     	 try {
     		 System.out.print("Enter Car License Number: ");
@@ -439,7 +470,7 @@ public class maintainPermit {
 	         int permit_id = scanner.nextInt();
 	         scanner.nextLine();
 	         
-	         String insertPermitQuery = "INSERT INTO Permit VALUES (?, ?, ?, ?, ?, ?)";
+	  
     		 String updateIsAssignedQuery = "UPDATE IsAssigned set phone = ? and permit_id = ? WHERE car_license_number = ? ";
     		 try (PreparedStatement preparedStatementPermit = connection.prepareStatement(updateIsAssignedQuery)) {
                  preparedStatementPermit.setString(1, phone);
@@ -460,6 +491,8 @@ public class maintainPermit {
          }
      }
 	 
+     //deleteVehicle: Removes the vehicle and all related records from the database.
+     //deleteVehicle: function to remove the vehicle and all related records from the database
      public static void deleteVehicle(Connection connection, Scanner scanner) {
 	        try {
 	            // Scanner scanner = new Scanner(System.in);
@@ -518,9 +551,5 @@ public class maintainPermit {
 	        }       
 	    }
 	 
-	 
-	 public static void getVehicleData(Connection connection, Scanner scanner) throws Exception{
-		 //add queries to get all permits associated with that license_number
-		 //add queries to get all citations associated with that license_number
-	 }
+	
 }
