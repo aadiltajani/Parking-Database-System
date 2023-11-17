@@ -235,7 +235,7 @@ public class MaintainPermit {
 					if (flag == true) {
 		                connection.setAutoCommit(false);  //setting auto-commit to false before executing statements
 		              //insert into Permit
-						if(!secondvehicle){
+						if(!secondvehicle){ //dont add this stuff if we are adding a second car on a permit for employee, just assign the car
 							try (PreparedStatement preparedStatement = connection.prepareStatement(insertPermitQuery)) {
 								preparedStatement.setInt(1, permit_id);
 								preparedStatement.setString(2, space_type);
@@ -250,23 +250,6 @@ public class MaintainPermit {
 								System.out.println("Error Occurred while inserting permit data " + e.getMessage());
 								return;
 							}
-							//if vehicle not found in Vehicles table, add new entry into Vehicle.
-							if (insertVehicle && !model.equals(null) && !color.equals(null) && !manufacturer.equals(null) && year!=-1){
-								try (PreparedStatement preparedStatement = connection.prepareStatement(insertVehicleQuery)) {
-									preparedStatement.setString(1, car_license_number);
-									preparedStatement.setString(2, model);
-									preparedStatement.setInt(3, year);
-									preparedStatement.setString(4, color);
-									preparedStatement.setString(5, manufacturer);
-									preparedStatement.executeUpdate(); //execute the query for insertion
-									System.out.println("Vehicle data added successfully.");
-								} catch (Exception e) {
-									//in case there is an issue in inserting data in Vehicle table, rollback the transaction
-									connection.rollback();
-									System.out.println("Error Occurred while inserting vehicle data " + e.getMessage());
-									return;
-								}   
-							}
 							//insert information of zone, lot related to the permit
 							try (PreparedStatement preparedStatement = connection.prepareStatement(insertHasZoneQuery)) {
 								preparedStatement.setInt(1, permit_id);
@@ -280,6 +263,23 @@ public class MaintainPermit {
 								System.out.println("Error Occurred while inserting permit zone " + e.getMessage());
 								return;
 							}
+						}
+						//if vehicle not found in Vehicles table, add new entry into Vehicle.
+						if (insertVehicle && !model.equals(null) && !color.equals(null) && !manufacturer.equals(null) && year!=-1){
+							try (PreparedStatement preparedStatement = connection.prepareStatement(insertVehicleQuery)) {
+								preparedStatement.setString(1, car_license_number);
+								preparedStatement.setString(2, model);
+								preparedStatement.setInt(3, year);
+								preparedStatement.setString(4, color);
+								preparedStatement.setString(5, manufacturer);
+								preparedStatement.executeUpdate(); //execute the query for insertion
+								System.out.println("Vehicle data added successfully.");
+							} catch (Exception e) {
+								//in case there is an issue in inserting data in Vehicle table, rollback the transaction
+								connection.rollback();
+								System.out.println("Error Occurred while inserting vehicle data " + e.getMessage());
+								return;
+							}   
 						}
 						//insertion into IsAssigned table
 						try (PreparedStatement preparedStatement = connection.prepareStatement(insertIsAssignedQuery)) {
