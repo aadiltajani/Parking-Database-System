@@ -392,7 +392,7 @@ public class Reports {
                 System.out.println("No records found");
             } else {
                 System.out.println(
-                        "Permit Id Space Type, Start Date, Expiration Date, Expiration Time, Permit Type, Car License Number, Zone Id, Lot Name");
+                        "Permit Id, Space Type, Start Date, Expiration Date, Expiration Time, Permit Type, Car License Number, Zone Id, Lot Name");
                 do {
                     int permitId = rs.getInt("permit_id");
                     String spaceType = rs.getString("space_type");
