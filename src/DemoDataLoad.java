@@ -186,15 +186,6 @@ public class DemoDataLoad {
             ")";
         stmt.execute(createAppealsTableSQL);
 
-        String createHasLotTableSQL = "CREATE TABLE HasLot (" +
-            "permit_id INT," +
-            "lot_name VARCHAR(128)," +
-            "PRIMARY KEY (permit_id, lot_name)," +
-            "FOREIGN KEY (permit_id) REFERENCES Permit(permit_id) ON UPDATE CASCADE ON DELETE CASCADE," +
-            "FOREIGN KEY (lot_name) REFERENCES ParkingLot(lot_name) ON UPDATE CASCADE ON DELETE CASCADE" +
-            ")";
-        stmt.execute(createHasLotTableSQL);
-
         String createHasZoneTableSQL = "CREATE TABLE HasZone (" +
             "permit_id INT," +
             "zone_id VARCHAR(2)," +

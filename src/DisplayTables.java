@@ -24,15 +24,6 @@ public class DisplayTables {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            // Close the database connection
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 

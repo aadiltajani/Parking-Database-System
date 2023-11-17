@@ -344,7 +344,7 @@ public class Citations {
                                 }
                             }
 
-                            // Update the Citation table
+                            // Update the Citation table in a transaction
                             try {
                                 connection.setAutoCommit(false);
                                 String updateCitationQuery = "UPDATE Citation SET citation_date = ?, citation_time = ?, category = ?, fee = ?, payment_status = ? WHERE citation_number = ?";
@@ -418,11 +418,9 @@ public class Citations {
             }
         } catch (SQLException e) {
             System.out.println("Error occurred while maintaining citation: " + e.getMessage());
-        } finally {
-            // scanner.close();
         }
     }
-
+    // Function to display citation info before changing it
     public static void  DisplayGetCitation(Connection connection, int citation_number) throws Exception {
         String selectQuery = "SELECT C.*, S.lot_name, G.car_license_number, A.appeal_status " +
             "FROM Citation C " +
@@ -501,8 +499,6 @@ public class Citations {
             }
         } catch (SQLException e) {
             System.out.println("Error occurred while updating payment status: " + e.getMessage());
-        } finally {
-            // scanner.close();
         }
     }
 
@@ -571,8 +567,6 @@ public class Citations {
             }
         } catch (SQLException e) {
             System.out.println("Error occurred while processing appeal: " + e.getMessage());
-        } finally {
-            // scanner.close();
         }
     }
 
