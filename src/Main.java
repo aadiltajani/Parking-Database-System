@@ -27,7 +27,7 @@ public class Main {
 
             do {
                 try {
-                    System.out.println("=============================================================================");
+                    System.out.println("\n\n=============================================================================");
                     System.out.println("Choose the operation from the main menu by inputting the respective number:");
                     System.out.println("=============================================================================");
                     System.out.println("1. Information Processing");
@@ -122,7 +122,9 @@ public class Main {
         int option = 0;
         do {
             try {
-                System.out.println("\nInformation Processing Menu:");
+                System.out.println("\n\n=============================================================================");
+                System.out.println("Information Processing Menu:");
+                System.out.println("=============================================================================");
                 System.out.println("Choose the operation from the menu by inputting the respective number:");
                 System.out.println("1.Enter driver info");
                 System.out.println("2.Update driver info");
@@ -253,8 +255,10 @@ public class Main {
         do {
             // Scanner sc = new Scanner(System.in);
             try {
+                System.out.println("\n\n=============================================================================");
                 System.out.println("Choose the operation from the menu by inputting the respective number:");
-                System.out.println("\nMaintaining Permits Menu:");
+                System.out.println("=============================================================================");
+                System.out.println("Maintaining Permits Menu:");
                 System.out.println("1. Assign permits to drivers");
                 System.out.println("2. Update permit information");
                 System.out.println("3. Add vehicle");
@@ -334,7 +338,7 @@ public class Main {
         // Scanner sc = new Scanner(System.in);
         do {
             try {
-                System.out.println("=============================================================================");
+                System.out.println("\n\n=============================================================================");
                 System.out.println("Generating and Maintaining Citations Menu:");
                 System.out.println("=============================================================================");
                 System.out.println(
@@ -344,7 +348,7 @@ public class Main {
                 System.out.println("4.Pay citation");
                 System.out.println("5.Appeal citation");
                 System.out.println("6.Delete citation");
-                System.out.println("7.Return to main menu");
+                System.out.println("100.Return to main menu");
                 System.out.println("=============================================================================");
                 System.out.print("Enter Your Choice: ");
                 option = sc.nextInt();
@@ -393,11 +397,8 @@ public class Main {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
-                    case 7:
-                        break;
                     case 100:
-                        System.out.println("Exiting...");
-                        System.exit(0);
+                        break;
                     default:
                         System.out.println("Invalid option. Please try again.");
                         continue;
@@ -407,7 +408,7 @@ public class Main {
                 sc.next();
                 System.out.println("Invalid input. Please enter a number.");
             }
-        } while (option != 7);
+        } while (option != 100);
     }
 
     private static void reportsMenu(Scanner sc) {
@@ -415,8 +416,9 @@ public class Main {
         do {
             // Scanner sc = new Scanner(System.in);
             try {
-                System.out.println("Choose the operation from the menu by inputting the respective number:");
-                System.out.println("\nReports Menu:");
+                System.out.println("\n\n=============================================================================");
+                System.out.println("Choose the operation from the Reports menu by inputting the respective number:");
+                System.out.println("=============================================================================");
                 System.out.println("1. Generate a report for citations");
                 System.out.println(
                         "2. For each lot, generate a report for the total number of citations given in all zones in the lot for a given period");
