@@ -66,7 +66,7 @@ public class Main {
                     e.printStackTrace();
                     option = -1;
                     sc.next();
-                } 
+                }
             } while (option != 100);
         } catch (Exception e) {
             System.out.println("Error Occurred");
@@ -150,7 +150,7 @@ public class Main {
                 switch (option) {
 
                     case 1:
-                    // enter driver info
+                        // enter driver info
                         ip.enterDriverInfo(statement, sc);
                         break;
                     case 2:
@@ -201,7 +201,7 @@ public class Main {
                     case 13:
                         // Enter permit info
                         try {
-                            maintainPermit.addPermit(connection, sc);
+                            MaintainPermit.addPermit(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Error occurred while adding permit: " + e.getMessage());
                         }
@@ -265,51 +265,51 @@ public class Main {
                 option = sc.nextInt();
                 sc.nextLine();
                 switch (option) {
-                    
+
                     case 1:
-                    	try {
-                            maintainPermit.addPermit(connection, sc);
+                        try {
+                            MaintainPermit.addPermit(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                             e.printStackTrace();
                         }
                         break;
                     case 2:
-                    	try {
-                    		InfoProcessing ip = new InfoProcessing();
+                        try {
+                            InfoProcessing ip = new InfoProcessing();
                             ip.updatePermitInfo(statement, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                             e.printStackTrace();
                         }
-                        break;  
+                        break;
                     case 3:
-                    	try {
-                            maintainPermit.addVehicle(connection, sc);
+                        try {
+                            MaintainPermit.addVehicle(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                             e.printStackTrace();
                         }
                         break;
                     case 4:
-                    	try {
-                            maintainPermit.updateVehicle(connection, sc);
+                        try {
+                            MaintainPermit.updateVehicle(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                             e.printStackTrace();
                         }
                         break;
                     case 5:
-                    	try {
-                            maintainPermit.updateVehicleOwnership(connection, sc);
+                        try {
+                            MaintainPermit.updateVehicleOwnership(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                             e.printStackTrace();
                         }
                         break;
                     case 6:
-                    	try {
-                            maintainPermit.deleteVehicle(connection, sc);
+                        try {
+                            MaintainPermit.deleteVehicle(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                             e.printStackTrace();
@@ -437,62 +437,63 @@ public class Main {
                 switch (option) {
                     case 1:
                         try {
-                            reports.generateReportCitations(connection);
+                            Reports.generateReportCitations(connection);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 2:
                         try {
-                            reports.totalCitationsCountByTimeRange(connection, sc);
+                            Reports.totalCitationsCountByTimeRange(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
+                        break;
                     case 3:
                         try {
-                            reports.totalCitationsCountByMonth(connection, sc);
+                            Reports.totalCitationsCountByMonth(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 4:
                         try {
-                            reports.totalCitationsCountByYear(connection, sc);
+                            Reports.totalCitationsCountByYear(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 5:
                         try {
-                            reports.listOfZones(connection);
+                            Reports.listOfZones(connection);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 6:
                         try {
-                            reports.carsInViolation(connection);
+                            Reports.carsInViolation(connection);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 7:
                         try {
-                            reports.employeesHavePermits(connection, sc);
+                            Reports.employeesHavePermits(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 8:
                         try {
-                            reports.returnPermitInfo(connection, sc);
+                            Reports.returnPermitInfo(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
                         break;
                     case 9:
                         try {
-                            reports.generateSpaceAvailable(connection, sc);
+                            Reports.generateSpaceAvailable(connection, sc);
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }

@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
 
-public class maintainPermit {
+public class MaintainPermit {
 	 public static void addPermit(Connection connection, Scanner scanner) throws Exception{
 		 try { 
 				 String insertPermitQuery = "INSERT INTO Permit VALUES (?, ?, ?, ?, ?, ?)";
