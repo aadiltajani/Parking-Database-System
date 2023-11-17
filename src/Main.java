@@ -447,6 +447,7 @@ public class Main {
                         } catch (Exception e) {
                             System.out.println("Sorry. Try Again.");
                         }
+                        break;
                     case 3:
                         try {
                             Reports.totalCitationsCountByMonth(connection, sc);
